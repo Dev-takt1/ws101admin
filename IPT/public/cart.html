@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .menu-items-section { margin-top: 10px; }
+        .section-label {
+            font-size: 13px; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: #19276F;
+            padding: 10px 0 6px; border-bottom: 2px solid #e8eaf5; margin-bottom: 4px;
+        }
+        .menu-cart-row {
+            display: grid; grid-template-columns: 1fr 130px 130px 120px;
+            align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; gap: 10px;
+        }
+        .menu-item-info { display: flex; flex-direction: column; gap: 3px; }
+        .menu-item-name { font-weight: 600; font-size: 14px; color: #1a1a2e; }
+        .menu-item-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .variant-badge {
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+        }
+        .variant-badge.pax    { background:#e8f0fe; color:#1967d2; border:1px solid #c5d8fb; }
+        .variant-badge.single { background:#fef3e2; color:#b06000; border:1px solid #fde3b0; }
+        .variant-badge.dozen  { background:#e6f9f0; color:#1a7a4a; border:1px solid #b0e8cb; }
+        .menu-price-cell { text-align: center; }
+        .menu-price-amount { font-size: 15px; font-weight: 700; color: #19276F; }
+        .menu-qty-cell { display: flex; justify-content: center; }
+        .menu-sub-cell { text-align: right; font-weight: 700; font-size: 15px; color: #1a1a2e; }
+        .remove-menu-item {
+            background: none; border: none; color: #ccc; cursor: pointer;
+            font-size: 13px; padding: 2px 6px; transition: color 0.2s; margin-left: 4px;
+        }
+        .remove-menu-item:hover { color: #e53935; }
+        .menu-empty-note { padding: 12px 0 16px; color: #bbb; font-size: 13px; font-style: italic; }
+        .reservation-note {
+            background: #f0f8ff; border-left: 4px solid #00A5E5; border-radius: 6px;
+            padding: 12px 15px; margin: 18px 0 10px; font-size: 13px; color: #333; line-height: 1.5;
+        }
+        .reservation-note strong { color: #19276F; }
+        .pay-button {
+            display: block; width: 100%; padding: 14px; background: #19276F;
+            color: #fff; font-size: 15px; font-weight: bold; letter-spacing: 0.5px;
+            border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; margin-top: 8px;
+        }
+        .pay-button:hover { background: #0f1c50; }
+        .split-pay-divider, #deposit-pay-link { display: none !important; }
+        .menu-category-group-label {
+            font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+            color: #aaa; padding: 10px 0 4px; font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .menu-cart-row { grid-template-columns: 1fr 90px 90px 80px; font-size: 13px; }
+            .menu-price-amount { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="cart-header">
+        <div class="header-container">
+            <div class="header-left">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="header-logo">
+                <h1>YOUR CART <i class="fa-solid fa-cart-shopping"></i></h1>
+            </div>
+            <div class="header-right">
+                <nav>
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="packages_list.html">Packages</a>
+                    <a href="contact.html">Contact Us</a>
+                </nav>
+                <div class="brand-text">
+                    <h4>DE LAS ARMAS</h4>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="cart-main">
+        <div class="cart-grid">
+            <div class="cart-items">
+                <div class="cart-table-header">
+                    <span class="h-pkg">Package / Item</span>
+                    <span class="h-price">Price</span>
+                    <span class="h-qty">Quantity</span>
+                    <span class="h-sub">Subtotal</span>
+                </div>
+                <div id="main-package-section"></div>
+                <div id="addons-section"></div>
+                <div id="menu-items-section" class="menu-items-section"></div>
+
+                <div class="action-row">
+                    <button class="trash-btn" onclick="toggleDeleteMode()">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <div class="cart-buttons" id="default-buttons">
+                        <a href="menu.html" class="btn-update"
+                           style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MENU</a>
+                        <a href="otherservices.html#services-cards" class="btn-continue">OTHER SERVICES</a>
+                    </div>
+                    <div class="cart-buttons hidden" id="delete-buttons" style="display:none;">
+                        <button class="btn-cancel-action" onclick="toggleDeleteMode()">CANCEL</button>
+                        <button class="btn-delete-action" onclick="confirmDelete()">DELETE ALL</button>
+                    </div>
+                </div>
+
+                <div class="message-box">
+                    <label>Message/Concern (Optional)</label>
+                    <textarea id="cartMessage" placeholder="Please leave a message if you have concern"></textarea>
+                </div>
+            </div>
+
+            <div class="payment-sidebar">
+                <div class="sidebar-box">
+                    <h2 class="sidebar-title">CART TOTAL</h2>
+                    <div class="summary-divider"></div>
+                    <div class="summary-line">
+                        <span>Package Subtotal</span>
+                        <span class="bold" id="package-subtotal-display">₱0.00</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-line">
+                        <span>Menu Items</span>
+                        <span class="bold" id="menu-subtotal-display">₱0.00</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-line">
+                        <span>Discount</span>
+                        <span class="gray">₱0.00</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-line total-row">
+                        <span>Total:</span>
+                        <span id="grand-total-display">₱0.00</span>
+                    </div>
+                    <div class="reservation-note">
+                        A non-refundable <strong>50% reservation fee</strong> is required to confirm your booking.
+                        The remaining balance is due before the event.
+                    </div>
+                    <a href="checkout.html" class="checkout-link" id="full-pay-link">
+                        <button class="pay-button" id="full-pay-btn">PAY ₱0.00 (50% Reservation)</button>
+                    </a>
+                    <!-- Hidden fallback kept so existing JS refs don't break -->
+                    <div class="split-pay-divider"></div>
+                    <a href="checkout.html" class="checkout-link" id="deposit-pay-link">
+                        <button class="pay-button" id="deposit-pay-btn">PAY ₱0.00</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    const API_URL = 'http://localhost:3001';
+    let cartItems = { package: null, addons: [] };
+
+    /* ── Helpers ────────────────────────────────────────── */
+    function fmt(n) {
+        return '₱' + parseFloat(n).toLocaleString('en-US', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2
+        });
+    }
+    function getUserId() {
+        try { return JSON.parse(localStorage.getItem('user'))?.id || null; }
+        catch { return null; }
+    }
+    function getMenuCartKey() {
+        const uid = getUserId();
+        return uid ? `menuCart_${uid}` : 'menuCart_guest';
+    }
+    function getMenuCart() {
+        try { return JSON.parse(localStorage.getItem(getMenuCartKey())) || []; }
+        catch { return []; }
+    }
+    function saveMenuCart(arr) {
+        localStorage.setItem(getMenuCartKey(), JSON.stringify(arr));
+    }
+    function variantBadge(unit) {
+        if (!unit) return '';
+        const u = unit.toLowerCase();
+        if (u.includes('pax') || u.includes('good for')) return `<span class="variant-badge pax">${unit}</span>`;
+        if (u.includes('single'))                         return `<span class="variant-badge single">${unit}</span>`;
+        if (u.includes('dozen') || u.includes('doz'))    return `<span class="variant-badge dozen">${unit}</span>`;
+        return `<span class="variant-badge pax">${unit}</span>`;
+    }
+
+    /* ── Full cart wipe (DB + localStorage) ─────────────── */
+    async function wipeCartCompletely(userId) {
+        // 1. Clear DB cart
+        try {
+            await fetch(`${API_URL}/api/cart/clear`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            });
+        } catch (e) { console.warn('[cart] DB clear failed:', e); }
+
+        // 2. Clear all localStorage cart keys
+        localStorage.removeItem('selectedPackage');
+        localStorage.removeItem('myCart');
+        localStorage.removeItem(getMenuCartKey());
+        localStorage.removeItem('cartTotal');
+        localStorage.removeItem('grandTotal');
+        localStorage.removeItem('customerDetails');
+        localStorage.removeItem('eventDate');
+        localStorage.removeItem('eventTime');
+        localStorage.removeItem('eventAddress');
+        localStorage.removeItem('contactNum');
+
+        // 3. Reset in-memory state
+        cartItems = { package: null, addons: [] };
+    }
+
+    /* ── Menu item qty / remove ─────────────────────────── */
+    function updateMenuItemQty(id, delta) {
+        let cart = getMenuCart();
+        const idx = cart.findIndex(i => i.id === id);
+        if (idx === -1) return;
+        cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+        saveMenuCart(cart);
+        renderMenuItems();
+        recalcTotals();
+    }
+
+    function removeMenuItem(id) {
+        saveMenuCart(getMenuCart().filter(i => i.id !== id));
+        renderMenuItems();
+        recalcTotals();
+    }
+
+    /* ── Render menu items ──────────────────────────────── */
+    function renderMenuItems() {
+        const container = document.getElementById('menu-items-section');
+        const menuCart  = getMenuCart();
+
+        if (!menuCart.length) {
+            container.innerHTML = `
+                <div class="section-label">
+                    <i class="fa-solid fa-utensils" style="margin-right:6px;opacity:0.6;"></i>Menu Items
+                </div>
+                <p class="menu-empty-note">No menu items added yet.
+                    <a href="menu.html" style="color:#19276F;">Browse our menu →</a></p>`;
+            return;
+        }
+
+        const grouped = {};
+        menuCart.forEach(item => {
+            const cat = item.category || 'Food';
+            if (!grouped[cat]) grouped[cat] = [];
+            grouped[cat].push(item);
+        });
+
+        let html = `
+            <div class="section-label">
+                <i class="fa-solid fa-utensils" style="margin-right:6px;opacity:0.6;"></i>
+                Menu Items
+                <span style="font-size:11px;font-weight:400;color:#999;margin-left:6px;">
+                    (${menuCart.length} item${menuCart.length !== 1 ? 's' : ''})
+                </span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 130px 130px 120px;gap:10px;
+                        padding:6px 0;border-bottom:1px solid #e8eaf5;
+                        font-size:11px;letter-spacing:0.8px;color:#aaa;text-transform:uppercase;font-weight:600;">
+                <span>Item</span>
+                <span style="text-align:center;">Unit Price</span>
+                <span style="text-align:center;">Qty</span>
+                <span style="text-align:right;">Subtotal</span>
+            </div>`;
+
+        Object.entries(grouped).forEach(([cat, items]) => {
+            html += `<div class="menu-category-group-label">${cat}</div>`;
+            items.forEach(item => {
+                html += `
+                    <div class="menu-cart-row">
+                        <div class="menu-item-info">
+                            <span class="menu-item-name">${item.name}</span>
+                            <div class="menu-item-meta">
+                                ${variantBadge(item.variant)}
+                                <button class="remove-menu-item" onclick="removeMenuItem('${item.id}')" title="Remove">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="menu-price-cell">
+                            <div class="menu-price-amount">${fmt(item.price)}</div>
+                        </div>
+                        <div class="menu-qty-cell">
+                            <div class="stepper">
+                                <button onclick="updateMenuItemQty('${item.id}', -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button onclick="updateMenuItemQty('${item.id}', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="menu-sub-cell">${fmt(item.price * item.qty)}</div>
+                    </div>`;
+            });
+        });
+
+        container.innerHTML = html;
+    }
+
+    function menuCartTotal() {
+        return getMenuCart().reduce((s, i) => s + i.price * i.qty, 0);
+    }
+
+    /* ── Load cart from DB ──────────────────────────────── */
+    async function loadCartFromDB() {
+        const userId = getUserId();
+        if (!userId) {
+            alert('Please log in to view your cart');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        try {
+            const res  = await fetch(`${API_URL}/api/cart?userId=${userId}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
+            cartItems.package = data.package;
+            cartItems.addons  = data.addons || [];
+
+            // Keep selectedPackage in sync for checkout.html
+            if (data.package) {
+                let guestCount = data.package.guestCount;
+                const vName    = data.package.variantName || data.package.variant || '';
+                if (!guestCount || guestCount <= 1) {
+                    const m = vName.match(/\((\d+)\s*Guests?\)/);
+                    guestCount = m ? parseInt(m[1]) : 1;
+                }
+                localStorage.setItem('selectedPackage', JSON.stringify({
+                    id:          data.package.product_id,
+                    name:        data.package.name,
+                    variant:     vName,
+                    variantName: vName,
+                    guestCount,
+                    price:       data.package.price,
+                    qty:         data.package.quantity
+                }));
+            } else {
+                localStorage.removeItem('selectedPackage');
+            }
+
+        } catch (err) {
+            console.error('[cart] DB load error:', err);
+            cartItems = { package: null, addons: [] };
+        }
+
+        renderPackageSection();
+        renderAddonsSection();
+        renderMenuItems();
+        recalcTotals();
+    }
+
+    /* ── Render package ─────────────────────────────────── */
+    function renderPackageSection() {
+        const el = document.getElementById('main-package-section');
+        if (!cartItems.package) {
+            el.innerHTML = `
+                <div style="padding:30px;text-align:center;background:#f9f9f9;border-radius:8px;margin:10px 0;">
+                    <p style="color:#666;font-size:15px;margin-bottom:12px;">No main package selected.</p>
+                    <a href="packages_list.html" style="display:inline-block;padding:10px 25px;
+                        background:#19276F;color:#fff;text-decoration:none;border-radius:5px;font-weight:bold;">
+                        VIEW OUR PACKAGES
+                    </a>
+                </div>`;
+            return;
+        }
+
+        const price       = parseFloat(cartItems.package.price || cartItems.package.basePrice);
+        const variantName = cartItems.package.variantName || cartItems.package.variant || '';
+        let guestCount    = cartItems.package.guestCount;
+        if (!guestCount || guestCount <= 1) {
+            const m = variantName.match(/\((\d+)\s*Guests?\)/);
+            guestCount = m ? parseInt(m[1]) : 1;
+        }
+        const qty = cartItems.package.quantity || 1;
+
+        el.innerHTML = `
+            <div class="cart-row main-item">
+                <div class="col-pkg">
+                    <img src="assets/img/CP.png" alt="Package"
+                         style="width:60px;height:60px;object-fit:cover;border-radius:5px;">
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <h3 style="margin:0;color:#19276F;">${cartItems.package.name || 'Package'}</h3>
+                        <span style="color:#666;font-size:14px;">${variantName || guestCount + ' Guests'}</span>
+                        <span style="color:#999;font-size:12px;">
+                            <i class="fas fa-users" style="margin-right:5px;"></i>${guestCount} guests per package
+                        </span>
+                    </div>
+                </div>
+                <div class="col-price">${fmt(price)}</div>
+                <div class="col-qty">
+                    <div class="stepper">
+                        <button onclick="updatePkgQty(-1)">-</button>
+                        <span>${qty}</span>
+                        <button onclick="updatePkgQty(1)">+</button>
+                    </div>
+                </div>
+                <div class="col-sub" style="font-weight:bold;">${fmt(price * qty)}</div>
+            </div>`;
+    }
+
+    /* ── Render addons ──────────────────────────────────── */
+    function renderAddonsSection() {
+        const el = document.getElementById('addons-section');
+        el.innerHTML = '';
+        if (!cartItems.addons?.length) return;
+        cartItems.addons.forEach((item, index) => {
+            const price = parseFloat(item.price);
+            el.innerHTML += `
+                <div class="cart-row addons-group">
+                    <div class="group-title">${item.name}</div>
+                    <div class="sub-row">
+                        <div class="sub-name">Standard Order</div>
+                        <div class="sub-price">${fmt(price)}</div>
+                        <div class="sub-qty">
+                            <div class="stepper">
+                                <button onclick="updateAddonQty(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateAddonQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="sub-total">${fmt(price * item.quantity)}</div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    /* ── Recalc totals ──────────────────────────────────── */
+    function recalcTotals() {
+        let pkgTotal = 0;
+        if (cartItems.package) {
+            pkgTotal = parseFloat(cartItems.package.price || cartItems.package.basePrice)
+                     * (cartItems.package.quantity || 1);
+        }
+        cartItems.addons.forEach(a => { pkgTotal += parseFloat(a.price) * a.quantity; });
+
+        const menuTotal      = menuCartTotal();
+        const grandTotal     = pkgTotal + menuTotal;
+        const reservationFee = grandTotal * 0.5;
+
+        document.getElementById('package-subtotal-display').textContent = fmt(pkgTotal);
+        document.getElementById('menu-subtotal-display').textContent    = fmt(menuTotal);
+        document.getElementById('grand-total-display').textContent      = fmt(grandTotal);
+        document.getElementById('full-pay-btn').textContent             = `PAY ${fmt(reservationFee)} (50% Reservation)`;
+        document.getElementById('deposit-pay-btn').textContent          = `PAY ${fmt(reservationFee)}`;
+
+        window.currentTotal      = grandTotal;
+        window.reservationFee    = reservationFee;
+        localStorage.setItem('cartTotal', grandTotal);
+    }
+
+    /* ── DB qty updates ─────────────────────────────────── */
+    async function updatePkgQty(change) {
+        if (!cartItems.package) return;
+        const newQty = Math.max(1, cartItems.package.quantity + change);
+        try {
+            const r = await fetch(`${API_URL}/api/cart/update`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cartId: cartItems.package.cartId, quantity: newQty })
+            });
+            if (r.ok) {
+                cartItems.package.quantity = newQty;
+                // Keep localStorage in sync so checkout snapshot gets correct qty
+                const stored = JSON.parse(localStorage.getItem('selectedPackage') || '{}');
+                stored.qty = newQty;
+                localStorage.setItem('selectedPackage', JSON.stringify(stored));
+                renderPackageSection();
+                recalcTotals();
+            }
+        } catch (e) { console.error('[cart] pkg qty update error:', e); }
+    }
+
+    async function updateAddonQty(index, change) {
+        const addon = cartItems.addons[index];
+        if (!addon) return;
+        const newQty = addon.quantity + change;
+        try {
+            const r = await fetch(`${API_URL}/api/cart/update`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cartId: addon.cartId, quantity: newQty })
+            });
+            if (r.ok) {
+                if (newQty <= 0) {
+                    cartItems.addons.splice(index, 1);
+                } else {
+                    addon.quantity = newQty;
+                }
+                // Sync myCart in localStorage
+                const myCart = cartItems.addons.map(a => ({
+                    name:  a.name,
+                    price: parseFloat(a.price),
+                    qty:   a.quantity
+                }));
+                localStorage.setItem('myCart', JSON.stringify(myCart));
+                renderAddonsSection();
+                recalcTotals();
+            }
+        } catch (e) { console.error('[cart] addon qty error:', e); }
+    }
+
+    /* ── Delete all ─────────────────────────────────────── */
+    async function confirmDelete() {
+        if (!confirm('Are you sure you want to clear your entire cart?')) return;
+        const userId = getUserId();
+        await wipeCartCompletely(userId);
+        renderPackageSection();
+        renderAddonsSection();
+        renderMenuItems();
+        recalcTotals();
+        toggleDeleteMode();
+    }
+
+    function toggleDeleteMode() {
+        const defBtns = document.getElementById('default-buttons');
+        const delBtns = document.getElementById('delete-buttons');
+        defBtns.classList.toggle('hidden');
+        delBtns.classList.toggle('hidden');
+        delBtns.style.display = delBtns.classList.contains('hidden') ? 'none' : 'flex';
+    }
+
+    /* ════════════════════════════════════════════════════════
+       INIT
+    ════════════════════════════════════════════════════════ */
+    document.addEventListener('DOMContentLoaded', async () => {
+        const userId = getUserId();
+        if (!userId) {
+            alert('Please log in to view your cart');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // ── If returning from a completed booking, wipe cart first ────
+        // checkout.html sets saleSaved=true; if we're back on cart after
+        // going through the full receipt+invoice flow, clear everything.
+        const saleSaved = sessionStorage.getItem('saleSaved');
+        if (saleSaved === 'true') {
+            await wipeCartCompletely(userId);
+            sessionStorage.removeItem('saleSaved');
+            sessionStorage.removeItem('saleId');
+            sessionStorage.removeItem('reservationId');
+            sessionStorage.removeItem('orderSnapshot');
+        }
+        // Also wipe if there's a stale orderSnapshot from a previous session
+        // (user navigated back without completing payment)
+        // We DON'T remove orderSnapshot here — checkout.html needs it if
+        // the user is mid-flow. We only wipe when saleSaved confirms completion.
+
+        await loadCartFromDB();
+
+        // ── Save full order snapshot before going to checkout ─────────
+        document.querySelectorAll('.checkout-link').forEach(link => {
+            link.addEventListener('click', e => {
+                const total    = window.currentTotal || 0;
+                const menuCart = getMenuCart(); // This gets the latest menu items with current quantities
+
+                if (total <= 0 && !cartItems.package && !menuCart.length) {
+                    e.preventDefault();
+                    alert('Your cart is empty! Please add a package or menu items first.');
+                    return;
+                }
+
+                const snapshot = {
+                    selectedPackage: cartItems.package ? {
+                        id:          cartItems.package.product_id,
+                        name:        cartItems.package.name,
+                        variant:     cartItems.package.variantName || cartItems.package.variant || '',
+                        variantName: cartItems.package.variantName || cartItems.package.variant || '',
+                        guestCount:  cartItems.package.guestCount  || 1,
+                        price:       parseFloat(cartItems.package.price),
+                        qty:         cartItems.package.quantity || 1   // ← live in-memory value, always current
+                    } : null,
+                    addons: cartItems.addons.map(a => ({
+                        name:  a.name,
+                        price: parseFloat(a.price),
+                        qty:   a.quantity   // ← live in-memory value
+                    })),
+                    menuItems: menuCart.map(item => ({
+                        id:       item.id,
+                        name:     item.name,
+                        price:    parseFloat(item.price),
+                        qty:      parseInt(item.qty || 1),
+                        variant:  item.variant  || '',
+                        category: item.category || ''
+                    })),
+                    grandTotal:     total,
+                    reservationFee: total * 0.5,
+                    message: document.getElementById('cartMessage')?.value.trim() || ''
+                };
+
+                console.log('Saving snapshot with quantities:', {
+                    package: snapshot.selectedPackage,
+                    addons: snapshot.addons,
+                    menuItems: snapshot.menuItems,
+                    grandTotal: snapshot.grandTotal
+                });
+                sessionStorage.setItem('orderSnapshot', JSON.stringify(snapshot));
+                localStorage.setItem('grandTotal', total);
+            });
+        });
+    });
+    </script>
+</body>
+</html>

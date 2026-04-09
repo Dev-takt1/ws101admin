@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Las Armas Catering</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/login.css">
+    <style>
+        /* ── Field error/success messages ── */
+        .field-msg {
+            font-size: 11px;
+            margin: 3px 0 0 4px;
+            display: none;
+        }
+        .field-msg.error   { color: #e74c3c; display: block; }
+        .field-msg.success { color: #27ae60; display: block; }
+
+        /* ── OTP overlay ── */
+        .otp-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .otp-overlay.active { display: flex; }
+
+        .otp-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 36px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 12px 50px rgba(0,0,0,0.2);
+        }
+        .otp-box h2 {
+            color: #19276F;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        .otp-box p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .otp-box p strong { color: #19276F; }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .otp-inputs input {
+            width: 46px;
+            height: 54px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            color: #19276F;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .otp-inputs input:focus { border-color: #19276F; }
+        .otp-inputs input.filled { border-color: #19276F; background: #f0f3ff; }
+        .otp-inputs input.error  { border-color: #e74c3c; background: #fff0f0; }
+
+        #otpMsg {
+            font-size: 12px;
+            min-height: 18px;
+            margin-bottom: 16px;
+            color: #e74c3c;
+        }
+        #otpMsg.ok { color: #27ae60; }
+
+        .otp-verify-btn {
+            width: 100%;
+            padding: 13px;
+            background: #19276F;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+            margin-bottom: 14px;
+        }
+        .otp-verify-btn:hover    { background: #2a3d9e; }
+        .otp-verify-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .otp-resend {
+            font-size: 12px;
+            color: #888;
+        }
+        .otp-resend button {
+            background: none;
+            border: none;
+            color: #19276F;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 0;
+            text-decoration: underline;
+        }
+        .otp-resend button:disabled { color: #aaa; cursor: not-allowed; text-decoration: none; }
+
+        .otp-timer { color: #c9a84c; font-weight: bold; }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%,60%  { transform: translateX(-6px); }
+            40%,80%  { transform: translateX(6px); }
+        }
+        .shake { animation: shake 0.4s ease; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="sub-logo">
+            <h1>De las armas</h1>
+            <p>Catering & Event Services</p>
+        </div>
+    </header>
+
+    <!-- ── SIGNUP FORM ── -->
+    <div class="wrapper" id="signup">
+        <form id="signupForm" method="post" novalidate>
+            <h1>Sign Up</h1>
+            <p>De Las Armas Catering</p>
+
+            <div class="info-box">
+                <input type="text" id="su-name" name="fName" placeholder="Name" required autocomplete="name">
+                <i class="bx bxs-user-pin"></i>
+            </div>
+            <small class="field-msg" id="nameMsg"></small>
+
+            <div class="info-box">
+                <input type="email" id="su-email" name="email" placeholder="Email" required autocomplete="email">
+                <i class="bx bxs-envelope"></i>
+            </div>
+            <small class="field-msg" id="emailMsg"></small>
+
+            <div class="info-box">
+                <input type="password" id="su-password" name="password" placeholder="Password" required autocomplete="new-password">
+                <i class="bx bxs-lock-alt"></i>
+            </div>
+            <small class="field-msg" id="pwMsg"></small>
+
+            <button type="submit" class="signup-btn" id="signupSubmitBtn">Sign Up</button>
+
+            <p2>Already have an Account? </p2>
+            <div class="login-link" id="logInButton">
+                <a href="index.html">Log In</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- ── TERMS OVERLAY ── -->
+    <div class="terms-overlay" id="termsOverlay" style="display:none;">
+        <div class="wrapper" id="login">
+            <h1>Terms and Conditions</h1>
+            <p>De Las Armas Catering</p>
+            <p class="subtitle">
+                <div class="terms-title">Welcome to De las Armas Website.
+                By using our website and booking our catering services,
+                you agree to the following terms:</div>
+            </p>
+            <p class="terms-list">
+                <div class="terms-title">1. Services
+                    <span>De las Armas Website provides catering services for weddings, birthdays,
+                    corporate events, and other special occasions. All bookings are subject to
+                    availability and confirmation.</span>
+                </div>
+            </p>
+            <p class="terms-list">
+                <div class="terms-title">2. Booking and Payment</div>
+                <ul class="terms-req">
+                    <li>A down payment is required to confirm your reservation.</li>
+                    <li>Full payment must be completed before the event date.</li>
+                    <li>Down payments are refundable, subject to our cancellation policy.</li>
+                </ul>
+            </p>
+            <p class="terms-list">
+                <div class="terms-title">3. Cancellation</div>
+                <ul class="terms-req">
+                    <li>Cancellation must be made in advance.</li>
+                    <li>Down payments may be refunded if cancellation is made within the agreed period.</li>
+                    <li>Late cancellations may result in service charges.</li>
+                </ul>
+            </p>
+            <p class="terms-list">
+                <div class="terms-title">4. Client Responsibility
+                    <span>Clients must provide accurate event details and inform us of any food
+                    allergies or dietary requirements before the event.</span>
+                </div>
+            </p>
+            <p class="terms-list">
+                <div class="terms-title">5. Liability
+                    <span>De las Armas Website is not responsible for delays, damages, or issues
+                    caused by circumstances beyond our control.</span>
+                </div>
+            </p>
+            <p class="terms-list">
+                <div class="terms-title">6. Changes to Terms
+                    <span>We reserve the right to update these Terms and Conditions at any time.</span>
+                </div>
+            </p>
+            <div class="terms-box">
+                <input type="checkbox" id="termsCheckbox">
+                <label for="termsCheckbox">I agree to the Terms &amp; Conditions</label>
+            </div>
+            <button id="closeTermsBtn" disabled>Accept &amp; Continue</button>
+        </div>
+    </div>
+
+    <!-- ── OTP OVERLAY ── -->
+    <div class="otp-overlay" id="otpOverlay">
+        <div class="otp-box">
+            <h2>Verify Your Email</h2>
+            <p>We sent a 6-digit code to<br><strong id="otpEmailDisplay"></strong><br>Enter it below to create your account.</p>
+
+            <div class="otp-inputs" id="otpInputs">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+            </div>
+
+            <div id="otpMsg"></div>
+
+            <button class="otp-verify-btn" id="otpVerifyBtn" disabled>Verify &amp; Create Account</button>
+
+            <div class="otp-resend">
+                Didn't receive it?
+                <button id="otpResendBtn" disabled>Resend code</button>
+                <span id="otpTimerDisplay" class="otp-timer"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

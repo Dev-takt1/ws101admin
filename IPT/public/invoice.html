@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - De Las Armas</title>
+    <link rel="stylesheet" href="assets/css/payment.css">
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .invoice-actions {
+            display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;
+        }
+        .btn-print, .btn-continue-invoice {
+            border: none; padding: 10px 20px; border-radius: 5px;
+            cursor: pointer; font-size: 14px; font-weight: 600;
+            min-width: 160px; text-align: center;
+        }
+        .btn-print            { background: #3498db; color: white; }
+        .btn-print:hover      { background: #2980b9; }
+        .btn-continue-invoice { background: #19276F; color: white; }
+        .btn-continue-invoice:hover { background: #0f1a4a; }
+        .payment-breakdown {
+            display: flex; justify-content: space-between;
+            font-size: 14px; margin: 10px 0 20px;
+            padding: 10px; background: #f5f5f5; border-radius: 5px;
+        }
+        .payment-breakdown div { flex: 1; text-align: center; }
+        .invoice-table tfoot tr td { padding: 5px 10px; border-top: 1px solid #ddd; }
+        .item-meta  { color: #666; font-size: 12px; margin-top: 3px; display: block; }
+        .empty-notice { text-align: center; padding: 30px; color: #999; font-style: italic; }
+        .section-row td {
+            background: #f0f4ff;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .6px; color: #19276F;
+            padding: 6px 10px !important;
+        }
+        .cat-row td {
+            font-size: 11px; color: #aaa; text-transform: uppercase;
+            letter-spacing: .4px; padding: 3px 10px 2px 20px !important;
+            background: transparent;
+        }
+        .var-badge          { display:inline-block; padding:1px 7px; border-radius:20px; font-size:10px; font-weight:600; margin-left:5px; }
+        .var-badge.pax      { background:#e8f0fe; color:#1967d2; }
+        .var-badge.single   { background:#fef3e2; color:#b06000; }
+        .var-badge.dozen    { background:#e6f9f0; color:#1a7a4a; }
+        @media print {
+            .invoice-actions, header, footer { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="checkout-header">
+        <div class="header-container">
+            <div class="header-left">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="header-logo">
+                <h1>DE LAS ARMAS <span style="font-size:16px;font-style:italic;font-weight:normal;">Catering</span></h1>
+            </div>
+            <div class="header-right">
+                <nav>
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="packages_list.html">Packages</a>
+                    <a href="contact.html">Contact Us</a>
+                </nav>
+                <div class="brand-text">
+                    <h4>DE LAS ARMAS</h4>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="payment-main invoice-main">
+        <div class="invoice-card">
+            <div class="invoice-bar top-bar"></div>
+
+            <div class="invoice-content">
+                <div class="client-header">
+                    <h2>DE LAS ARMAS CATERING</h2>
+                    <p>123 Mabini Street, Barangay Poblacion</p>
+                    <p>Baliuag City, Bulacan, 3006</p>
+                </div>
+
+                <div class="invoice-info-grid">
+                    <div class="info-col">
+                        <h3>BILL TO / CLIENT</h3>
+                        <p id="clientFullName">&#8212;</p>
+                        <p id="clientAddress">&#8212;</p>
+                        <p id="clientContact">&#8212;</p>
+                        <p id="clientEmail">&#8212;</p>
+                    </div>
+                    <div class="info-col">
+                        <h3>EVENT DETAILS</h3>
+                        <p><strong>Event Date:</strong> <span id="eventDate">&#8212;</span></p>
+                        <p><strong>Event Time:</strong> <span id="eventTime">&#8212;</span></p>
+                        <p><strong>Event Address:</strong> <span id="eventAddress">&#8212;</span></p>
+                        <p><strong>Payment Status:</strong>
+                            <span id="paymentStatus" style="color:#f39c12;">Reservation Fee Paid</span>
+                        </p>
+                    </div>
+                    <div class="info-col details-col">
+                        <div class="detail-pair">
+                            <span class="key">INVOICE #</span>
+                            <span class="val" id="invoiceNumber">&#8212;</span>
+                        </div>
+                        <div class="detail-pair">
+                            <span class="key">INVOICE DATE</span>
+                            <span class="val" id="invoiceDate">&#8212;</span>
+                        </div>
+                        <div class="detail-pair">
+                            <span class="key">RESERVATION FEE</span>
+                            <span class="val" id="reservationFeeDisplay">&#8369;0.00</span>
+                        </div>
+                        <div class="detail-pair">
+                            <span class="key">BALANCE DUE DATE</span>
+                            <span class="val" id="dueDate">&#8212;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="receipt-total-section">
+                    <span class="total-label">TOTAL ORDER AMOUNT</span>
+                    <span class="total-amount" id="totalOrderAmount">&#8369;0.00</span>
+                </div>
+
+                <div class="payment-breakdown">
+                    <div>
+                        <small>Reservation Fee Paid:</small><br>
+                        <strong id="reservationPaid" style="color:#27ae60;">&#8369;0.00</strong>
+                    </div>
+                    <div>
+                        <small>Remaining Balance:</small><br>
+                        <strong id="remainingBalance" style="color:#e74c3c;">&#8369;0.00</strong>
+                    </div>
+                </div>
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">QTY</th>
+                            <th style="text-align:left;">DESCRIPTION</th>
+                            <th style="text-align:right;">UNIT PRICE</th>
+                            <th style="text-align:right;">AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceItems"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align:right;font-weight:bold;">Subtotal:</td>
+                            <td style="text-align:right;font-weight:bold;" id="subtotal">&#8369;0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align:right;">Reservation Fee (Paid):</td>
+                            <td style="text-align:right;color:#27ae60;" id="footerReservation">-&#8369;0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align:right;font-weight:bold;">BALANCE DUE:</td>
+                            <td style="text-align:right;font-weight:bold;color:#e74c3c;" id="balanceDue">&#8369;0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="terms-section">
+                    <h3>TERMS AND CONDITIONS</h3>
+                    <p>1. Reservation fee (50% of total order) is non-refundable but will be deducted from the total amount.</p>
+                    <p>2. Full payment must be settled at least 3 days before the event date.</p>
+                    <div class="bank-details">
+                        <p><strong>Payment Methods:</strong></p>
+                        <p>GCash: 09876543212 &mdash; De Las Armas Catering</p>
+                        <p>BDO: 001234567890 &mdash; De Las Armas Catering</p>
+                        <p>BPI: 9876543210 &mdash; De Las Armas Catering</p>
+                    </div>
+                </div>
+
+                <div class="invoice-actions">
+                    <button onclick="downloadInvoicePDF()" class="btn-print">
+                        <i class="fas fa-file-pdf"></i> DOWNLOAD PDF
+                    </button>
+                    <button onclick="window.location.href='home.html'" class="btn-continue-invoice">
+                        CONTINUE TO HOME
+                    </button>
+                </div>
+            </div>
+
+            <div class="invoice-bar bottom-bar"></div>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering &amp; Event Services</p>
+        </div>
+        <div class="footer-links">
+            <div class="v-line"></div>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+    // ── Prevent back navigation ───────────────────────────────────
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', function () { history.pushState(null, '', location.href); });
+
+    function safeLS(key)  { try { return JSON.parse(localStorage.getItem(key));  } catch { return null; } }
+    function safeSS(key)  { try { return JSON.parse(sessionStorage.getItem(key));} catch { return null; } }
+    function safeSSStr(key) { return sessionStorage.getItem(key) || null; }
+
+    function getMenuCartKey() {
+        try { const uid = JSON.parse(localStorage.getItem('user'))?.id; return uid ? `menuCart_${uid}` : 'menuCart_guest'; }
+        catch { return 'menuCart_guest'; }
+    }
+
+    function clearCartAfterOrder() {
+        localStorage.removeItem(getMenuCartKey());
+        localStorage.removeItem('selectedPackage');
+        localStorage.removeItem('myCart');
+        localStorage.removeItem('cartTotal');
+        localStorage.removeItem('grandTotal');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const fmt = (n) => '\u20B1' + parseFloat(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        function varBadge(unit) {
+            if (!unit) return '';
+            const u = unit.toLowerCase();
+            if (u.includes('single'))                      return `<span class="var-badge single">${unit}</span>`;
+            if (u.includes('dozen') || u.includes('doz')) return `<span class="var-badge dozen">${unit}</span>`;
+            return `<span class="var-badge pax">${unit}</span>`;
+        }
+        function formatDate(str) {
+            if (!str) return '—';
+            const d = new Date(str + 'T00:00:00');
+            return isNaN(d) ? str : d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+        }
+        function calcDueDate(str) {
+            if (!str) return '—';
+            const d = new Date(str + 'T00:00:00');
+            if (isNaN(d)) return '—';
+            d.setDate(d.getDate() - 7);
+            return d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+        }
+
+        /* ── Read all data ───────────────────────────────────────── */
+        // Primary source: orderSnapshot (saved by checkout.html, carries customer + items)
+        const snapshot        = safeSS('orderSnapshot') || {};
+        const customerDetails = snapshot.customerDetails || safeLS('customerDetails') || {};
+        const selectedPackage = snapshot.selectedPackage || safeLS('selectedPackage');
+        const dbAddons        = snapshot.addons          || safeLS('myCart')          || [];
+        const menuItems       = snapshot.menuItems       || safeLS(getMenuCartKey())  || [];
+
+        // Event info
+        const eventDateRaw = snapshot.eventDate    || localStorage.getItem('eventDate')    || '';
+        const eventTimeRaw = snapshot.eventTime    || localStorage.getItem('eventTime')    || '';
+        const eventAddrRaw = snapshot.eventAddress || localStorage.getItem('eventAddress') || customerDetails.address || '';
+
+        // Payment figures (passed from payment_receipt.html via sessionStorage)
+        const sessionTotal  = parseFloat(safeSSStr('totalOrderAmount'));
+        const sessionResFee = parseFloat(safeSSStr('reservationFee'));
+
+        let itemsHtml = '', pkgTotal = 0, dbTotal = 0, menuTotal = 0;
+
+        /* Package */
+        if (selectedPackage) {
+            const price = parseFloat(selectedPackage.price) || 0;
+            const qty   = parseInt(selectedPackage.qty) || 1;  // Make sure qty is used
+            const gc    = (selectedPackage.guestCount > 1) ? selectedPackage.guestCount
+                        : ((selectedPackage.variantName || selectedPackage.variant || '').match(/\((\d+)\s*Guests?\)/)?.[1] || 1);
+            const vl    = selectedPackage.variantName || selectedPackage.variant || `${gc} Guests`;
+            pkgTotal    = price * qty;
+            itemsHtml  += `<tr>
+                <td style="text-align:center;">${qty}</td>
+                <td><strong>${selectedPackage.name || 'Catering Package'}</strong>
+                    <span class="item-meta">${vl} &nbsp;&middot;&nbsp; ${gc} guests</span></td>
+                <td style="text-align:right;">${fmt(price)}</td>
+                <td style="text-align:right;">${fmt(pkgTotal)}</td>
+            </tr>`;
+        }
+
+        /* Add-ons */
+        if (dbAddons.length > 0) {
+            itemsHtml += `<tr class="section-row"><td colspan="4"><i class="fas fa-plus-circle" style="margin-right:6px;"></i>Service Add-ons</td></tr>`;
+            dbAddons.forEach(item => {
+                const price = parseFloat(item.price) || 0;
+                const qty   = parseInt(item.qty || item.quantity) || 1;
+                const it    = price * qty;
+                dbTotal    += it;
+                itemsHtml  += `<tr>
+                    <td style="text-align:center;">${qty}</td>
+                    <td><strong>${item.name}</strong><span class="item-meta">Service Add-on</span></td>
+                    <td style="text-align:right;">${fmt(price)}</td>
+                    <td style="text-align:right;">${fmt(it)}</td>
+                </tr>`;
+            });
+        }
+
+        /* Menu Items */
+        if (menuItems.length > 0) {
+            itemsHtml += `<tr class="section-row"><td colspan="4"><i class="fas fa-utensils" style="margin-right:6px;"></i>Menu Items</td></tr>`;
+            const grouped = {};
+            menuItems.forEach(i => { const c = i.category || 'Food'; if (!grouped[c]) grouped[c] = []; grouped[c].push(i); });
+            Object.entries(grouped).forEach(([cat, items]) => {
+                itemsHtml += `<tr class="cat-row"><td colspan="4">${cat}</td></tr>`;
+                items.forEach(item => {
+                    const price = parseFloat(item.price) || 0;
+                    const qty   = parseInt(item.qty)     || 1;
+                    const it    = price * qty;
+                    menuTotal  += it;
+                    itemsHtml  += `<tr>
+                        <td style="text-align:center;">${qty}</td>
+                        <td><strong>${item.name}</strong>${varBadge(item.variant)}<span class="item-meta">${cat}</span></td>
+                        <td style="text-align:right;">${fmt(price)}</td>
+                        <td style="text-align:right;">${fmt(it)}</td>
+                    </tr>`;
+                });
+            });
+        }
+
+        const calculatedTotal = pkgTotal + dbTotal + menuTotal;
+        const total   = (!isNaN(sessionTotal) && sessionTotal > 0) ? sessionTotal
+                      : (calculatedTotal > 0 ? calculatedTotal : parseFloat(localStorage.getItem('grandTotal') || 0));
+        const RESERVATION_FEE = (!isNaN(sessionResFee) && sessionResFee > 0) ? sessionResFee : total * 0.5;
+        const balance = total - RESERVATION_FEE;
+
+        const today       = new Date();
+        const invoiceNum  = safeSSStr('invoiceNumber') ||
+                            'INV-' + today.getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+        const invoiceDate = today.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+
+        /* ── Populate client / event fields ─────────────────────── */
+        document.getElementById('clientFullName').textContent = customerDetails.fullName || '—';
+        document.getElementById('clientAddress').textContent  = customerDetails.address  || eventAddrRaw || '—';
+        document.getElementById('clientContact').textContent  = customerDetails.contact  || '—';
+        document.getElementById('clientEmail').textContent    = customerDetails.email    || '—';
+
+        document.getElementById('eventDate').textContent    = formatDate(eventDateRaw);
+        document.getElementById('eventTime').textContent    = eventTimeRaw || '—';
+        document.getElementById('eventAddress').textContent = eventAddrRaw || customerDetails.address || '—';
+
+        document.getElementById('invoiceNumber').textContent = invoiceNum;
+        document.getElementById('invoiceDate').textContent   = invoiceDate;
+        document.getElementById('dueDate').textContent       = calcDueDate(eventDateRaw);
+
+        document.getElementById('totalOrderAmount').textContent      = fmt(total);
+        document.getElementById('subtotal').textContent              = fmt(total);
+        document.getElementById('reservationFeeDisplay').textContent = fmt(RESERVATION_FEE);
+        document.getElementById('reservationPaid').textContent       = fmt(RESERVATION_FEE);
+        document.getElementById('footerReservation').textContent     = '-' + fmt(RESERVATION_FEE);
+        document.getElementById('remainingBalance').textContent      = fmt(Math.max(0, balance));
+        document.getElementById('balanceDue').textContent            = fmt(Math.max(0, balance));
+
+        const statusEl = document.getElementById('paymentStatus');
+        if (balance <= 0) { statusEl.textContent = 'FULLY PAID'; statusEl.style.color = '#27ae60'; }
+        else              { statusEl.textContent = 'PARTIALLY PAID — Reservation Fee'; statusEl.style.color = '#f39c12'; }
+
+        document.getElementById('invoiceItems').innerHTML = itemsHtml ||
+            '<tr><td colspan="4" class="empty-notice">No items found. Please check your cart.</td></tr>';
+
+        sessionStorage.setItem('invoiceNumber', invoiceNum);
+        sessionStorage.setItem('invoiceDate',   invoiceDate);
+        sessionStorage.setItem('dueDate',       calcDueDate(eventDateRaw));
+
+        // Clear cart after invoice renders
+        clearCartAfterOrder();
+    });
+
+    /* ── Strip HTML tags ───────────────────────────────────────── */
+    function stripHtml(html) {
+        const tmp = document.createElement('div'); tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    }
+    function safePeso(str) { return String(str).replace(/[₱±]/g, 'PHP '); }
+
+    /* ── PDF Download ──────────────────────────────────────────── */
+    async function downloadInvoicePDF() {
+        const btn  = document.querySelector('.btn-print');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating…';
+        btn.disabled  = true;
+
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+            const PW = 210, PH = 297, ML = 15, MR = 15, CW = PW - ML - MR;
+            let Y = 0;
+
+            const NAVY   = [25, 39, 111];
+            const DARK   = [30, 30, 50];
+            const MID    = [90, 90, 110];
+            const LIGHT  = [150, 150, 170];
+            const SILVER = [220, 222, 235];
+            const WHITE  = [255, 255, 255];
+            const GREEN  = [39, 174, 96];
+            const RED    = [231, 76, 60];
+            const BGROW  = [246, 247, 252];
+            const GOLD   = [243, 156, 18];
+
+            function fc(rgb) { doc.setFillColor(...rgb); }
+            function dc(rgb) { doc.setDrawColor(...rgb); }
+            function tc(rgb) { doc.setTextColor(...rgb); }
+            function rule(y, color) { dc(color || SILVER); doc.setLineWidth(0.2); doc.line(ML, y, PW - MR, y); }
+            function sp(str) { return safePeso(str); }
+
+            fc(NAVY); doc.rect(0, 0, PW, 6, 'F');
+            Y = 16;
+
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(15); tc(NAVY);
+            doc.text('DE LAS ARMAS CATERING', ML, Y);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8); tc(MID);
+            doc.text('123 Mabini Street, Barangay Poblacion', ML, Y + 5);
+            doc.text('Baliuag City, Bulacan, 3006', ML, Y + 9);
+
+            const badgeX = PW - MR - 42;
+            fc(NAVY); doc.roundedRect(badgeX, Y - 8, 42, 18, 2, 2, 'F');
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(13); tc(WHITE);
+            doc.text('INVOICE', badgeX + 21, Y + 1, { align: 'center' });
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
+            doc.text(document.getElementById('invoiceNumber').textContent, badgeX + 21, Y + 6, { align: 'center' });
+            Y += 18; rule(Y); Y += 8;
+
+            const C1 = ML, C2 = ML + 57, C3 = ML + 122;
+
+            function infoBlock(x, startY, heading, lines) {
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(7); tc(NAVY);
+                doc.text(heading, x, startY);
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(8); tc(DARK);
+                lines.forEach((line, i) => {
+                    if (line && line !== '—') {
+                        const maxW     = 60;
+                        const truncated = doc.splitTextToSize(String(line), maxW)[0];
+                        doc.text(truncated, x, startY + 5 + i * 5);
+                    } else if (line) {
+                        doc.text(String(line), x, startY + 5 + i * 5);
+                    }
+                });
+            }
+
+            infoBlock(C1, Y, 'BILL TO / CLIENT', [
+                document.getElementById('clientFullName').textContent,
+                document.getElementById('clientAddress').textContent,
+                document.getElementById('clientContact').textContent,
+                document.getElementById('clientEmail').textContent
+            ]);
+
+            infoBlock(C2, Y, 'EVENT DETAILS', [
+                'Date: '  + document.getElementById('eventDate').textContent,
+                'Time: '  + document.getElementById('eventTime').textContent,
+                'Venue: ' + document.getElementById('eventAddress').textContent
+            ]);
+
+            const statusText  = document.getElementById('paymentStatus').textContent;
+            const isFullyPaid = statusText.includes('FULLY PAID');
+
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(7); tc(NAVY);
+            doc.text('INVOICE DETAILS', C3, Y);
+            [
+                ['Invoice Date:', document.getElementById('invoiceDate').textContent],
+                ['Due Date:',     document.getElementById('dueDate').textContent],
+                ['Res. Fee:',     sp(document.getElementById('reservationFeeDisplay').textContent)],
+            ].forEach(([key, val], i) => {
+                const iy = Y + 5 + i * 5;
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); tc(MID);
+                doc.text(key, C3, iy);
+                tc(DARK);
+                doc.text(val, C3 + 22, iy);
+            });
+
+            fc(isFullyPaid ? GREEN : GOLD);
+            doc.roundedRect(C3, Y + 18, 63, 7, 1.5, 1.5, 'F');
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(6.5); tc(WHITE);
+            doc.text(statusText, C3 + 31.5, Y + 22.5, { align: 'center' });
+
+            Y += 40; rule(Y); Y += 8;
+
+            fc(NAVY); doc.rect(ML, Y, CW, 12, 'F');
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(9); tc(WHITE);
+            doc.text('TOTAL ORDER AMOUNT', ML + 4, Y + 8);
+            doc.setFontSize(11);
+            doc.text(sp(document.getElementById('totalOrderAmount').textContent), PW - MR - 3, Y + 8, { align: 'right' });
+            Y += 16;
+
+            const bw = (CW - 4) / 2;
+            fc(BGROW); doc.roundedRect(ML, Y, bw, 10, 1.5, 1.5, 'F');
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7); tc(MID);
+            doc.text('Reservation Fee Paid', ML + bw / 2, Y + 4, { align: 'center' });
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(9); tc(GREEN);
+            doc.text(sp(document.getElementById('reservationPaid').textContent), ML + bw / 2, Y + 8.5, { align: 'center' });
+
+            fc(BGROW); doc.roundedRect(ML + bw + 4, Y, bw, 10, 1.5, 1.5, 'F');
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7); tc(MID);
+            doc.text('Remaining Balance', ML + bw + 4 + bw / 2, Y + 4, { align: 'center' });
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(9); tc(RED);
+            doc.text(sp(document.getElementById('remainingBalance').textContent), ML + bw + 4 + bw / 2, Y + 8.5, { align: 'center' });
+            Y += 16;
+
+            const ROW_H = 8, ROW_H_META = 10;
+            fc(NAVY); doc.rect(ML, Y, CW, 8, 'F');
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(7); tc(WHITE);
+            doc.text('QTY',         ML + 6,        Y + 5.5, { align: 'center' });
+            doc.text('DESCRIPTION', ML + 14,        Y + 5.5);
+            doc.text('UNIT PRICE',  PW - MR - 40,  Y + 5.5, { align: 'right' });
+            doc.text('AMOUNT',      PW - MR - 8,   Y + 5.5, { align: 'right' });
+            Y += 8;
+
+            const rows = document.querySelectorAll('#invoiceItems tr');
+            let rowIdx = 0;
+            rows.forEach(row => {
+                if (Y > PH - 55) { doc.addPage(); Y = 20; }
+
+                if (row.classList.contains('section-row')) {
+                    fc([232, 240, 255]); doc.rect(ML, Y, CW, 6, 'F');
+                    doc.setFont('helvetica', 'bold'); doc.setFontSize(7); tc(NAVY);
+                    doc.text(stripHtml(row.querySelector('td')?.innerHTML || '').trim(), ML + 3, Y + 4.5);
+                    Y += 6; return;
+                }
+                if (row.classList.contains('cat-row')) {
+                    doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5); tc(LIGHT);
+                    doc.text((row.querySelector('td')?.textContent || '').toUpperCase(), ML + 8, Y + 4);
+                    Y += 5; return;
+                }
+
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 4) return;
+                const hasMeta   = !!cells[1].querySelector('.item-meta');
+                const thisRowH  = hasMeta ? ROW_H_META : ROW_H;
+                if (rowIdx % 2 === 0) { fc(BGROW); doc.rect(ML, Y, CW, thisRowH, 'F'); }
+                rowIdx++;
+
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(8); tc(DARK);
+                doc.text(cells[0].textContent.trim(), ML + 6, Y + 5.5, { align: 'center' });
+
+                const nameText = cells[1].querySelector('strong')?.textContent.trim() || cells[1].textContent.trim();
+                const meta     = cells[1].querySelector('.item-meta');
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(8); tc(DARK);
+                doc.text(doc.splitTextToSize(nameText, 90)[0], ML + 14, Y + 5.5);
+                if (meta) {
+                    doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5); tc(LIGHT);
+                    doc.text(doc.splitTextToSize(meta.textContent.trim(), 90)[0], ML + 14, Y + 9);
+                }
+
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(8); tc(DARK);
+                doc.text(sp(cells[2].textContent.trim()), PW - MR - 40, Y + 5.5, { align: 'right' });
+                doc.text(sp(cells[3].textContent.trim()), PW - MR - 8,  Y + 5.5, { align: 'right' });
+                rule(Y + thisRowH, SILVER);
+                Y += thisRowH;
+            });
+
+            Y += 4;
+            [
+                ['Subtotal:',               sp(document.getElementById('subtotal').textContent),          DARK,  false],
+                ['Reservation Fee (Paid):', sp(document.getElementById('footerReservation').textContent), GREEN, false],
+                ['BALANCE DUE:',            sp(document.getElementById('balanceDue').textContent),        RED,   true],
+            ].forEach(([label, value, color, bold]) => {
+                if (Y > PH - 30) { doc.addPage(); Y = 20; }
+                if (bold) { fc(BGROW); doc.rect(ML, Y, CW, 8, 'F'); }
+                doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(bold ? 9 : 8);
+                tc(bold ? color : MID);
+                doc.text(label, PW - MR - 75, Y + 5.5);
+                tc(color);
+                doc.text(value, PW - MR - 8, Y + 5.5, { align: 'right' });
+                Y += 8;
+            });
+
+            Y += 6; rule(Y); Y += 8;
+
+            if (Y > PH - 60) { doc.addPage(); Y = 20; }
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(8); tc(NAVY);
+            doc.text('TERMS AND CONDITIONS', ML, Y); Y += 6;
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); tc(DARK);
+            [
+                '1. Reservation fee (50% of total order) is non-refundable but will be deducted from the total amount.',
+                '2. Full payment must be settled at least 3 days before the event date.',
+            ].forEach(t => { doc.splitTextToSize(t, CW).forEach(line => { doc.text(line, ML, Y); Y += 5; }); });
+
+            Y += 4;
+            if (Y > PH - 40) { doc.addPage(); Y = 20; }
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(8); tc(NAVY);
+            doc.text('PAYMENT METHODS', ML, Y); Y += 5;
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); tc(DARK);
+            ['GCash: 09876543212 — De Las Armas Catering',
+             'BDO: 001234567890 — De Las Armas Catering',
+             'BPI: 9876543210 — De Las Armas Catering'
+            ].forEach(p => { doc.text(p, ML, Y); Y += 5; });
+
+            fc(NAVY); doc.rect(0, PH - 6, PW, 6, 'F');
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7); tc([180, 190, 220]);
+            doc.text('De Las Armas Catering & Event Services  |  Thank you for choosing us!', PW / 2, PH - 2, { align: 'center' });
+
+            doc.save(`${document.getElementById('invoiceNumber').textContent}.pdf`);
+
+        } catch (err) {
+            console.error('[Invoice PDF]', err);
+            alert('Failed to generate PDF: ' + err.message);
+        }
+
+        btn.innerHTML = orig;
+        btn.disabled  = false;
+    }
+    </script>
+</body>
+</html>

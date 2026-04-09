@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPIN Login - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="checkout-header">
+        <div class="header-container">
+            <div class="header-left">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="header-logo">
+                <h1>DE LAS ARMAS <span style="font-size: 16px; font-style: italic; font-weight: normal;">Catering</span></h1>
+            </div>
+            <div class="header-right">
+                <nav>
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="packages_list.html">Packages</a>
+                    <a href="contact.html">Contact Us</a>
+                </nav>
+                <div class="brand-text">
+                    <h4>DE LAS ARMAS</h4>
+                    <p>Catering & Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="payment-main">
+        
+        <h1 class="gcash-title">GCash</h1>
+
+        <div class="payment-card">
+            <div class="card-header-info">
+                <div class="info-row">
+                    <span class="label">Merchant</span>
+                    <span class="merchant-name">DE LAS ARMAS CATERING</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Reservation Fee</span>
+                    <span class="amount" id="displayAmount">₱1,500.00</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <h2>Enter your MPIN</h2>
+                <p class="subtitle mpin-subtitle">Enter your 4-digit MPIN to confirm payment</p>
+
+                <form id="mpinForm" class="payment-form">
+                    
+                    <div class="mpin-container">
+                        <input type="password" maxlength="1" class="mpin-input" id="mpin1" inputmode="numeric" autofocus>
+                        <input type="password" maxlength="1" class="mpin-input" id="mpin2" inputmode="numeric">
+                        <input type="password" maxlength="1" class="mpin-input" id="mpin3" inputmode="numeric">
+                        <input type="password" maxlength="1" class="mpin-input" id="mpin4" inputmode="numeric">
+                    </div>
+                    
+                    <div id="mpinError" style="color: #e74c3c; display: none; margin-bottom: 10px; text-align: center;"></div>
+                    <div id="mpinLoading" style="color: #3498db; display: none; margin-bottom: 10px; text-align: center;">Processing payment...</div>
+
+                    <button type="submit" class="btn-next" id="mpinSubmitBtn">PAY ₱1,500</button>
+
+                    <a href="#" class="forgot-mpin">Forgot MPIN?</a>
+                </form>
+                
+                <div class="mpin-hint" style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 5px; text-align: center;">
+                    <p style="color: #666; font-size: 12px;">
+                        <i class="fas fa-info-circle"></i> 
+                        For demo purposes, use MPIN: <strong>1234</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="page-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering & Event Services</p>
+        </div>
+        <div class="footer-links">
+            <div class="v-line"></div>
+            <a href="terms_&_conditions.html">Terms</a>
+            <a href="privacy_policy.html">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:3001';
+        
+        // Flag to prevent double submission
+        let isSubmitting = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const CORRECT_MPIN = '1234';
+
+            // Check if already paid
+            if (sessionStorage.getItem('saleSaved') === 'true') {
+                window.location.href = 'payment_receipt.html';
+                return;
+            }
+
+            // ── Read totals from snapshot/storage ─────────────────────
+            const snapshotForFee = JSON.parse(sessionStorage.getItem('orderSnapshot') || '{}');
+
+            const _p  = snapshotForFee.selectedPackage;
+            const _a  = snapshotForFee.addons    || [];
+            const _m  = snapshotForFee.menuItems || [];
+            const _gt = (_p ? parseFloat(_p.price) * parseInt(_p.qty || 1) : 0)
+                    + _a.reduce((s, a) => s + parseFloat(a.price) * parseInt(a.qty || a.quantity || 1), 0)
+                    + _m.reduce((s, i) => s + parseFloat(i.price) * parseInt(i.qty || 1), 0);
+
+            const grandTotal      = _gt || parseFloat(localStorage.getItem('grandTotal') || 0);
+            const RESERVATION_FEE = grandTotal * 0.5;
+
+            // ── Display the correct dynamic reservation fee ────────────
+            document.getElementById('displayAmount').textContent =
+                '₱' + RESERVATION_FEE.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('mpinSubmitBtn').textContent =
+                'PAY ₱' + RESERVATION_FEE.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // ── Store for receipt/invoice ──────────────────────────────
+            sessionStorage.setItem('paymentAmount',     RESERVATION_FEE);
+            sessionStorage.setItem('totalOrderAmount',  grandTotal);
+            sessionStorage.setItem('reservationFee',    RESERVATION_FEE);
+
+            const mpinInputs = [
+                document.getElementById('mpin1'),
+                document.getElementById('mpin2'),
+                document.getElementById('mpin3'),
+                document.getElementById('mpin4')
+            ];
+
+            mpinInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    if (this.value.length === 1 && index < mpinInputs.length - 1) {
+                        mpinInputs[index + 1].focus();
+                    }
+                    document.getElementById('mpinError').style.display = 'none';
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && index > 0 && this.value.length === 0) {
+                        mpinInputs[index - 1].focus();
+                    }
+                });
+            });
+
+            document.addEventListener('paste', function(e) {
+                if (document.activeElement.classList.contains('mpin-input')) {
+                    e.preventDefault();
+                    const pasteData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+                    for (let i = 0; i < Math.min(pasteData.length, mpinInputs.length); i++) {
+                        mpinInputs[i].value = pasteData[i];
+                    }
+                    mpinInputs[Math.min(pasteData.length, mpinInputs.length - 1)].focus();
+                }
+            });
+
+            document.getElementById('mpinForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Prevent double submission
+                if (isSubmitting) {
+                    console.log('Payment already in progress, ignoring duplicate click');
+                    return;
+                }
+
+                const enteredMPIN = mpinInputs.map(i => i.value).join('');
+                const errorDiv  = document.getElementById('mpinError');
+                const loadingDiv = document.getElementById('mpinLoading');
+                const submitBtn = document.getElementById('mpinSubmitBtn');
+
+                errorDiv.style.display = 'none';
+
+                if (enteredMPIN.length !== 4) {
+                    errorDiv.textContent = 'Please enter complete 4-digit MPIN';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                if (enteredMPIN !== CORRECT_MPIN) {
+                    errorDiv.textContent = 'Invalid MPIN. Please try again. (Use 1234 for demo)';
+                    errorDiv.style.display = 'block';
+                    mpinInputs.forEach(i => i.value = '');
+                    mpinInputs[0].focus();
+                    return;
+                }
+
+                // Check again if already saved (in case of race condition)
+                if (sessionStorage.getItem('saleSaved') === 'true') {
+                    window.location.href = 'payment_receipt.html';
+                    return;
+                }
+
+                // Set submitting flag
+                isSubmitting = true;
+                loadingDiv.style.display = 'block';
+                submitBtn.disabled = true;
+
+                const userData = JSON.parse(localStorage.getItem('user'));
+                const userId = userData ? userData.id : null;
+
+                if (!userId) {
+                    errorDiv.textContent = 'User not logged in';
+                    errorDiv.style.display = 'block';
+                    loadingDiv.style.display = 'none';
+                    submitBtn.disabled = false;
+                    isSubmitting = false;
+                    return;
+                }
+
+                const selPkg = JSON.parse(localStorage.getItem('selectedPackage')) || null;
+                let guestCount = 50;
+                if (selPkg) {
+                    if (selPkg.guestCount && parseInt(selPkg.guestCount) > 1) {
+                        guestCount = parseInt(selPkg.guestCount);
+                    } else {
+                        const m = (selPkg.variantName || '').match(/\((\d+)\s*Guests?\)/i);
+                        if (m) guestCount = parseInt(m[1]);
+                    }
+                }
+
+                try {
+                    const orderSnapshot = JSON.parse(sessionStorage.getItem('orderSnapshot') || '{}');
+
+                    const _pkg     = orderSnapshot.selectedPackage;
+                    const _addons  = orderSnapshot.addons  || [];
+                    const _menus   = orderSnapshot.menuItems || [];
+
+                    const _pkgTotal   = _pkg ? parseFloat(_pkg.price) * parseInt(_pkg.qty || 1) : 0;
+                    const _addonTotal = _addons.reduce((s, a) => s + parseFloat(a.price) * parseInt(a.qty || a.quantity || 1), 0);
+                    const _menuTotal  = _menus.reduce((s, i)  => s + parseFloat(i.price) * parseInt(i.qty || 1), 0);
+
+                    const finalGrandTotal     = _pkgTotal + _addonTotal + _menuTotal;
+                    const finalReservationFee = finalGrandTotal * 0.5;
+
+                    sessionStorage.setItem('totalOrderAmount', finalGrandTotal);
+                    sessionStorage.setItem('reservationFee',   finalReservationFee);
+
+                    const saleResponse = await fetch(`${API_URL}/add-sale`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId,
+                            amount:          finalReservationFee,
+                            totalAmount:     finalGrandTotal,
+                            address:         localStorage.getItem('eventAddress') || '',
+                            eventDate:       localStorage.getItem('eventDate')    || '',
+                            eventTime:       localStorage.getItem('eventTime')    || '',
+                            contact:         localStorage.getItem('contactNumber')|| '',
+                            guestCount:      localStorage.getItem('guestCount')   || guestCount,
+                            customerDetails: JSON.parse(localStorage.getItem('customerDetails') || '{}'),
+                            message:         orderSnapshot.message    || '',
+                            package:         orderSnapshot.selectedPackage,
+                            addons:          orderSnapshot.addons     || [],
+                            menuItems:       orderSnapshot.menuItems  || []
+                        })
+                    });
+
+                    if (saleResponse.ok) {
+                        const result = await saleResponse.json();
+                        sessionStorage.setItem('saleSaved',      'true');
+                        sessionStorage.setItem('saleId',         result.saleId        || '');
+                        sessionStorage.setItem('reservationId',  result.reservationId || '');
+
+                        await fetch(`${API_URL}/api/cart/clear`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId })
+                        });
+
+                        window.location.href = 'payment_receipt.html';
+                    } else {
+                        const err = await saleResponse.json();
+                        errorDiv.textContent = 'Payment failed: ' + (err.message || 'Server error');
+                        errorDiv.style.display = 'block';
+                        loadingDiv.style.display = 'none';
+                        submitBtn.disabled = false;
+                        isSubmitting = false;
+                    }
+                } catch (err) {
+                    console.error('Payment Error:', err);
+                    errorDiv.textContent = 'Payment failed. Please try again.';
+                    errorDiv.style.display = 'block';
+                    loadingDiv.style.display = 'none';
+                    submitBtn.disabled = false;
+                    isSubmitting = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

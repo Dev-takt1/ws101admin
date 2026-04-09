@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Las Armas - Schedule</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/schedule.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="main-nav">
+                <ul class="nav-left">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="packages.html">Packages</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                </ul>
+                <div class="nav-center">
+                    <h1>DE LAS ARMAS</h1>
+                    <p>Catering & Event Services</p>
+                </div>
+                <ul class="nav-right">
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="schedule.html" class="active">Schedule</a></li>
+                    <li><a href="otherservices.html">Other Services</a></li>
+                    <li><a href="#" id="userNavBtn">User</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="schedule-section">
+            <div class="container">
+                <h1>Schedule for the Month</h1>
+                <div class="content-row">
+                    <div class="calendar-wrapper">
+                        <div class="calendar-label">
+                            <h2>Calendar</h2>
+                            <div class="line"></div>
+                        </div>
+                        <div class="calendar-box">
+                            <div class="calendar-header">
+                                <h2 id="monthDisplay">March 2026</h2>
+                                <div class="arrows">
+                                    <span id="prevMonth" style="cursor:pointer">&#10094;</span>
+                                    <span id="nextMonth" style="cursor:pointer">&#10095;</span>
+                                </div>
+                            </div>
+                            <div class="calendar-grid" id="dynamicCalendarGrid">
+                                <div class="weekday">Su</div>
+                                <div class="weekday">Mo</div>
+                                <div class="weekday">Tu</div>
+                                <div class="weekday">We</div>
+                                <div class="weekday">Th</div>
+                                <div class="weekday">Fr</div>
+                                <div class="weekday">Sa</div>
+                            </div>
+                        </div>
+                        <!-- Click hint -->
+                        <p class="calendar-hint"><i class="fas fa-hand-pointer"></i> Click any date to view its schedule</p>
+                    </div>
+
+                    <div class="legend-wrapper">
+                        <div class="legend-item">
+                            <div class="box free"></div>
+                            <p>Free Schedule</p>
+                        </div>
+                        <div class="legend-item">
+                            <div class="box busy"></div>
+                            <p>Fairly Busy</p>
+                        </div>
+                        <div class="legend-item">
+                            <div class="box full"></div>
+                            <p>Full Schedule</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-vector"><img src="assets/img/Vector 7.png" alt="Footer Wave"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><img src="assets/img/de las armasa logo 3 (1).png" alt=""></div>
+                <div class="footer-section">
+                    <a href="home.html">Home</a><a href="about.html">About</a>
+                    <a href="schedule.html">Schedule</a><a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-section">
+                    <a href="packages.html">Packages</a><a href="otherservices.html">Tables & Chairs</a>
+                    <a href="otherservices.html">Backdrops</a><a href="gallery.html">Gallery</a>
+                </div>
+                <div class="footer-section">
+                    <a href="packages.html">Wedding Package</a><a href="packages.html">Debut Package</a>
+                    <a href="packages.html">Corporate Package</a>
+                </div>
+                <div class="footer-section">
+                    <a href="#"><br></a><a href="home.html#reviews">Reviews</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+         DAY SCHEDULE MODAL
+    ═══════════════════════════════════════ -->
+    <div class="day-modal-overlay" id="dayScheduleModal">
+        <div class="day-modal">
+
+            <!-- Header -->
+            <div class="day-modal-header">
+                <div class="day-modal-title-group">
+                    <i class="fas fa-calendar-day day-modal-icon"></i>
+                    <div>
+                        <h3 id="dayModalDate">Monday, March 10, 2026</h3>
+                        <p id="dayModalSubtitle" class="day-modal-sub">Loading schedule…</p>
+                    </div>
+                </div>
+                <button class="day-modal-close" id="dayModalClose" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="day-modal-body" id="dayModalBody">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Popup -->
+    <div class="settings-popup" id="settingsPopup">
+        <div class="user-info">
+            <img src="assets/img/Profile-PNG-Photo.png" alt="" id="popupAvatar"
+                 onerror="this.src='assets/img/Profile-PNG-Photo.png'">
+            <h3 id="popupName">User</h3>
+            <p id="popupEmail">&mdash;</p>
+        </div>
+        <hr class="settings-divider">
+        <ul class="settings-menu">
+            <li><a href="#" id="editProfileBtn"><i class="fa-solid fa-user"></i> Edit Profile</a></li>
+            <li><a href="#" id="changeNameBtn"><i class="fa-solid fa-pen-to-square"></i> Change Name</a></li>
+            <li><a href="#" id="changePasswordBtn"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <li><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
+        </ul>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="center-modal-overlay" id="editProfileModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="editProfileModal">&times;</span>
+            <h3>Edit Profile Picture</h3>
+            <form id="profilePicForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Upload a new photo:</label>
+                    <input type="file" id="profilePicInput" accept="image/*"
+                        style="border:none;padding:0;font-size:13px;">
+                </div>
+                <button type="submit" class="modal-btn">Upload &amp; Save</button>
+                <button type="button" id="clearPicBtn" class="modal-btn"
+                    style="margin-top:8px;background:transparent;color:#e53e3e;border:1.5px solid #e53e3e;">
+                    <i class="fa-solid fa-trash" style="margin-right:6px;"></i>Remove Profile Picture
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Name Modal -->
+    <div class="center-modal-overlay" id="changeNameModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changeNameModal">&times;</span>
+            <h3>Change Name</h3>
+            <div style="margin-bottom:14px;padding:10px 14px;background:#f5f7ff;border-radius:7px;font-size:13px;">
+                <strong>Current Name:</strong> <span id="currentNameDisplay">&mdash;</span>
+            </div>
+            <div class="form-group">
+                <label>New Name:</label>
+                <input type="text" id="newNameField" placeholder="Enter your new name">
+            </div>
+            <div id="changeNameMsg" style="display:none;border-radius:6px;padding:8px 12px;font-size:13px;margin-bottom:10px;"></div>
+            <button class="modal-btn" id="saveNameBtn">Save Name</button>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="center-modal-overlay" id="changePasswordModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changePasswordModal">&times;</span>
+            <h3>Change Password</h3>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Current Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="currentPassword" placeholder="Current password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="currentPassword"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="newPassword" placeholder="New password (min 8 chars)" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="newPassword"></i>
+                    </div>
+                    <small class="password-hint">Minimum 8 characters</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                    </div>
+                </div>
+                <div id="passwordError"   class="error-message"   style="display:none;"></div>
+                <div id="passwordSuccess" class="success-message" style="display:none;"></div>
+                <button type="submit" class="modal-btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* ── Calendar day states ──────────────────────────── */
+        .day.busy {
+            background-color: #FFAE00;
+            color: #fff;
+            border: 2px solid #19276F;
+            font-weight: 700;
+        }
+        .day.full {
+            background-color: #BC4141;
+            color: #fff;
+            border: 2px solid #19276F;
+            font-weight: 700;
+        }
+        .day.fade { background: transparent !important; border: none !important; cursor: default !important; }
+        .legend-wrapper .box {
+            width: 60px; height: 60px; border-radius: 8px;
+            margin-right: 10px; border: 3px solid #19276F;
+        }
+        .legend-wrapper .box.free { background-color: #FBFFF3; }
+        .legend-wrapper .box.busy { background-color: #FFAE00; }
+        .legend-wrapper .box.full { background-color: #BC4141; }
+
+        /* ── Calendar hint ────────────────────────────────── */
+        .calendar-hint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+        .calendar-hint i { margin-right: 5px; font-size: 11px; }
+
+        /* ── Clickable day cursor ─────────────────────────── */
+        .day:not(.fade) { cursor: pointer; }
+        .day:not(.fade):hover { filter: brightness(0.9); outline: 2px solid #19276F; }
+
+        /* ══════════════════════════════════════════════════
+           DAY SCHEDULE MODAL
+        ══════════════════════════════════════════════════ */
+        .day-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 18, 60, 0.55);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+            animation: dmFadeIn 0.18s ease;
+        }
+        .day-modal-overlay.active { display: flex; }
+
+        @keyframes dmFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes dmSlideUp {
+            from { opacity: 0; transform: translateY(22px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+
+        .day-modal {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 440px;
+            margin: 16px;
+            box-shadow: 0 20px 60px rgba(10,18,60,0.22);
+            overflow: hidden;
+            animation: dmSlideUp 0.22s ease;
+        }
+
+        /* Header */
+        .day-modal-header {
+            background: #19276F;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .day-modal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .day-modal-icon {
+            font-size: 22px;
+            color: #c9a84c;
+            flex-shrink: 0;
+        }
+        .day-modal-header h3 {
+            color: #fff;
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0 0 2px;
+        }
+        .day-modal-sub {
+            color: rgba(255,255,255,0.65);
+            font-size: 12px;
+            margin: 0;
+            letter-spacing: 0.3px;
+        }
+        .day-modal-close {
+            background: rgba(255,255,255,0.12);
+            border: none;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: #fff;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+        .day-modal-close:hover { background: rgba(255,255,255,0.25); }
+
+        /* Body */
+        .day-modal-body {
+            padding: 20px 24px 24px;
+        }
+
+        /* Free state */
+        .dm-free {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0 8px;
+            gap: 10px;
+            color: #3a9e6c;
+        }
+        .dm-free-icon {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: #eafaf2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            color: #3a9e6c;
+        }
+        .dm-free h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d8a5e;
+            margin: 0;
+        }
+        .dm-free p {
+            font-size: 13px;
+            color: #888;
+            margin: 0;
+        }
+
+        /* Loading state */
+        .dm-loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 24px 0;
+            color: #888;
+            font-size: 14px;
+        }
+        .dm-spinner {
+            width: 18px; height: 18px;
+            border: 2px solid #ddd;
+            border-top-color: #19276F;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Error state */
+        .dm-error {
+            background: #fff5f5;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: #c0392b;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Slot list */
+        .dm-slot-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .dm-slot-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #19276F;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .dm-slot {
+            background: #f5f7ff;
+            border: 1px solid rgba(25,39,111,0.12);
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .dm-slot-num {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: #19276F;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .dm-slot-num.slot-2 { background: #BC4141; }
+        .dm-slot-info { flex: 1; }
+        .dm-slot-time {
+            font-size: 15px;
+            font-weight: 600;
+            color: #19276F;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dm-slot-time i { font-size: 12px; color: #c9a84c; }
+        .dm-slot-arrow {
+            font-size: 12px;
+            color: #aaa;
+        }
+        .dm-slot-status {
+            font-size: 11px;
+            color: #888;
+            margin-top: 3px;
+        }
+        .dm-slot-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .dm-slot-badge.booked {
+            background: rgba(25,39,111,0.1);
+            color: #19276F;
+        }
+
+        /* Full warning banner */
+        .dm-full-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff0f0;
+            border: 1px solid #f5c6c6;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #BC4141;
+            font-weight: 500;
+        }
+        .dm-full-banner i { font-size: 14px; flex-shrink: 0; }
+    </style>
+
+    <script>
+        const API = 'http://localhost:3001';
+
+        /* ── Helpers ─────────────────────────────────────── */
+        function getUser() {
+            try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
+        }
+
+        function avatarSrc(pic) {
+            if (!pic) return 'assets/img/Profile-PNG-Photo.png';
+            if (pic.startsWith('http')) return pic;
+            return `${API}${pic}`;
+        }
+
+        function showMsg(el, text, type) {
+            el.textContent = text;
+            el.style.background = type === 'ok' ? '#d4edda' : '#fde';
+            el.style.color      = type === 'ok' ? '#155724' : '#721c24';
+            el.style.border     = type === 'ok' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+            el.style.display    = 'block';
+        }
+        function hideMsg(el) { if (el) el.style.display = 'none'; }
+        function openModal(id)  { document.getElementById(id)?.classList.add('active'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+        /* ── Format "HH:MM" or "HH:MM:SS" → 12h ─────────── */
+        function fmt12(t) {
+            if (!t) return '—';
+            const [h, m] = t.split(':').map(Number);
+            const period = h >= 12 ? 'PM' : 'AM';
+            const hour12 = h % 12 || 12;
+            return `${String(hour12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${period}`;
+        }
+
+        /* ── Format date string "YYYY-MM-DD" → "Monday, March 10, 2026" */
+        function fmtDateLong(dateStr) {
+            const d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('en-PH', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        /* ══════════════════════════════════════════════════
+           DAY SCHEDULE MODAL LOGIC
+        ══════════════════════════════════════════════════ */
+        const dayModal        = document.getElementById('dayScheduleModal');
+        const dayModalDate    = document.getElementById('dayModalDate');
+        const dayModalSub     = document.getElementById('dayModalSubtitle');
+        const dayModalBody    = document.getElementById('dayModalBody');
+        const dayModalClose   = document.getElementById('dayModalClose');
+
+        function openDayModal() { dayModal.classList.add('active'); }
+        function closeDayModal() { dayModal.classList.remove('active'); }
+
+        dayModalClose.addEventListener('click', closeDayModal);
+        dayModal.addEventListener('click', e => { if (e.target === dayModal) closeDayModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDayModal(); });
+
+        async function showDaySchedule(dateStr, dayCount) {
+            /* Set header */
+            dayModalDate.textContent = fmtDateLong(dateStr);
+
+            /* Subtitle based on count */
+            if (dayCount === 0)      dayModalSub.textContent = 'No bookings — fully available';
+            else if (dayCount === 1) dayModalSub.textContent = '1 booking scheduled';
+            else                     dayModalSub.textContent = `${dayCount} bookings — fully booked`;
+
+            /* Show loading */
+            dayModalBody.innerHTML = `
+                <div class="dm-loading">
+                    <div class="dm-spinner"></div>
+                    Fetching time slots…
+                </div>`;
+            openDayModal();
+
+            try {
+                const res  = await fetch(`${API}/api/orders?date=${dateStr}`);
+                const data = res.ok ? await res.json() : [];
+
+                /* Filter to orders that have time data */
+                const withTime = data.filter(o => o.event_start_time || o.event_time);
+
+                if (withTime.length === 0) {
+                    /* Free day */
+                    dayModalBody.innerHTML = `
+                        <div class="dm-free">
+                            <div class="dm-free-icon"><i class="fas fa-check"></i></div>
+                            <h4>Fully Available</h4>
+                            <p>No bookings on this day.</p>
+                        </div>`;
+                    return;
+                }
+
+                /* Build slot list */
+                let html = `<div class="dm-slot-label"><i class="fas fa-clock" style="margin-right:6px;color:#c9a84c;"></i>Booked Time Slots</div>`;
+                html += `<div class="dm-slot-list">`;
+
+                withTime.forEach((order, idx) => {
+                    const startRaw = order.event_start_time || '';
+                    const endRaw   = order.event_end_time   || '';
+
+                    /* Fallback: parse from event_time string like "02:00 PM – 05:00 PM" */
+                    let startFmt, endFmt;
+                    if (startRaw) {
+                        startFmt = fmt12(startRaw.slice(0,5));
+                        endFmt   = endRaw ? fmt12(endRaw.slice(0,5)) : '—';
+                    } else if (order.event_time) {
+                        const parts = order.event_time.split('–').map(s => s.trim());
+                        startFmt = parts[0] || '—';
+                        endFmt   = parts[1] || '—';
+                    } else {
+                        startFmt = '—';
+                        endFmt   = '—';
+                    }
+
+                    const numClass = idx === 1 ? 'slot-2' : '';
+                    html += `
+                        <div class="dm-slot">
+                            <div class="dm-slot-num ${numClass}">${idx + 1}</div>
+                            <div class="dm-slot-info">
+                                <div class="dm-slot-time">
+                                    <i class="fas fa-hourglass-start"></i>
+                                    ${startFmt}
+                                    <span class="dm-slot-arrow">→</span>
+                                    ${endFmt}
+                                </div>
+                                <div class="dm-slot-status">Event scheduled</div>
+                            </div>
+                            <span class="dm-slot-badge booked">Booked</span>
+                        </div>`;
+                });
+
+                html += `</div>`;
+
+                /* Full warning if 2+ */
+                if (withTime.length >= 2) {
+                    html += `
+                        <div class="dm-full-banner">
+                            <i class="fas fa-ban"></i>
+                            This date is fully booked. No more bookings can be made.
+                        </div>`;
+                }
+
+                dayModalBody.innerHTML = html;
+
+            } catch (err) {
+                dayModalBody.innerHTML = `
+                    <div class="dm-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Could not load schedule. Please try again.
+                    </div>`;
+                console.warn('[schedule] Failed to fetch day orders:', err);
+            }
+        }
+
+        /* ── Calendar helpers ────────────────────────────── */
+        let currentDisplayDate = new Date();
+        let calendarEvents     = [];
+
+        function toYMD(value) {
+            if (!value) return '';
+            if (typeof value === 'string') return value.substring(0, 10);
+            const d = new Date(value);
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        async function loadCalendarEvents() {
+            try {
+                const res = await fetch('/api/calendar-events');
+                if (res.ok) {
+                    const raw = await res.json();
+                    calendarEvents = raw.map(row => ({
+                        order_date:   toYMD(row.order_date),
+                        total_orders: parseInt(row.total_orders, 10) || 0
+                    }));
+                } else {
+                    calendarEvents = [];
+                }
+            } catch (err) {
+                calendarEvents = [];
+            }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid   = document.getElementById('dynamicCalendarGrid');
+            const header = document.getElementById('monthDisplay');
+
+            const weekdays = Array.from(grid.querySelectorAll('.weekday'));
+            grid.innerHTML = '';
+            weekdays.forEach(w => grid.appendChild(w));
+
+            const year  = currentDisplayDate.getFullYear();
+            const month = currentDisplayDate.getMonth();
+
+            header.innerText = currentDisplayDate.toLocaleString('default', { month: 'long' }) + ' ' + year;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDay  = new Date(year, month + 1, 0).getDate();
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let x = 0; x < firstDay; x++) {
+                const el = document.createElement('div');
+                el.classList.add('day', 'fade');
+                grid.appendChild(el);
+            }
+
+            for (let i = 1; i <= lastDay; i++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                const cell    = document.createElement('div');
+                cell.classList.add('day');
+                cell.setAttribute('data-date', dateStr);
+                cell.textContent = i;
+
+                if (new Date(dateStr + 'T00:00:00').getTime() === today.getTime())
+                    cell.classList.add('today');
+
+                const event = calendarEvents.find(e => e.order_date === dateStr);
+                const count = event ? event.total_orders : 0;
+
+                if (count >= 2) {
+                    cell.classList.add('full');
+                    cell.setAttribute('title', `${count} reservations — Full Schedule`);
+                } else if (count === 1) {
+                    cell.classList.add('busy');
+                    cell.setAttribute('title', '1 reservation — Fairly Busy');
+                } else {
+                    cell.classList.add('free');
+                    cell.setAttribute('title', 'No reservations — Free Schedule');
+                }
+
+                /* ── CLICK: show day schedule ── */
+                cell.addEventListener('click', () => {
+                    showDaySchedule(dateStr, count);
+                });
+
+                grid.appendChild(cell);
+            }
+        }
+
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1);
+            loadCalendarEvents();
+        });
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDisplayDate.setMonth(currentDisplayDate.getMonth() + 1);
+            loadCalendarEvents();
+        });
+
+        /* ══════════════════════════════════════════════════
+           DOMContentLoaded — auth + all UI setup
+        ══════════════════════════════════════════════════ */
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const user = getUser();
+            if (!user) { window.location.href = 'index.html'; return; }
+
+            const name = user.username || user.fName || 'User';
+            document.getElementById('popupEmail').textContent = user.email || '—';
+            const navName = name.length > 10 ? name.substring(0, 10) + '...' : name;
+            document.getElementById('userNavBtn').textContent = "User";
+            document.getElementById('popupName').textContent  = name;
+
+            if (user.profilePic) {
+                const src = avatarSrc(user.profilePic);
+                document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+            }
+
+            document.getElementById('userNavBtn').addEventListener('click', e => {
+                e.preventDefault(); e.stopPropagation();
+                document.getElementById('settingsPopup').classList.toggle('active');
+            });
+            document.addEventListener('click', e => {
+                const popup = document.getElementById('settingsPopup');
+                if (!popup.contains(e.target) && e.target.id !== 'userNavBtn')
+                    popup.classList.remove('active');
+            });
+
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.preventDefault();
+                    closeModal(btn.dataset.target || btn.closest('.center-modal-overlay')?.id);
+                });
+            });
+
+            document.querySelectorAll('.center-modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', e => {
+                    if (e.target === overlay) closeModal(overlay.id);
+                });
+            });
+
+            document.getElementById('editProfileBtn').addEventListener('click', e => {
+                e.preventDefault();
+                document.getElementById('settingsPopup').classList.remove('active');
+                openModal('editProfileModal');
+            });
+            document.getElementById('clearPicBtn').addEventListener('click', async () => {
+                const u = getUser();
+                if (!u?.id) return alert('Please log in first.');
+                const DEFAULT = 'assets/img/Profile-PNG-Photo.png';
+                try {
+                    const r = await fetch(`${API}/api/user/update-profile-pic`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: u.id, profilePic: '' })
+                    });
+                    if (!r.ok) throw new Error('Server error');
+                } catch { }
+                u.profilePic = '';
+                localStorage.setItem('user', JSON.stringify(u));
+                document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = DEFAULT);
+                closeModal('editProfileModal');
+                alert('Profile picture removed.');
+            });
+
+            document.getElementById('changeNameBtn').addEventListener('click', e => {
+                e.preventDefault();
+                document.getElementById('settingsPopup').classList.remove('active');
+                const u = getUser();
+                document.getElementById('currentNameDisplay').textContent = u?.username || u?.fName || '—';
+                document.getElementById('newNameField').value = '';
+                hideMsg(document.getElementById('changeNameMsg'));
+                openModal('changeNameModal');
+            });
+
+            document.getElementById('changePasswordBtn').addEventListener('click', e => {
+                e.preventDefault();
+                document.getElementById('settingsPopup').classList.remove('active');
+                document.getElementById('changePasswordForm').reset();
+                hideMsg(document.getElementById('passwordError'));
+                hideMsg(document.getElementById('passwordSuccess'));
+                openModal('changePasswordModal');
+            });
+
+            document.getElementById('saveNameBtn').addEventListener('click', async () => {
+                const newName = document.getElementById('newNameField').value.trim();
+                const msgEl   = document.getElementById('changeNameMsg');
+                const u       = getUser();
+                if (!newName)         return showMsg(msgEl, 'Please enter a name.', 'err');
+                if (newName.length<2) return showMsg(msgEl, 'Name must be at least 2 characters.', 'err');
+                if (!u?.id)           return showMsg(msgEl, 'Please log in again.', 'err');
+                const btn = document.getElementById('saveNameBtn');
+                btn.textContent = 'Saving…'; btn.disabled = true;
+                try {
+                    const r = await fetch(`${API}/api/user/update-name`, {
+                        method: 'PUT', headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({ id: u.id, fName: newName })
+                    });
+                    const data = await r.json();
+                    if (!r.ok) throw new Error(data.message);
+                    u.username = newName; u.fName = newName;
+                    localStorage.setItem('user', JSON.stringify(u));
+                    document.getElementById('userNavBtn').textContent = newName;
+                    document.getElementById('popupName').textContent  = newName;
+                    showMsg(msgEl, 'Name updated successfully!', 'ok');
+                    setTimeout(() => closeModal('changeNameModal'), 1500);
+                } catch (err) { showMsg(msgEl, err.message || 'Failed to update name.', 'err'); }
+                finally { btn.textContent = 'Save Name'; btn.disabled = false; }
+            });
+
+            document.getElementById('changePasswordForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                const curPw = document.getElementById('currentPassword').value;
+                const newPw = document.getElementById('newPassword').value;
+                const conPw = document.getElementById('confirmPassword').value;
+                const errEl = document.getElementById('passwordError');
+                const sucEl = document.getElementById('passwordSuccess');
+                const btn   = e.target.querySelector('button[type="submit"]');
+                const u     = getUser();
+                hideMsg(errEl); hideMsg(sucEl);
+                if (!curPw||!newPw||!conPw) return showMsg(errEl,'All fields are required.','err');
+                if (newPw.length < 8)       return showMsg(errEl,'New password must be at least 8 characters.','err');
+                if (newPw !== conPw)         return showMsg(errEl,'Passwords do not match.','err');
+                if (!u?.id)                  return showMsg(errEl,'Please log in again.','err');
+                btn.textContent = 'Updating…'; btn.disabled = true;
+                try {
+                    const r = await fetch(`${API}/api/user/change-password`, {
+                        method: 'POST', headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({ userId: u.id, currentPassword: curPw, newPassword: newPw })
+                    });
+                    const data = await r.json();
+                    if (!r.ok) throw new Error(data.message);
+                    showMsg(sucEl, 'Password changed successfully!', 'ok');
+                    e.target.reset();
+                    setTimeout(() => closeModal('changePasswordModal'), 2000);
+                } catch (err) { showMsg(errEl, err.message || 'Failed to change password.', 'err'); }
+                finally { btn.textContent = 'Update Password'; btn.disabled = false; }
+            });
+
+            document.getElementById('profilePicForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                const file = document.getElementById('profilePicInput').files[0];
+                const u    = getUser();
+                const btn  = e.target.querySelector('button[type="submit"]');
+                if (!file)  return alert('Please select a file.');
+                if (!u?.id) return alert('Please log in first.');
+                if (!file.type.startsWith('image/')) return alert('Please select an image file.');
+                if (file.size > 5*1024*1024) return alert('File must be under 5 MB.');
+                btn.textContent = 'Uploading…'; btn.disabled = true;
+                const fd = new FormData();
+                fd.append('profilePic', file);
+                fd.append('userId', u.id);
+                try {
+                    const r    = await fetch(`${API}/api/user/upload-profile-pic`, { method:'POST', body:fd });
+                    const data = await r.json();
+                    if (!r.ok) throw new Error(data.message);
+                    const src = avatarSrc(data.image);
+                    document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+                    u.profilePic = data.image;
+                    localStorage.setItem('user', JSON.stringify(u));
+                    closeModal('editProfileModal');
+                    document.getElementById('profilePicInput').value = '';
+                    alert('Profile picture updated!');
+                } catch (err) { alert(err.message || 'Upload failed.'); }
+                finally { btn.textContent = 'Upload & Save'; btn.disabled = false; }
+            });
+
+            document.querySelectorAll('.toggle-password').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const inp  = document.getElementById(icon.dataset.target);
+                    if (!inp) return;
+                    const show = inp.type === 'password';
+                    inp.type   = show ? 'text' : 'password';
+                    icon.classList.toggle('fa-eye',      !show);
+                    icon.classList.toggle('fa-eye-slash', show);
+                });
+            });
+
+            loadCalendarEvents();
+            setInterval(loadCalendarEvents, 30000);
+        });
+    </script>
+</body>
+</html>

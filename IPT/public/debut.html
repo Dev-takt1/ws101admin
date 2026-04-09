@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debut Package - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/debut.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="package-header">
+        <div class="header-content">
+            <a href="packages_list.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+            <div class="header-logo-section">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="pkg-logo">
+                <div class="header-text">
+                    <h3>DE LAS ARMAS</h3>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="package-main">
+        <div class="content-grid">
+            <div class="col-text">
+                <div class="info-section">
+                    <h1 class="pkg-title">Debut Package</h1>
+                    <h2 class="pkg-price">₱30,000 – Good for 50 guests</h2>
+                    <div class="pkg-lists">
+                        <p class="list-label">Inclusions:</p>
+                        <ul class="inclusions-list">
+                            <li><i class="fas fa-check"></i> Complete catering setup</li>
+                            <li><i class="fas fa-check"></i> Backdrop styling</li>
+                            <li><i class="fas fa-check"></i> Basic lights and sound</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="img-container img-1"><img src="assets/img/Deb 1.png" alt="Debutante"></div>
+            </div>
+            <div class="col-middle">
+                <div class="img-container img-2"><img src="assets/img/Deb 2.png" alt="Catering"></div>
+                <div class="img-container img-3"><img src="assets/img/Deb 3.png" alt="Event Tech"></div>
+            </div>
+            <div class="col-right">
+                <div class="img-container img-4"><img src="assets/img/Deb 4.png" alt="Styling 1"></div>
+                <div class="img-container img-5"><img src="assets/img/Deb 5.png" alt="Styling 2"></div>
+                <div class="img-container img-6"><img src="assets/img/Deb 6.png" alt="Styling 3"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering &amp; Event Services</p>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-pkg btn-addons"  onclick="window.location.href='menu.html'">Add-Ons</button>
+            <button class="btn-pkg btn-addcart" onclick="addToCart()">Add to Cart</button>
+            <button class="btn-pkg btn-cart"    onclick="window.location.href='cart.html'">View Cart</button>
+        </div>
+    </footer>
+
+    <script>
+    const API_URL = 'http://localhost:3001';
+
+    const THIS_PACKAGE = {
+        name:   'Debut Package',
+        price:  30000,
+        guests: 50
+    };
+
+    function getUserId() {
+        try { return JSON.parse(localStorage.getItem('user'))?.id || null; }
+        catch { return null; }
+    }
+
+    async function resolvePackageInfo() {
+        const raw = sessionStorage.getItem('selectedPackageInfo');
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (parsed.id && parsed.price) return parsed;
+            } catch {}
+        }
+        try {
+            const res      = await fetch(`${API_URL}/api/packages`);
+            const packages = await res.json();
+            const match    = packages.find(p =>
+                p.name.toLowerCase().includes('debut')
+            );
+            if (match) {
+                const info = {
+                    id:     match.id,
+                    name:   match.name || THIS_PACKAGE.name,
+                    price:  parseFloat(match.price) || THIS_PACKAGE.price,
+                    guests: match.guest_count        || THIS_PACKAGE.guests
+                };
+                sessionStorage.setItem('selectedPackageInfo', JSON.stringify(info));
+                return info;
+            }
+        } catch (e) {
+            console.error('[debut] failed to fetch packages:', e);
+        }
+        return { id: null, ...THIS_PACKAGE };
+    }
+
+    async function addToCart() {
+        const userId = getUserId();
+        if (!userId) {
+            alert('Please log in first to add items to cart');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const pkg = await resolvePackageInfo();
+
+        if (!pkg.id) {
+            alert('Package information not found. Please go back and select a package.');
+            window.location.href = 'packages_list.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/cart/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId,
+                    productId:   parseInt(pkg.id),
+                    productType: 'package',
+                    quantity:    1,
+                    guestCount:  pkg.guests || THIS_PACKAGE.guests,
+                    variantName: pkg.name + ` (${pkg.guests || THIS_PACKAGE.guests} Guests)`,
+                    price:       pkg.price  || THIS_PACKAGE.price
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('selectedPackage', JSON.stringify({
+                    id:          pkg.id,
+                    name:        pkg.name,
+                    variantName: pkg.name + ` (${pkg.guests || THIS_PACKAGE.guests} Guests)`,
+                    guestCount:  pkg.guests || THIS_PACKAGE.guests,
+                    price:       pkg.price  || THIS_PACKAGE.price,
+                    qty:         1
+                }));
+                sessionStorage.removeItem('selectedPackageInfo');
+                if (confirm(`"${pkg.name}" added to cart! Go to cart now?`)) {
+                    window.location.href = 'cart.html';
+                }
+            } else {
+                alert('Failed to add to cart: ' + (result.message || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+            alert('Connection error. Please make sure the server is running on port 3001.');
+        }
+    }
+    </script>
+</body>
+</html>

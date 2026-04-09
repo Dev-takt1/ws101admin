@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Las Armas - Contact Us</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/contact.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="main-nav">
+                <ul class="nav-left">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="packages.html">Packages</a></li>
+                    <li><a href="contact.html" class="active">Contact Us</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                </ul>
+                <div class="nav-center">
+                    <h1>DE LAS ARMAS</h1>
+                    <p>Catering & Event Services</p>
+                </div>
+                <ul class="nav-right">
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="otherservices.html">Other Services</a></li>
+                    <li><a href="#" id="userNavBtn">User</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="contact-layout">
+                    
+                    <div class="contact-info">
+                        <div class="hero-content">
+                            <h2>DE LAS ARMAS CATERING</h2>
+                            <h1>Reach out!</h1>
+                            <p>We'd love to hear from you and help you out with your event!</p>
+                            <p class="hero-par">You can reach us through the following methods:</p>
+                        </div>
+                        
+                        <div class="email">
+                            <h3>EMAIL US</h3>
+                            <p>If you feel more comfortable sending us a message, please do so!</p>
+                            <p class="detail">delasarmascateringservice@gmail.com</p>
+                        </div>
+                        
+                        <div class="call">
+                            <h3>CALL US / SEND US A MESSAGE</h3>
+                            <p>For a more immediate communication, give us a call or send us a text!</p>
+                            <p class="detail">(0917) 526 6818</p>
+                            <p class="detail">(0917) 848 7056</p>
+                            <p class="detail">(632) 8374 5100</p>
+                        </div>
+                        
+                        <div class="visit">
+                            <h3>VISIT US:</h3>
+                            <p>Daangbakal Sto Cristo, Baliuag, Bulacan</p>
+                        </div>
+                    </div>
+
+                    <div class="map">
+                        <img src="assets/img/Screenshot 2025-04-23 140328 1.png" alt="Map Location">
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-vector">
+            <img src="assets/img/Vector 7.png" alt="Footer Wave">
+        </div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/img/de las armasa logo 3 (1).png" alt="">
+                </div>
+                <div class="footer-section">
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="schedule.html">Schedule</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-section">
+                    <a href="packages.html">Packages</a>
+                    <a href="otherservices.html">Tables & Chairs</a>
+                    <a href="otherservices.html">Backdrops</a>
+                    <a href="gallery.html">Gallery</a>
+                </div>
+                <div class="footer-section">
+                    <a href="packages.html">Wedding Package</a>
+                    <a href="packages.html">Debut Package</a>
+                    <a href="packages.html">Corporate Package</a>
+                </div>
+                <div class="footer-section">
+                    <a href="#"><br></a>
+                    <a href="home.html#reviews">Reviews</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="settings-popup" id="settingsPopup">
+        <div class="user-info">
+            <img src="assets/img/Profile-PNG-Photo.png" alt="" id="popupAvatar"
+                 onerror="this.src='assets/img/Profile-PNG-Photo.png'">
+            <h3 id="popupName">User</h3>
+            <p id="popupEmail">—</p>
+        </div>
+        <hr class="settings-divider">
+        <ul class="settings-menu">
+            <li><a href="#" id="editProfileBtn"><i class="fa-solid fa-user"></i> Edit Profile</a></li>
+            <li><a href="#" id="changeNameBtn"><i class="fa-solid fa-pen-to-square"></i> Change Name</a></li>
+            <li><a href="#" id="changePasswordBtn"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <li><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
+        </ul>
+    </div>
+
+    <!-- ── Edit Profile Modal ──────────────────────────────────── -->
+    <div class="center-modal-overlay" id="editProfileModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="editProfileModal">&times;</span>
+            <h3>Edit Profile Picture</h3>
+            <form id="profilePicForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Upload a new photo:</label>
+                    <input type="file" id="profilePicInput" accept="image/*"
+                        style="border:none;padding:0;font-size:13px;">
+                </div>
+                <button type="submit" class="modal-btn">Upload &amp; Save</button>
+                <button type="button" id="clearPicBtn" class="modal-btn"
+                    style="margin-top:8px;background:transparent;color:#e53e3e;border:1.5px solid #e53e3e;">
+                    <i class="fa-solid fa-trash" style="margin-right:6px;"></i>Remove Profile Picture
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Change Name Modal ───────────────────────────────────── -->
+    <div class="center-modal-overlay" id="changeNameModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changeNameModal">&times;</span>
+            <h3>Change Name</h3>
+            <div style="margin-bottom:14px;padding:10px 14px;background:#f5f7ff;border-radius:7px;font-size:13px;">
+                <strong>Current Name:</strong> <span id="currentNameDisplay">—</span>
+            </div>
+            <div class="form-group">
+                <label>New Name:</label>
+                <input type="text" id="newNameField" placeholder="Enter your new name">
+            </div>
+            <div id="changeNameMsg" style="display:none;border-radius:6px;padding:8px 12px;font-size:13px;margin-bottom:10px;"></div>
+            <button class="modal-btn" id="saveNameBtn">Save Name</button>
+        </div>
+    </div>
+
+    <!-- ── Change Password Modal ───────────────────────────────── -->
+    <div class="center-modal-overlay" id="changePasswordModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changePasswordModal">&times;</span>
+            <h3>Change Password</h3>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Current Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="currentPassword" placeholder="Current password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="currentPassword"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="newPassword" placeholder="New password (min 8 chars)" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="newPassword"></i>
+                    </div>
+                    <small class="password-hint">Minimum 8 characters</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                    </div>
+                </div>
+                <div id="passwordError"   class="error-message"   style="display:none;"></div>
+                <div id="passwordSuccess" class="success-message" style="display:none;"></div>
+                <button type="submit" class="modal-btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+const API = 'http://localhost:3001';
+
+    function getUser() {
+        try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
+    }
+
+    function avatarSrc(pic) {
+        if (!pic) return 'assets/img/Profile-PNG-Photo.png';
+        if (pic.startsWith('http')) return pic;
+        return `${API}${pic}`;
+    }
+
+    function showMsg(el, text, type) {
+        el.textContent = text;
+        el.style.background = type === 'ok' ? '#d4edda' : '#fde';
+        el.style.color      = type === 'ok' ? '#155724' : '#721c24';
+        el.style.border     = type === 'ok' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+        el.style.display    = 'block';
+    }
+
+    function hideMsg(el) { if (el) el.style.display = 'none'; }
+
+    function openModal(id)  { document.getElementById(id)?.classList.add('active'); }
+    function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+    // ════════════════════════════════════════════════════════════════
+    //  BOOTSTRAP
+    // ════════════════════════════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ── Auth guard ──────────────────────────────────────────
+        const user = getUser();
+        if (!user) { window.location.href = 'index.html'; return; }
+
+        // ── Populate header / popup ─────────────────────────────
+        const name = user.username || user.fName || 'User';
+        document.getElementById('popupEmail').textContent = user.email || '—';
+
+        let navName = name;
+        if (navName.length > 10) {
+            navName = navName.substring(0, 10) + "...";
+        }
+
+        document.getElementById('userNavBtn').textContent = "User";
+        document.getElementById('popupName').textContent = name;
+
+        if (user.profilePic) {
+            const src = avatarSrc(user.profilePic);
+            document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+        }
+
+        // ── Settings popup toggle ───────────────────────────────
+        document.getElementById('userNavBtn').addEventListener('click', e => {
+            e.preventDefault(); e.stopPropagation();
+            document.getElementById('settingsPopup').classList.toggle('active');
+        });
+        document.addEventListener('click', e => {
+            const popup = document.getElementById('settingsPopup');
+            if (!popup.contains(e.target) && e.target.id !== 'userNavBtn') {
+                popup.classList.remove('active');
+            }
+        });
+
+        // ── Close modal buttons (×) ─────────────────────────────
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                closeModal(btn.dataset.target || btn.closest('.center-modal-overlay')?.id);
+            });
+        });
+
+        // ── Close modal on backdrop click ───────────────────────
+        document.querySelectorAll('.center-modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) closeModal(overlay.id);
+            });
+        });
+
+        // ── Edit Profile button ─────────────────────────────────
+        document.getElementById('editProfileBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            openModal('editProfileModal');
+        });
+
+        // ── Change Name button ──────────────────────────────────
+        document.getElementById('changeNameBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            // Pre-fill current name
+            const u = getUser();
+            document.getElementById('currentNameDisplay').textContent = u?.username || u?.fName || '—';
+            document.getElementById('newNameField').value = '';
+            hideMsg(document.getElementById('changeNameMsg'));
+            openModal('changeNameModal');
+        });
+
+        // ── Change Password button ──────────────────────────────
+        document.getElementById('changePasswordBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            document.getElementById('changePasswordForm').reset();
+            hideMsg(document.getElementById('passwordError'));
+            hideMsg(document.getElementById('passwordSuccess'));
+            openModal('changePasswordModal');
+        });
+
+        // ── Save Name ───────────────────────────────────────────
+        document.getElementById('saveNameBtn').addEventListener('click', async () => {
+            const newName = document.getElementById('newNameField').value.trim();
+            const msgEl   = document.getElementById('changeNameMsg');
+            const u       = getUser();
+
+            if (!newName)         return showMsg(msgEl, 'Please enter a name.', 'err');
+            if (newName.length<2) return showMsg(msgEl, 'Name must be at least 2 characters.', 'err');
+            if (!u?.id)           return showMsg(msgEl, 'Please log in again.', 'err');
+
+            const btn = document.getElementById('saveNameBtn');
+            btn.textContent = 'Saving…'; btn.disabled = true;
+
+            try {
+                const r = await fetch(`${API}/api/user/update-name`, {
+                    method: 'PUT',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ id: u.id, fName: newName })
+                });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                // Persist
+                u.username = newName; u.fName = newName;
+                localStorage.setItem('user', JSON.stringify(u));
+
+                // Update visible names
+                document.getElementById('userNavBtn').textContent = newName;
+                document.getElementById('popupName').textContent  = newName;
+
+                showMsg(msgEl, 'Name updated successfully!', 'ok');
+                setTimeout(() => closeModal('changeNameModal'), 1500);
+            } catch (err) {
+                showMsg(msgEl, err.message || 'Failed to update name.', 'err');
+            } finally {
+                btn.textContent = 'Save Name'; btn.disabled = false;
+            }
+        });
+
+        // ── Change Password form ────────────────────────────────
+        document.getElementById('changePasswordForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const curPw  = document.getElementById('currentPassword').value;
+            const newPw  = document.getElementById('newPassword').value;
+            const conPw  = document.getElementById('confirmPassword').value;
+            const errEl  = document.getElementById('passwordError');
+            const sucEl  = document.getElementById('passwordSuccess');
+            const btn    = e.target.querySelector('button[type="submit"]');
+            const u      = getUser();
+
+            hideMsg(errEl); hideMsg(sucEl);
+
+            if (!curPw||!newPw||!conPw) return showMsg(errEl,'All fields are required.','err');
+            if (newPw.length < 8)       return showMsg(errEl,'New password must be at least 8 characters.','err');
+            if (newPw !== conPw)         return showMsg(errEl,'Passwords do not match.','err');
+            if (!u?.id)                  return showMsg(errEl,'Please log in again.','err');
+
+            btn.textContent = 'Updating…'; btn.disabled = true;
+
+            try {
+                const r = await fetch(`${API}/api/user/change-password`, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ userId: u.id, currentPassword: curPw, newPassword: newPw })
+                });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                showMsg(sucEl, 'Password changed successfully!', 'ok');
+                e.target.reset();
+                setTimeout(() => closeModal('changePasswordModal'), 2000);
+            } catch (err) {
+                showMsg(errEl, err.message || 'Failed to change password.', 'err');
+            } finally {
+                btn.textContent = 'Update Password'; btn.disabled = false;
+            }
+        });
+
+        // ── Profile pic upload ──────────────────────────────────
+        document.getElementById('profilePicForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const file = document.getElementById('profilePicInput').files[0];
+            const u    = getUser();
+            const btn  = e.target.querySelector('button[type="submit"]');
+
+            if (!file)  return alert('Please select a file.');
+            if (!u?.id) return alert('Please log in first.');
+
+            if (!file.type.startsWith('image/')) return alert('Please select an image file.');
+            if (file.size > 5*1024*1024)          return alert('File must be under 5 MB.');
+
+            btn.textContent = 'Uploading…'; btn.disabled = true;
+
+            const fd = new FormData();
+            fd.append('profilePic', file);
+            fd.append('userId', u.id);
+
+            try {
+                const r    = await fetch(`${API}/api/user/upload-profile-pic`, { method:'POST', body:fd });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                const src = avatarSrc(data.image);
+                document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+                u.profilePic = data.image;
+                localStorage.setItem('user', JSON.stringify(u));
+
+                closeModal('editProfileModal');
+                document.getElementById('profilePicInput').value = '';
+                alert('Profile picture updated!');
+            } catch (err) {
+                alert(err.message || 'Upload failed.');
+            } finally {
+                btn.textContent = 'Upload & Save'; btn.disabled = false;
+            }
+        });
+        document.getElementById('clearPicBtn').addEventListener('click', async () => {
+            const u = getUser();
+            if (!u?.id) return alert('Please log in first.');
+
+            const DEFAULT = 'assets/img/Profile-PNG-Photo.png';
+
+            try {
+                const r = await fetch(`${API}/api/user/update-profile-pic`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: u.id, profilePic: '' })
+                });
+                if (!r.ok) throw new Error('Server error');
+            } catch { /* non-fatal — still clear locally */ }
+
+            u.profilePic = '';
+            localStorage.setItem('user', JSON.stringify(u));
+
+            document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = DEFAULT);
+            closeModal('editProfileModal');
+            alert('Profile picture removed.');
+        });
+
+        // ── Toggle password visibility ──────────────────────────
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const inp = document.getElementById(icon.dataset.target);
+                if (!inp) return;
+                const show = inp.type === 'password';
+                inp.type = show ? 'text' : 'password';
+                icon.classList.toggle('fa-eye',       !show);
+                icon.classList.toggle('fa-eye-slash',  show);
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ── Inline error under input ── */
+        .input-error {
+            display: none;
+            font-family: "Times New Roman", serif;
+            font-size: 12px;
+            color: #BC4141;
+            font-weight: 600;
+            margin-top: -58px;
+            margin-bottom: 50px;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .input-error.show { display: flex; }
+        .input-group.has-error { border-bottom-color: #BC4141; }
+        .input-group.has-error input { color: #BC4141; }
+
+        /* ── OTP Modal Overlay ── */
+        .otp-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 14, 50, 0.75);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: oFadeIn 0.2s ease;
+        }
+        @keyframes oFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .otp-card {
+            background: #fff;
+            border-radius: 20px;
+            width: 92%;
+            max-width: 390px;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(8, 14, 50, 0.32);
+            animation: oSlideUp 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes oSlideUp {
+            from { transform: translateY(32px) scale(0.97); opacity: 0; }
+            to   { transform: translateY(0)    scale(1);    opacity: 1; }
+        }
+
+        /* ── Navy banner ── */
+        .otp-banner {
+            background: linear-gradient(140deg, #19276F 0%, #1e3494 100%);
+            padding: 32px 24px 38px;
+            text-align: center;
+            position: relative;
+        }
+        .otp-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 22px;
+            background: #fff;
+            border-radius: 22px 22px 0 0;
+        }
+        .otp-icon-wrap {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.14);
+            border: 2px solid rgba(255,255,255,0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+        }
+        .otp-icon-wrap i { font-size: 28px; color: #fff; }
+        .otp-banner h3 {
+            font-family: "Times New Roman", serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 5px;
+        }
+        .otp-banner p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.65);
+            margin: 0;
+        }
+
+        /* ── Modal body ── */
+        .otp-body {
+            padding: 10px 28px 28px;
+            text-align: center;
+        }
+        .otp-to-label {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 3px;
+        }
+        .otp-to-number {
+            font-family: "Times New Roman", serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #19276F;
+            margin-bottom: 20px;
+        }
+
+        /* ── Code display box ── */
+        .otp-code-box {
+            background: #f4f6ff;
+            border: 1.5px solid #d0d7f5;
+            border-radius: 14px;
+            padding: 20px 16px 16px;
+            margin-bottom: 22px;
+        }
+        .otp-code-hint {
+            font-size: 11px;
+            font-weight: 700;
+            color: #19276F;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .otp-code-digits {
+            font-family: "Courier New", monospace;
+            font-size: 44px;
+            font-weight: 900;
+            color: #19276F;
+            letter-spacing: 14px;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+        .otp-timer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(188,65,65,0.1);
+            color: #BC4141;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* ── Continue button ── */
+        .otp-continue-btn {
+            width: 100%;
+            padding: 13px;
+            background: #19276F;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .otp-continue-btn:hover  { background: #101c52; transform: translateY(-1px); }
+        .otp-continue-btn:active { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <header class="checkout-header">
+        <div class="header-container">
+            <div class="header-left">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="header-logo">
+                <h1>DE LAS ARMAS <span style="font-size: 16px; font-style: italic; font-weight: normal;">Catering</span></h1>
+            </div>
+            <div class="header-right">
+                <nav>
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="packages_list.html">Packages</a>
+                    <a href="contact.html">Contact Us</a>
+                </nav>
+                <div class="brand-text">
+                    <h4>DE LAS ARMAS</h4>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="payment-main">
+
+        <h1 class="gcash-title">GCash</h1>
+
+        <div class="payment-card">
+            <div class="card-header-info">
+                <div class="info-row">
+                    <span class="label">Merchant</span>
+                    <span class="merchant-name">DE LAS ARMAS CATERING</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Amount Due</span>
+                    <span class="amount" id="displayAmount">₱0.00</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <h2>Login to pay with GCash</h2>
+                <p class="subtitle">Input your Mobile Number</p>
+
+                <form id="gcashLoginForm" class="payment-form">
+                    <div class="input-group" id="mobileGroup">
+                        <span class="prefix">+63</span>
+                        <input type="text" id="mobileNumber" placeholder="9XXXXXXXXX" maxlength="10" inputmode="numeric" required>
+                    </div>
+                    <div class="input-error" id="mobileError">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="mobileErrorText">Invalid number.</span>
+                    </div>
+
+                    <button type="submit" class="btn-next" id="loginNextBtn">NEXT</button>
+
+                    <a href="#" class="create-account-link">Create an account</a>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="page-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering &amp; Event Services</p>
+        </div>
+        <div class="footer-links">
+            <div class="v-line"></div>
+            <a href="terms_&_conditions.html">Terms</a>
+            <a href="privacy_policy.html">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+    // ── Amount ────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+        const total = localStorage.getItem('cartTotal') || '0';
+        document.getElementById('displayAmount').textContent =
+            '₱' + parseFloat(total).toLocaleString('en-PH', { minimumFractionDigits: 2 });
+        sessionStorage.setItem('paymentAmount', total);
+    });
+
+    // ── Digits only, clear error while typing ─────────────────
+    document.getElementById('mobileNumber').addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+        clearMobileError();
+    });
+
+    // ── Error helpers ─────────────────────────────────────────
+    function showMobileError(msg) {
+        document.getElementById('mobileGroup').classList.add('has-error');
+        document.getElementById('mobileErrorText').textContent = msg;
+        document.getElementById('mobileError').classList.add('show');
+    }
+    function clearMobileError() {
+        document.getElementById('mobileGroup').classList.remove('has-error');
+        document.getElementById('mobileError').classList.remove('show');
+    }
+
+    // ── Validation ────────────────────────────────────────────
+    function validateMobile(n) {
+        if (!n || n.length === 0) return 'Please enter your mobile number.';
+        if (n.length < 10)        return 'Mobile number must be 10 digits (e.g. 9XXXXXXXXX).';
+        if (!n.startsWith('9'))   return 'Philippine numbers must start with 9.';
+        if (!/^\d{10}$/.test(n))  return 'Mobile number must contain digits only.';
+        return null;
+    }
+
+    // ── Form submit ───────────────────────────────────────────
+    document.getElementById('gcashLoginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const number = document.getElementById('mobileNumber').value.trim();
+        const err    = validateMobile(number);
+        if (err) { showMobileError(err); return; }
+
+        const btn = document.getElementById('loginNextBtn');
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        btn.textContent = 'Sending…';
+        btn.disabled    = true;
+
+        setTimeout(() => {
+            sessionStorage.setItem('gcashOTP',    otp);
+            sessionStorage.setItem('gcashMobile', number);
+            showOTPModal(otp, number);
+            btn.textContent = 'NEXT';
+            btn.disabled    = false;
+        }, 1200);
+    });
+
+    // ── OTP Modal ─────────────────────────────────────────────
+    function showOTPModal(otp, number) {
+        const fmt = number.replace(/(\d{4})(\d{3})(\d{3})/, '$1-$2-$3');
+
+        const overlay = document.createElement('div');
+        overlay.className = 'otp-overlay';
+        overlay.innerHTML = `
+            <div class="otp-card">
+
+                <div class="otp-banner">
+                    <div class="otp-icon-wrap">
+                        <i class="fa-solid fa-comment-sms"></i>
+                    </div>
+                    <h3>OTP Sent!</h3>
+                    <p>A verification code has been sent to your number</p>
+                </div>
+
+                <div class="otp-body">
+                    <p class="otp-to-label">Sending to</p>
+                    <p class="otp-to-number">+63 ${fmt}</p>
+
+                    <div class="otp-code-box">
+                        <p class="otp-code-hint">Your One-Time Password</p>
+                        <div class="otp-code-digits">${otp}</div>
+                        <span class="otp-timer-pill">
+                            <i class="fa-solid fa-clock"></i>&nbsp;Valid for 5 minutes
+                        </span>
+                    </div>
+
+                    <button class="otp-continue-btn" id="otpContinueBtn">
+                        Continue to Authentication
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        document.getElementById('otpContinueBtn').addEventListener('click', function () {
+            overlay.style.animation = 'oFadeIn 0.15s ease reverse forwards';
+            setTimeout(() => {
+                overlay.remove();
+                window.location.href = 'payment_auth.html';
+            }, 150);
+        });
+    }
+    </script>
+</body>
+</html>

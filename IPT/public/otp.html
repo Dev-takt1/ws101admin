@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Las Armas Catering - OTP Verification</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/otp.css">
+</head>
+<body>
+    <header>
+        <div class="sub-logo">
+            <h1>De las armas</h1>
+            <p>Catering & Event Services</p>
+        </div>
+    </header>
+    
+    <!-- OTP Verification Section -->
+    <div class="wrapper" id="otp-verify">
+        <form id="verification">
+            <h1>OTP Verification</h1>
+            <p>De Las Armas Catering</p>
+            <p class="otp-desc">Please enter the OTP verification sent to your email</p>
+            <div class="mpin-container">
+                <input type="text" maxlength="1" class="mpin-input" pattern="[0-9]" inputmode="numeric">
+                <input type="text" maxlength="1" class="mpin-input" pattern="[0-9]" inputmode="numeric">
+                <input type="text" maxlength="1" class="mpin-input" pattern="[0-9]" inputmode="numeric">
+                <input type="text" maxlength="1" class="mpin-input" pattern="[0-9]" inputmode="numeric">
+                <input type="text" maxlength="1" class="mpin-input" pattern="[0-9]" inputmode="numeric">
+                <input type="text" maxlength="1" class="mpin-input" pattern="[0-9]" inputmode="numeric">
+            </div>
+            <p class="resend-desc"></p>
+            <button type="button" class="resend-btn" id="resend-btn" disabled>Resend OTP</button>
+            <span class="resend-timer" id="resend-timer"></span>
+            <button type="button" class="btn" id="otp-btn">Verify</button>            
+        </form>
+    </div>
+
+    <!-- OTP Success Section -->
+    <div class="wrapper" id="otp-success" style="display: none;">
+        <form>
+            <h1>OTP Verification</h1>
+            <p>De Las Armas Catering</p>
+            <div class="success-logo">
+                <img src="assets/img/Success.png" alt="Success">
+                <p class="subtitle">Success!</p>
+                <p class="success-desc">Congratulations! You have been successfully authenticated.</p>
+            </div>
+            <button type="button" class="signup-btn" id="otp-verify-btn">Continue</button>
+        </form>
+    </div>
+
+    <!-- New Password Section -->
+    <div class="wrapper" id="newpass" style="display: none;">
+        <form>
+            <h1>New Password</h1>
+            <p>De Las Armas Catering</p>
+            <div class="type-box">
+                <p>Please enter your new password to reset your password</p>
+                <input type="password" name="password" placeholder="Enter new password (min. 8 characters)" required> 
+            </div>
+            <div class="type-box">
+                <input type="password" name="confirm-password" placeholder="Confirm new password" required> 
+            </div>
+            <button type="submit" class="btn" id="new-password-btn">Reset Password</button>
+        </form>
+    </div>
+
+    <script src="assets/js/otp.js"></script>
+</body>
+</html>

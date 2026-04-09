@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Package - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/corporate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="package-header">
+        <div class="header-content">
+            <a href="packages_list.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+            <div class="header-logo-section">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="pkg-logo">
+                <div class="header-text">
+                    <h3>DE LAS ARMAS</h3>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="package-main">
+        <div class="content-grid">
+            <div class="col-text">
+                <h1 class="pkg-title">Corporate Package</h1>
+                <h2 class="pkg-price">Good for 120 guests – ₱55,000</h2>
+                <p class="pkg-desc">Perfect for weddings, birthdays, or corporate events</p>
+                <div class="pkg-lists">
+                    <p class="list-label">Menu:</p>
+                    <ul class="menu-list">
+                        <li>Beef or Pork</li>
+                        <li>Cordon Bleu or Fish Fillet</li>
+                        <li>Pasta</li>
+                        <li>Vegetable</li>
+                        <li>Steamed Rice</li>
+                        <li>Drinks &amp; Dessert</li>
+                    </ul>
+                    <p class="list-label">Inclusions:</p>
+                    <ul class="inclusions-list">
+                        <li><i class="fas fa-check"></i> Basic backdrop styling</li>
+                        <li><i class="fas fa-check"></i> Complete catering &amp; buffet setup</li>
+                        <li><i class="fas fa-check"></i> Uniformed waiters and buffet attendants</li>
+                        <li><i class="fas fa-check"></i> Covered tables &amp; chairs with color motif</li>
+                        <li><i class="fas fa-check"></i> Centerpieces &amp; table numbers</li>
+                        <li><i class="fas fa-check"></i> FREE Tiffany-style couch</li>
+                        <li><i class="fas fa-check"></i> FREE coffee station at the buffet</li>
+                    </ul>
+                    <p class="list-label">Freebies:</p>
+                    <ul class="freebies-list">
+                        <li><i class="fas fa-microphone-alt"></i> Basic lights and sounds</li>
+                        <li><i class="fas fa-user-tie"></i> EMCEE or Clown (your choice)</li>
+                    </ul>
+                </div>
+                <div class="img-container img-1"><img src="assets/img/Corp 1.png" alt="Food Setup"></div>
+            </div>
+            <div class="col-middle">
+                <div class="img-container img-5"><img src="assets/img/Corp 5.png" alt="Buffet Service"></div>
+                <div class="middle-bottom-row">
+                    <div class="img-container img-4"><img src="assets/img/Corp 4.png" alt="Decor Detail"></div>
+                    <div class="img-container img-2"><img src="assets/img/Corp 2.png" alt="Stage Setup"></div>
+                    <div class="img-container img-3"><img src="assets/img/Corp 3.png" alt="Stage Zoom"></div>
+                </div>
+            </div>
+            <div class="col-right">
+                <div class="img-container img-6"><img src="assets/img/Corp 6.png" alt="Hall Overview"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering &amp; Event Services</p>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-pkg btn-addons"  onclick="window.location.href='menu.html'">Add-Ons</button>
+            <button class="btn-pkg btn-addcart" onclick="addToCart()">Add to Cart</button>
+            <button class="btn-pkg btn-cart"    onclick="window.location.href='cart.html'">View Cart</button>
+        </div>
+    </footer>
+
+    <script>
+    const API_URL = 'http://localhost:3001';
+
+    // ── This page's own package data (fallback if sessionStorage is empty) ──
+    const THIS_PACKAGE = {
+        name:   'Corporate Package',
+        price:  55000,
+        guests: 120
+    };
+
+    function getUserId() {
+        try { return JSON.parse(localStorage.getItem('user'))?.id || null; }
+        catch { return null; }
+    }
+
+    // Resolve the DB id by matching name from /api/packages
+    async function resolvePackageInfo() {
+        // Already set by packages_list.html — use it directly
+        const raw = sessionStorage.getItem('selectedPackageInfo');
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (parsed.id && parsed.price) return parsed;
+            } catch {}
+        }
+
+        // Not set — fetch all packages and match by name
+        try {
+            const res      = await fetch(`${API_URL}/api/packages`);
+            const packages = await res.json();
+            const match    = packages.find(p =>
+                p.name.toLowerCase().includes('corporate')
+            );
+            if (match) {
+                const info = {
+                    id:     match.id,
+                    name:   match.name || THIS_PACKAGE.name,
+                    price:  parseFloat(match.price) || THIS_PACKAGE.price,
+                    guests: match.guest_count       || THIS_PACKAGE.guests
+                };
+                sessionStorage.setItem('selectedPackageInfo', JSON.stringify(info));
+                return info;
+            }
+        } catch (e) {
+            console.error('[corporate] failed to fetch packages:', e);
+        }
+
+        // Last resort — use hardcoded data with id=null (will fail gracefully)
+        return { id: null, ...THIS_PACKAGE };
+    }
+
+    async function addToCart() {
+        const userId = getUserId();
+        if (!userId) {
+            alert('Please log in first to add items to cart');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const pkg = await resolvePackageInfo();
+
+        if (!pkg.id) {
+            alert('Package information not found. Please go back and select a package.');
+            window.location.href = 'packages_list.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/cart/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId,
+                    productId:   parseInt(pkg.id),
+                    productType: 'package',
+                    quantity:    1,
+                    guestCount:  pkg.guests || THIS_PACKAGE.guests,
+                    variantName: pkg.name + ` (${pkg.guests || THIS_PACKAGE.guests} Guests)`,
+                    price:       pkg.price  || THIS_PACKAGE.price
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('selectedPackage', JSON.stringify({
+                    id:          pkg.id,
+                    name:        pkg.name,
+                    variantName: pkg.name + ` (${pkg.guests || THIS_PACKAGE.guests} Guests)`,
+                    guestCount:  pkg.guests || THIS_PACKAGE.guests,
+                    price:       pkg.price  || THIS_PACKAGE.price,
+                    qty:         1
+                }));
+                sessionStorage.removeItem('selectedPackageInfo');
+                if (confirm(`"${pkg.name}" added to cart! Go to cart now?`)) {
+                    window.location.href = 'cart.html';
+                }
+            } else {
+                alert('Failed to add to cart: ' + (result.message || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+            alert('Connection error. Please make sure the server is running on port 3001.');
+        }
+    }
+    </script>
+</body>
+</html>

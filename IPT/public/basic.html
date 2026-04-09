@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Package - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/basic.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="package-header">
+        <div class="header-content">
+            <a href="packages_list.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="header-logo-section">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="pkg-logo">
+                <div class="header-text">
+                    <h3>DE LAS ARMAS</h3>
+                    <p>Catering & Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="package-main">
+        <div class="content-grid">
+            
+            <div class="col-text">
+                <div class="info-section">
+                    <h1 class="pkg-title">Basic Package</h1>
+                    <p class="pkg-desc">Perfect for small gatherings and family events</p>
+                    
+                    <p class="list-label">Variants:</p>
+                    <p class="pkg-desc italic">5 dishes + Steamed Rice + Drinks</p>
+
+                    <div class="pkg-lists">
+                        <p class="list-label">Inclusions:</p>
+                        <ul class="inclusions-list">
+                            <li><i class="fas fa-check"></i> Dressed tables & chairs</li>
+                            <li><i class="fas fa-check"></i> Centerpieces</li>
+                            <li><i class="fas fa-check"></i> Cutlery, napkins, and glassware</li>
+                            <li><i class="fas fa-check"></i> Full buffet setup with equipment</li>
+                            <li><i class="fas fa-check"></i> Uniformed catering staff</li>
+                        </ul>
+
+                        <p class="list-label">Rates:</p>
+                        <ul class="rates-list">
+                            <li>
+                                <!-- FIX: was selectVariant('Basic Package', 5, 'Basic (30 Guests)', 30, 20250) — wrong arg order/count -->
+                                <button class="variant-btn" onclick="selectVariant('Basic (30 Guests)', 20250)">
+                                    <span>30 Guests</span>
+                                    <span class="price-tag">₱20,250</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="variant-btn" onclick="selectVariant('Basic (50 Guests)', 29025)">
+                                    <span>50 Guests</span>
+                                    <span class="price-tag">₱29,025</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="variant-btn" onclick="selectVariant('Basic (70 Guests)', 39000)">
+                                    <div>
+                                        <span>70 Guests</span>
+                                        <span class="promo-label">+ Free Lechon Belly</span>
+                                    </div>
+                                    <span class="price-tag">₱39,000</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="variant-btn" onclick="selectVariant('Basic (100 Guests)', 54000)">
+                                    <span>100 Guests</span>
+                                    <span class="price-tag">₱54,000</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="img-container img-1">
+                    <img src="assets/img/Bas 1.png" alt="Staff Member">
+                </div>
+            </div>
+
+            <div class="col-middle">
+                <div class="img-container img-2">
+                    <img src="assets/img/Bas 2.png" alt="Buffet Setup">
+                </div>
+                <div class="img-container img-3">
+                    <img src="assets/img/Bas 3.png" alt="Food Spread">
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="img-container img-4">
+                    <img src="assets/img/Bas 4.png" alt="Venue Setup">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering & Event Services</p>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-pkg btn-addons" onclick="window.location.href='menu.html'">Add-Ons</button>
+            <button class="btn-pkg btn-cart" onclick="window.location.href='cart.html'">View Cart</button>
+        </div>
+    </footer>
+    <script>
+    const API_URL = 'http://localhost:3001';
+
+    function getUserId() {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            try {
+                const user = JSON.parse(userData);
+                return user.id;
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    async function selectVariant(variantName, price) {
+        const userId = getUserId();
+        
+        if (!userId) {
+            alert('Please log in first to add items to cart');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Extract guest count from variant name e.g. "Basic (30 Guests)" -> 30
+        const guestMatch = variantName.match(/\((\d+)\s*Guests?\)/);
+        const guestCount = guestMatch ? parseInt(guestMatch[1]) : 1;
+        
+        const packageId = 5; // Basic package ID
+        
+        try {
+            const response = await fetch(`${API_URL}/api/cart/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: userId,
+                    productId: packageId,
+                    productType: 'package',
+                    quantity: 1,
+                    guestCount: guestCount,
+                    variantName: variantName,
+                    price: price
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // FIX: include both 'variant' and 'variantName' so all pages can read it
+                localStorage.setItem('selectedPackage', JSON.stringify({
+                    id: packageId,
+                    name: 'Basic Package',
+                    variant: variantName,
+                    variantName: variantName,
+                    guestCount: guestCount,
+                    price: price,
+                    qty: 1
+                }));
+                
+                if (confirm(`"${variantName}" added to cart! Go to cart now?`)) {
+                    window.location.href = 'cart.html';
+                }
+            } else {
+                alert('Failed to add to cart: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            alert('Connection error. Please make sure the server is running.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Basic package page loaded');
+    });
+    </script>
+</body>
+</html>

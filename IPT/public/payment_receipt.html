@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .order-summary      { background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:20px; }
+        .order-item         { display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; }
+        .order-item-name    { color:#666; }
+        .order-item-price   { font-weight:bold; color:#19276F; }
+        .order-item-qty     { color:#999; font-size:12px; margin-left:5px; }
+        .highlight-row      { background:#e8f4fd; padding:10px; border-radius:8px; margin:10px 0; }
+        .highlight-row .detail-label  { color:#00A5E5; font-weight:bold; }
+        .highlight-row .detail-amount { color:#19276F; font-size:1.2em; font-weight:bold; }
+        .status-badge       { background:#f39c12; color:white !important; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:bold; }
+        .payment-info-box   { background:#f0f8ff; border-left:4px solid #00A5E5; padding:15px; margin:20px 0; border-radius:5px; display:flex; align-items:flex-start; gap:10px; }
+        .payment-info-box i { color:#00A5E5; font-size:20px; margin-top:2px; }
+        .payment-info-box p { color:#333; font-size:14px; line-height:1.5; margin:0; }
+        .btn-done           { background:#27ae60 !important; margin-top:10px; }
+        .btn-done:hover     { background:#2ecc71 !important; }
+        .section-label      { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#19276F; margin:12px 0 5px; padding-bottom:4px; border-bottom:1px dashed #ddd; }
+        .var-badge          { display:inline-block; padding:1px 8px; border-radius:20px; font-size:11px; font-weight:600; margin-left:6px; }
+        .var-badge.pax      { background:#e8f0fe; color:#1967d2; }
+        .var-badge.single   { background:#fef3e2; color:#b06000; }
+        .var-badge.dozen    { background:#e6f9f0; color:#1a7a4a; }
+        .cat-label          { font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:.4px; margin:5px 0 2px 10px; }
+    </style>
+</head>
+<body>
+
+    <header class="checkout-header">
+        <div class="header-container">
+            <div class="header-left">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="header-logo">
+                <h1>DE LAS ARMAS <span style="font-size:16px;font-style:italic;font-weight:normal;">Catering</span></h1>
+            </div>
+            <div class="header-right">
+                <nav>
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="packages_list.html">Packages</a>
+                    <a href="contact.html">Contact Us</a>
+                </nav>
+                <div class="brand-text">
+                    <h4>DE LAS ARMAS</h4>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="payment-main">
+
+        <h1 class="gcash-title">GCash</h1>
+
+        <div class="payment-card receipt-card">
+            <div class="card-body">
+
+                <div class="success-header">
+                    <i class="fas fa-check-circle success-icon"></i>
+                    <span class="success-text">Successfully Sent to</span>
+                </div>
+
+                <h2 class="recipient-name">DE LAS ARMAS CATERING</h2>
+
+                <div class="divider-line"></div>
+
+                <div class="order-summary">
+                    <h3 style="color:#19276F;margin-bottom:15px;">Order Summary</h3>
+                    <div id="packageSummary"></div>
+                    <div id="addonsSummary"></div>
+                    <div id="menuItemsSummary"></div>
+                    <div class="divider-line"></div>
+                    <div class="detail-row">
+                        <span class="detail-label">Total Order Amount</span>
+                        <span class="detail-amount" id="totalOrderAmount">&#8369;0.00</span>
+                    </div>
+                </div>
+
+                <div class="transaction-details">
+                    <h3 style="color:#19276F;margin-bottom:15px;">Payment Details</h3>
+                    <div class="detail-row highlight-row">
+                        <span class="detail-label">Reservation Fee Paid</span>
+                        <span class="detail-amount" id="reservationFee">&#8369;0.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Remaining Balance</span>
+                        <span class="detail-amount" id="remainingBalance">&#8369;0.00</span>
+                    </div>
+                    <div class="divider-line"></div>
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction ID</span>
+                        <span class="detail-value" id="transactionId">GCASH-2025-000001</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Reference No.</span>
+                        <span class="detail-value" id="referenceNo">1234567890</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Date</span>
+                        <span class="detail-value" id="paymentDate"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Status</span>
+                        <span class="detail-value status-badge">Reservation Fee Paid</span>
+                    </div>
+                    <div class="divider-line"></div>
+                    <div class="detail-row total-row">
+                        <span class="detail-label">Amount Paid Today</span>
+                        <span class="detail-amount" id="amountPaid">&#8369;0.00</span>
+                    </div>
+                </div>
+
+                <div class="payment-info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Your reservation is confirmed with the 50% down payment.
+                       The remaining balance of &#8369;<span id="remainingDisplay">0</span>
+                       is due before the event date.</p>
+                </div>
+
+                <form action="invoice.html" method="get">
+                    <button type="submit" class="btn-next btn-done">VIEW FULL INVOICE</button>
+                </form>
+
+                <div class="receipt-footer-text" id="receiptFooter">
+                    <p id="transactionDate"></p>
+                    <p><span style="color:#00A5E5;font-weight:bold;">GCash</span> Send Money</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering &amp; Event Services</p>
+        </div>
+        <div class="footer-links">
+            <div class="v-line"></div>
+            <a href="terms_&_conditions.html">Terms</a>
+            <a href="privacy_policy.html">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+    // ── Prevent back navigation ───────────────────────────────────────────
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, '', location.href);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Reservation fee = 50% of total (set after totals are computed below)
+
+        /* ── Helpers ───────────────────────────────────────────────────── */
+        function safeJSON(key, storage) {
+            try { return JSON.parse((storage || localStorage).getItem(key)); } catch { return null; }
+        }
+        function fmt(n) {
+            return '\u20B1' + parseFloat(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+        }
+        function varBadge(unit) {
+            if (!unit) return '';
+            const u = unit.toLowerCase();
+            if (u.includes('single'))                      return `<span class="var-badge single">${unit}</span>`;
+            if (u.includes('dozen') || u.includes('doz')) return `<span class="var-badge dozen">${unit}</span>`;
+            return `<span class="var-badge pax">${unit}</span>`;
+        }
+        function resolveGuests(pkg) {
+            if (!pkg) return 1;
+            if (pkg.guestCount && parseInt(pkg.guestCount) > 1) return parseInt(pkg.guestCount);
+            const m = (pkg.variantName || pkg.variant || '').match(/\((\d+)\s*Guests?\)/);
+            return m ? parseInt(m[1]) : 1;
+        }
+        function getMenuCartKey() {
+            try {
+                const userId = JSON.parse(localStorage.getItem('user'))?.id;
+                return userId ? `menuCart_${userId}` : 'menuCart_guest';
+            } catch { return 'menuCart_guest'; }
+        }
+
+        /* ── Read from orderSnapshot first, fall back to individual keys ─ */
+        const snapshot        = safeJSON('orderSnapshot', sessionStorage) || {};
+        const selectedPackage = snapshot.selectedPackage || safeJSON('selectedPackage');
+        const dbAddons        = snapshot.addons          || safeJSON('myCart') || [];
+        // menuItems: snapshot uses 'qty', legacy menuCart uses 'qty' too — consistent
+        const menuItems       = snapshot.menuItems       || safeJSON(getMenuCartKey()) || [];
+
+        /* ── Package ─────────────────────────────────────────────────── */
+        let pkgTotal = 0, pkgHtml = '';
+        if (selectedPackage) {
+            const price = parseFloat(selectedPackage.price) || 0;
+            const qty   = parseInt(selectedPackage.qty) || 1;  // Make sure qty is used
+            pkgTotal    = price * qty;
+            const gc    = resolveGuests(selectedPackage);
+            const vl    = selectedPackage.variantName || selectedPackage.variant || `${gc} Guests`;
+            pkgHtml     = `
+                <div class="order-item" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <span style="font-weight:bold;color:#19276F;font-size:16px;">${selectedPackage.name}</span>
+                        <span style="color:#666;font-size:14px;">${vl}</span>
+                        <span style="color:#999;font-size:12px;"><i class="fas fa-users" style="margin-right:5px;"></i>${gc} guests &middot; ${qty} package${qty > 1 ? 's' : ''}</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="font-weight:bold;color:#19276F;font-size:18px;">${fmt(pkgTotal)}</span>
+                    </div>
+                </div>`;
+        }
+
+        /* ── Service Add-ons ─────────────────────────────────────────── */
+        let dbTotal = 0, dbHtml = '';
+        if (dbAddons.length > 0) {
+            dbHtml = '<div class="section-label"><i class="fas fa-plus-circle" style="margin-right:5px;opacity:.7;"></i>Service Add-ons</div>';
+            dbAddons.forEach(item => {
+                const qty = parseInt(item.qty || item.quantity || 1);
+                const it  = parseFloat(item.price) * qty;
+                dbTotal  += it;
+                dbHtml   += `<div class="order-item" style="margin-left:10px;">
+                    <span><span class="order-item-name">${item.name}</span><span class="order-item-qty">x${qty}</span></span>
+                    <span class="order-item-price">${fmt(it)}</span>
+                </div>`;
+            });
+        }
+
+        /* ── Menu Items ──────────────────────────────────────────────── */
+        let menuTotal = 0, menuHtml = '';
+        if (menuItems.length > 0) {
+            const grouped = {};
+            menuItems.forEach(i => {
+                const c = i.category || 'Food';
+                if (!grouped[c]) grouped[c] = [];
+                grouped[c].push(i);
+            });
+            menuHtml = '<div class="section-label"><i class="fas fa-utensils" style="margin-right:5px;opacity:.7;"></i>Menu Items</div>';
+            Object.entries(grouped).forEach(([cat, items]) => {
+                menuHtml += `<div class="cat-label">${cat}</div>`;
+                items.forEach(item => {
+                    const qty = parseInt(item.qty || 1);
+                    const it  = parseFloat(item.price) * qty;
+                    menuTotal += it;
+                    menuHtml  += `<div class="order-item" style="margin-left:10px;align-items:center;">
+                        <span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+                            <span class="order-item-name">${item.name}</span>
+                            ${varBadge(item.variant)}
+                            <span class="order-item-qty">x${qty}</span>
+                        </span>
+                        <span class="order-item-price">${fmt(it)}</span>
+                    </div>`;
+                });
+            });
+        }
+
+        const total          = pkgTotal + dbTotal + menuTotal;
+        // Use snapshot's reservationFee if available, otherwise compute 50%
+        const RESERVATION_FEE = snapshot.reservationFee || (total * 0.5);
+        const balance         = total - RESERVATION_FEE;
+
+        /* ── Transaction details ─────────────────────────────────────── */
+        const txId    = 'GCASH-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+        const refNo   = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        const today   = new Date();
+        const fmtDate = today.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+        const fmtDT   = today.toLocaleString('en-US', {month:'long', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit', hour12:true});
+
+        /* ── Render ──────────────────────────────────────────────────── */
+        document.getElementById('packageSummary').innerHTML   = pkgHtml;
+        document.getElementById('addonsSummary').innerHTML    = dbHtml;
+        document.getElementById('menuItemsSummary').innerHTML = menuHtml;
+        document.getElementById('totalOrderAmount').textContent = fmt(total);
+        document.getElementById('reservationFee').textContent   = fmt(RESERVATION_FEE);
+        document.getElementById('remainingBalance').textContent = fmt(Math.max(0, balance));
+        document.getElementById('amountPaid').textContent       = fmt(RESERVATION_FEE);
+        document.getElementById('remainingDisplay').textContent = Math.max(0, balance).toLocaleString();
+        document.getElementById('transactionId').textContent    = txId;
+        document.getElementById('referenceNo').textContent      = refNo;
+        document.getElementById('transactionDate').textContent  = fmtDate;
+        document.getElementById('paymentDate').textContent      = fmtDT;
+
+        if (balance <= 0) {
+            document.querySelector('.status-badge').textContent      = 'Fully Paid';
+            document.querySelector('.status-badge').style.background = '#27ae60';
+            document.querySelector('.payment-info-box').innerHTML    = `
+                <i class="fas fa-check-circle" style="color:#27ae60;font-size:20px;margin-top:2px;"></i>
+                <p><strong>Payment Complete!</strong> Your total of ${fmt(total)} has been fully paid. Thank you!</p>`;
+        }
+
+        /* ── Pass data forward to invoice.html via sessionStorage ─────── */
+        sessionStorage.setItem('totalOrderAmount', total);
+        sessionStorage.setItem('reservationFee',   RESERVATION_FEE);  // actual 50% amount
+        sessionStorage.setItem('remainingBalance',  balance);
+        sessionStorage.setItem('transactionId',     txId);
+        sessionStorage.setItem('referenceNo',       refNo);
+        sessionStorage.setItem('paymentDate',       fmtDT);
+        // Keep orderSnapshot alive so invoice.html can also read items
+        // (invoice.html will clear the cart itself after rendering)
+
+        /* ── Clear cart from localStorage now that order is confirmed ─── */
+        localStorage.removeItem('selectedPackage');
+        localStorage.removeItem('myCart');
+        localStorage.removeItem(getMenuCartKey());
+        localStorage.removeItem('cartTotal');
+        localStorage.removeItem('grandTotal');
+
+        sessionStorage.removeItem('gcashOTP');
+        sessionStorage.removeItem('gcashMobile');
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Promo - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/special-promo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="package-header">
+        <div class="header-content">
+            <a href="packages_list.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="header-logo-section">
+                <img src="assets/img/de las armasa logo 3 (1).png" alt="Logo" class="pkg-logo">
+                <div class="header-text">
+                    <h3>DE LAS ARMAS</h3>
+                    <p>Catering & Event Services</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="package-main">
+        <div class="content-grid">
+            
+            <div class="col-text">
+                <div class="info-section">
+                    <h1 class="pkg-title">Special Promo Packages</h1>
+                    
+                    <p class="list-label">Variant Options:</p>
+                    <p class="pkg-desc">Steamed Rice | Desserts | Drinks</p>
+
+                    <div class="pkg-lists">
+                        <p class="list-label">Inclusions:</p>
+                        <ul class="inclusions-list">
+                            <li><i class="fas fa-check"></i> Basic backdrop setup</li>
+                            <li><i class="fas fa-check"></i> Chairs with cover and ribbons</li>
+                            <li><i class="fas fa-check"></i> Guest tables with centerpieces</li>
+                            <li><i class="fas fa-check"></i> Cake & souvenir tables</li>
+                            <li><i class="fas fa-check"></i> Managed buffet setup</li>
+                            <li><i class="fas fa-check"></i> All catering equipment</li>
+                            <li><i class="fas fa-check"></i> Uniformed staff</li>
+                        </ul>
+
+                        <p class="list-label">Rates:</p>
+                        <ul class="rates-list">
+                            <li>
+                                <!-- FIX: variant name now matches the label shown on button -->
+                                <button class="variant-btn" onclick="selectVariant('Special Promo (50 Guests)', 20500)">
+                                    <span>50 Guests</span>
+                                    <span class="price-tag">₱20,500</span>
+                                </button>
+                            </li>
+                            <li>
+                                <!-- FIX: was 'Special-promo (70 Guests)' but label said 100 Guests -->
+                                <button class="variant-btn" onclick="selectVariant('Special Promo (100 Guests)', 40500)">
+                                    <div>
+                                        <span>100 Guests</span>
+                                        <span class="promo-label">+ Free Lechon Belly</span>
+                                    </div>
+                                    <span class="price-tag">₱40,500</span>
+                                </button>
+                            </li>
+                            <li>
+                                <!-- FIX: was 'Special-promo (100 Guests)' but label said 150 Guests -->
+                                <button class="variant-btn" onclick="selectVariant('Special Promo (150 Guests)', 60700)">
+                                    <div>
+                                        <span>150 Guests</span>
+                                        <span class="promo-label">+ Free Photographer & Photobooth</span>
+                                    </div>
+                                    <span class="price-tag">₱60,700</span>
+                                </button>
+                            </li>
+                        </ul>
+
+                        <p class="list-label">Freebies Based on Guest Count:</p>
+                        <ul class="freebies-list">
+                            <li><i class="fas fa-cake"></i> 50 guests — Free Cake</li>
+                            <li><i class="fas fa-camera"></i> 100 guests — Free Photobooth + Lights & Sounds</li>
+                            <li><i class="fas fa-camera-retro"></i> 150 guests — Free Photographer + Photobooth + Lights & Sounds</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="img-container img-1">
+                    <img src="assets/img/Pro 1.png" alt="Pasta Dish">
+                </div>
+            </div>
+
+            <div class="col-middle">
+                <div class="img-container img-2">
+                    <img src="assets/img/Pro 2.png" alt="Buffet Tray">
+                </div>
+                
+                <div class="middle-bottom-gallery">
+                    <div class="img-container img-strip">
+                        <img src="assets/img/Pro 3.png" alt="Event Backdrop 1">
+                    </div>
+                    <div class="img-container img-strip">
+                        <img src="assets/img/Pro 4.png" alt="Event Backdrop 2">
+                    </div>
+                    <div class="img-container img-strip">
+                        <img src="assets/img/Pro 5.png" alt="Event Backdrop 3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="img-container img-6">
+                    <img src="assets/img/Pro 6.png" alt="Celebration Cake">
+                </div>
+                <div class="img-container img-7">
+                    <img src="assets/img/Pro 7.png" alt="Souvenirs">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering & Event Services</p>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-pkg btn-addons" onclick="window.location.href='menu.html'">Add-Ons</button>
+            <button class="btn-pkg btn-cart" onclick="window.location.href='cart.html'">View Cart</button>
+        </div>
+    </footer>
+    <script>
+    const API_URL = 'http://localhost:3001';
+
+    function getUserId() {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            try {
+                const user = JSON.parse(userData);
+                return user.id;
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    async function selectVariant(variantName, price) {
+        const userId = getUserId();
+        
+        if (!userId) {
+            alert('Please log in first to add items to cart');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const guestMatch = variantName.match(/\((\d+)\s*Guests?\)/);
+        const guestCount = guestMatch ? parseInt(guestMatch[1]) : 1;
+        
+        const packageId = 7; // Special Promo package ID
+        
+        try {
+            const response = await fetch(`${API_URL}/api/cart/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: userId,
+                    productId: packageId,
+                    productType: 'package',
+                    quantity: 1,
+                    guestCount: guestCount,
+                    variantName: variantName,
+                    price: price
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // FIX: include both 'variant' and 'variantName' so all pages can read it
+                localStorage.setItem('selectedPackage', JSON.stringify({
+                    id: packageId,
+                    name: 'Special Promo',
+                    variant: variantName,
+                    variantName: variantName,
+                    guestCount: guestCount,
+                    price: price,
+                    qty: 1
+                }));
+                
+                if (confirm(`"${variantName}" added to cart! Go to cart now?`)) {
+                    window.location.href = 'cart.html';
+                }
+            } else {
+                alert('Failed to add to cart: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            alert('Connection error. Please make sure the server is running.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Special Promo package page loaded');
+    });
+    </script>
+</body>
+</html>

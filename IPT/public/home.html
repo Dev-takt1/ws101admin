@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Las Armas - Catering & Event Services</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ── Star Rating ─────────────────────────────────────── */
+        .star-rating {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .star-rating i {
+            font-size: 20px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+        .star-rating i.active { color: #FFD700; }
+        .star-rating i:hover,
+        .star-rating i:hover ~ i { color: #ccc; }
+        .star-rating:hover i  { color: #FFD700; }
+        .star-rating i:hover ~ i { color: #ccc; }
+
+        /* ── Review item ─────────────────────────────────────── */
+        .review-item {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            border-left: 4px solid #19276F;
+        }
+        .review-item .rev-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .review-item .rev-header img {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .review-item .rev-header strong { color: #19276F; }
+        .review-item .rev-stars { margin-left: auto; color: #FFD700; letter-spacing: 2px; }
+        .review-item .rev-text  { margin-left: 42px; color: #333; font-size: 14px; }
+        .review-item .rev-date  { margin-left: 42px; color: #999; font-size: 12px; margin-top: 4px; }
+
+        /* ── Review input area ───────────────────────────────── */
+        .review-input-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: #fff;
+            border-radius: 10px;
+            border: 1.5px solid #e0e0e0;
+            margin-top: 14px;
+        }
+        .review-input-box .input-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .review-input-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+        }
+        .review-input-box .input-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-post-review {
+            background: #19276F;
+            color: #fff;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+        .btn-post-review:hover { background: #0f1a4a; }
+
+        /* ── Empty reviews ───────────────────────────────────── */
+        .empty-reviews-box {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* ── Gallery grid in modal ───────────────────────────── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 14px;
+        }
+        .gallery-item {
+            cursor: pointer;
+            border-radius: 7px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: border-color 0.15s;
+        }
+        .gallery-item:hover { border-color: #19276F; }
+        .gallery-item img   { width: 100%; height: 70px; object-fit: cover; display: block; }
+
+        /* ── Settings popup ──────────────────────────────────── */
+        .settings-popup { display: none; }
+        .settings-popup.active { display: block; }
+        .center-modal-overlay { display: none; }
+        .center-modal-overlay.active { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .center-modal { background: #fff; border-radius: 14px; padding: 28px 26px; width: 100%; max-width: 440px; position: relative; }
+        .center-modal h3 { color: #19276F; margin-bottom: 18px; font-size: 18px; }
+        .close-modal { position: absolute; top: 14px; right: 18px; font-size: 22px; cursor: pointer; color: #888; }
+        .close-modal:hover { color: #BC4141; }
+        .modal-btn { width: 100%; padding: 11px; background: #19276F; color: #fff; border: none; border-radius: 7px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 6px; }
+        .modal-btn:hover { background: #0f1a4a; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; }
+        .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 13px; outline: none; box-sizing: border-box; }
+        .form-group input:focus { border-color: #19276F; }
+        .password-input-wrapper { position: relative; }
+        .password-input-wrapper input { padding-right: 38px; }
+        .toggle-password { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; }
+        .password-hint { font-size: 11px; color: #aaa; margin-top: 3px; display: block; }
+        .error-message   { background: #fde; color: #721c24; border: 1px solid #f5c6cb; border-radius: 6px; padding: 8px 12px; font-size: 13px; margin-bottom: 10px; }
+        .success-message { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; padding: 8px 12px; font-size: 13px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="main-nav">
+                <ul class="nav-left">
+                    <li><a href="home.html" class="active">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="packages.html">Packages</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                </ul>
+                <div class="nav-center">
+                    <h1>DE LAS ARMAS</h1>
+                    <p>Catering &amp; Event Services</p>
+                </div>
+                <ul class="nav-right">
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="otherservices.html">Other Services</a></li>
+                    <li><a href="#" id="userNavBtn">User</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-bg-image"></div>
+            <div class="container hero-content">
+                <h1>De las Armas</h1>
+                <h2>Catering</h2>
+                <p>Simplify your event planning and enhance<br>every occasion with our catering services.</p>
+                <div class="hero-buttons">
+                    <a href="packages.html" class="btn btn-primary">Packages</a>
+                    <a href="packages_list.html" class="btn btn-secondary">Place an Order</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-cream-bg">
+            <div class="section-background">
+                <img src="assets/img/Vector 3.png" alt="White Background Wave">
+            </div>
+            <div class="section-design">
+                <img src="assets/img/image.png" alt="Paper Texture">
+            </div>
+
+            <section class="featured-section">
+                <div class="container">
+                    <div class="box-container blue-box">
+                        <div class="section-header">
+                            <h2 class="overlap-title title-center"><span class="mask-blue">Featured</span></h2>
+                        </div>
+                        <div class="featured-grid">
+                            <a href="packages.html" class="feature-card">
+                                <img src="assets/img/Catering.png" alt="Catering Packages">
+                                <div class="overlay"><p>Catering<br>Packages</p></div>
+                                <div class="box"></div>
+                            </a>
+                            <a href="otherservices.html" class="feature-card">
+                                <img src="assets/img/Tables and Chairs.png" alt="Tables & Chairs">
+                                <div class="overlay"><p>Tables &amp;<br>Chairs</p></div>
+                                <div class="box"></div>
+                            </a>
+                            <a href="otherservices.html" class="feature-card">
+                                <img src="assets/img/Backdrop.png" alt="Backdrop">
+                                <div class="overlay"><p>Backdrop</p></div>
+                                <div class="box"></div>
+                            </a>
+                            <a href="gallery.html" class="feature-card">
+                                <img src="assets/img/Gallery.png" alt="Gallery">
+                                <div class="overlay"><p>Gallery</p></div>
+                                <div class="box"></div>
+                            </a>
+                            <a href="schedule.html" class="feature-card">
+                                <img src="assets/img/Calendar.png" alt="Calendar">
+                                <div class="overlay"><p>Calendar</p></div>
+                                <div class="box"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about-section">
+                <div class="container">
+                    <div class="box-container cream-box">
+                        <h2 class="overlap-title title-right"><span class="mask-cream">About Us</span></h2>
+                        <div class="about-text">
+                            <p><span class="dropcap">W</span>elcome to De Las Armas Catering, your trusted partner for unforgettable events in Baliwag, Bulacan. We specialize in providing exceptional catering services, complete with beautiful backdrops, tables, and chairs, to make every occasion truly special. Whether it's a wedding, birthday, corporate event, or any celebration, we are dedicated to delivering delicious food and creating the perfect setting for your event. Let us take care of the details, so you can enjoy your special day with ease and style. At De Las Armas Catering, we turn your vision into a reality, with a personal touch that makes all the difference.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ── Reviews ──────────────────────────────────────────── -->
+        <section class="reviews-section-wrapper" id="reviews">
+            <div class="container">
+                <div class="box-container transparent-box">
+                    <h2 class="overlap-title title-center"><span class="mask-transparent">Reviews</span></h2>
+
+                    <div class="reviews-inner">
+                        <div id="reviewsContainer">
+                            <div class="empty-reviews-box"><p>Loading reviews…</p></div>
+                        </div>
+
+                        <!-- Review input with star picker -->
+                        <div class="review-input-box">
+                            <div class="input-left">
+                                <img src="assets/img/Profile-PNG-Photo.png" alt="User" class="profile-pic"
+                                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;"
+                                    onerror="this.src='assets/img/Profile-PNG-Photo.png'">
+                                <input type="text" id="reviewInput" placeholder="How was your experience? (press Enter or click Post)">
+                            </div>
+                            <div class="input-right" style="display:flex;align-items:center;gap:8px;">
+                                <!-- Star rating picker -->
+                                <div class="star-rating" id="starRating">
+                                    <i class="fa-solid fa-star active" data-val="1"></i>
+                                    <i class="fa-solid fa-star active" data-val="2"></i>
+                                    <i class="fa-solid fa-star active" data-val="3"></i>
+                                    <i class="fa-solid fa-star active" data-val="4"></i>
+                                    <i class="fa-solid fa-star active" data-val="5"></i>
+                                </div>
+                                <button class="btn-post-review" id="postReviewBtn">Post</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-vector">
+            <img src="assets/img/Vector 6.png" alt="Footer Wave">
+        </div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/img/de las armasa logo 3.png" alt="">
+                </div>
+                <div class="footer-section">
+                    <a href="home.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="schedule.html">Schedule</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-section">
+                    <a href="packages.html">Packages</a>
+                    <a href="otherservices.html">Tables &amp; Chairs</a>
+                    <a href="otherservices.html">Backdrops</a>
+                    <a href="gallery.html">Gallery</a>
+                </div>
+                <div class="footer-section">
+                    <a href="packages.html">Wedding Package</a>
+                    <a href="packages.html">Debut Package</a>
+                    <a href="packages.html">Corporate Package</a>
+                </div>
+                <div class="footer-section">
+                    <a href="#"><br></a>
+                    <a href="#reviews">Reviews</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── Settings Popup ──────────────────────────────────────── -->
+    <div class="settings-popup" id="settingsPopup">
+        <div class="user-info">
+            <img src="assets/img/Profile-PNG-Photo.png" alt="" id="popupAvatar"
+                 onerror="this.src='assets/img/Profile-PNG-Photo.png'">
+            <h3 id="popupName">User</h3>
+            <p id="popupEmail">—</p>
+        </div>
+        <hr class="settings-divider">
+        <ul class="settings-menu">
+            <li><a href="#" id="editProfileBtn"><i class="fa-solid fa-user"></i> Edit Profile</a></li>
+            <li><a href="#" id="changeNameBtn"><i class="fa-solid fa-pen-to-square"></i> Change Name</a></li>
+            <li><a href="#" id="changePasswordBtn"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <li><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
+        </ul>
+    </div>
+
+    <!-- ── Edit Profile Modal ──────────────────────────────────── -->
+    <div class="center-modal-overlay" id="editProfileModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="editProfileModal">&times;</span>
+            <h3>Edit Profile Picture</h3>
+            <form id="profilePicForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Upload a new photo:</label>
+                    <input type="file" id="profilePicInput" accept="image/*"
+                        style="border:none;padding:0;font-size:13px;">
+                </div>
+                <button type="submit" class="modal-btn">Upload &amp; Save</button>
+                <button type="button" id="clearPicBtn" class="modal-btn"
+                    style="margin-top:8px;background:transparent;color:#e53e3e;border:1.5px solid #e53e3e;">
+                    <i class="fa-solid fa-trash" style="margin-right:6px;"></i>Remove Profile Picture
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Change Name Modal ───────────────────────────────────── -->
+    <div class="center-modal-overlay" id="changeNameModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changeNameModal">&times;</span>
+            <h3>Change Name</h3>
+            <div style="margin-bottom:14px;padding:10px 14px;background:#f5f7ff;border-radius:7px;font-size:13px;">
+                <strong>Current Name:</strong> <span id="currentNameDisplay">—</span>
+            </div>
+            <div class="form-group">
+                <label>New Name:</label>
+                <input type="text" id="newNameField" placeholder="Enter your new name">
+            </div>
+            <div id="changeNameMsg" style="display:none;border-radius:6px;padding:8px 12px;font-size:13px;margin-bottom:10px;"></div>
+            <button class="modal-btn" id="saveNameBtn">Save Name</button>
+        </div>
+    </div>
+
+    <!-- ── Change Password Modal ───────────────────────────────── -->
+    <div class="center-modal-overlay" id="changePasswordModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changePasswordModal">&times;</span>
+            <h3>Change Password</h3>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Current Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="currentPassword" placeholder="Current password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="currentPassword"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="newPassword" placeholder="New password (min 8 chars)" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="newPassword"></i>
+                    </div>
+                    <small class="password-hint">Minimum 8 characters</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                    </div>
+                </div>
+                <div id="passwordError"   class="error-message"   style="display:none;"></div>
+                <div id="passwordSuccess" class="success-message" style="display:none;"></div>
+                <button type="submit" class="modal-btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    const API = 'http://localhost:3001';
+    let selectedRating = 5;   // default star rating
+
+    // ════════════════════════════════════════════════════════════════
+    //  UTILITIES
+    // ════════════════════════════════════════════════════════════════
+    function getUser() {
+        try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
+    }
+
+    function avatarSrc(pic) {
+        if (!pic) return 'assets/img/Profile-PNG-Photo.png';
+        if (pic.startsWith('http')) return pic;
+        return `${API}${pic}`;
+    }
+
+    function showMsg(el, text, type) {
+        el.textContent = text;
+        el.style.background = type === 'ok' ? '#d4edda' : '#fde';
+        el.style.color      = type === 'ok' ? '#155724' : '#721c24';
+        el.style.border     = type === 'ok' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+        el.style.display    = 'block';
+    }
+
+    function hideMsg(el) { if (el) el.style.display = 'none'; }
+
+    function openModal(id)  { document.getElementById(id)?.classList.add('active'); }
+    function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+    // ════════════════════════════════════════════════════════════════
+    //  BOOTSTRAP
+    // ════════════════════════════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ── Auth guard ──────────────────────────────────────────
+        const user = getUser();
+        if (!user) { window.location.href = 'index.html'; return; }
+
+        // ── Populate header / popup ─────────────────────────────
+        const name = user.username || user.fName || 'User';
+        document.getElementById('popupEmail').textContent = user.email || '—';
+
+        let navName = name;
+        if (navName.length > 10) {
+            navName = navName.substring(0, 10) ;
+        }
+
+        document.getElementById('userNavBtn').textContent = "User";
+        document.getElementById('popupName').textContent = name;
+
+        if (user.profilePic) {
+            const src = avatarSrc(user.profilePic);
+            document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+        }
+
+        // ── Settings popup toggle ───────────────────────────────
+        document.getElementById('userNavBtn').addEventListener('click', e => {
+            e.preventDefault(); e.stopPropagation();
+            document.getElementById('settingsPopup').classList.toggle('active');
+        });
+        document.addEventListener('click', e => {
+            const popup = document.getElementById('settingsPopup');
+            if (!popup.contains(e.target) && e.target.id !== 'userNavBtn') {
+                popup.classList.remove('active');
+            }
+        });
+
+        // ── Close modal buttons (×) ─────────────────────────────
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                closeModal(btn.dataset.target || btn.closest('.center-modal-overlay')?.id);
+            });
+        });
+
+        // ── Close modal on backdrop click ───────────────────────
+        document.querySelectorAll('.center-modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) closeModal(overlay.id);
+            });
+        });
+
+        // ── Edit Profile button ─────────────────────────────────
+        document.getElementById('editProfileBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            openModal('editProfileModal');
+        });
+
+        // ── Change Name button ──────────────────────────────────
+        document.getElementById('changeNameBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            // Pre-fill current name
+            const u = getUser();
+            document.getElementById('currentNameDisplay').textContent = u?.username || u?.fName || '—';
+            document.getElementById('newNameField').value = '';
+            hideMsg(document.getElementById('changeNameMsg'));
+            openModal('changeNameModal');
+        });
+
+        // ── Change Password button ──────────────────────────────
+        document.getElementById('changePasswordBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            document.getElementById('changePasswordForm').reset();
+            hideMsg(document.getElementById('passwordError'));
+            hideMsg(document.getElementById('passwordSuccess'));
+            openModal('changePasswordModal');
+        });
+
+        // ── Save Name ───────────────────────────────────────────
+        document.getElementById('saveNameBtn').addEventListener('click', async () => {
+            const newName = document.getElementById('newNameField').value.trim();
+            const msgEl   = document.getElementById('changeNameMsg');
+            const u       = getUser();
+
+            if (!newName)         return showMsg(msgEl, 'Please enter a name.', 'err');
+            if (newName.length<2) return showMsg(msgEl, 'Name must be at least 2 characters.', 'err');
+            if (!u?.id)           return showMsg(msgEl, 'Please log in again.', 'err');
+
+            const btn = document.getElementById('saveNameBtn');
+            btn.textContent = 'Saving…'; btn.disabled = true;
+
+            try {
+                const r = await fetch(`${API}/api/user/update-name`, {
+                    method: 'PUT',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ id: u.id, fName: newName })
+                });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                // Persist
+                u.username = newName; u.fName = newName;
+                localStorage.setItem('user', JSON.stringify(u));
+
+                // Update visible names
+                document.getElementById('userNavBtn').textContent = newName;
+                document.getElementById('popupName').textContent  = newName;
+
+                showMsg(msgEl, 'Name updated successfully!', 'ok');
+                setTimeout(() => closeModal('changeNameModal'), 1500);
+            } catch (err) {
+                showMsg(msgEl, err.message || 'Failed to update name.', 'err');
+            } finally {
+                btn.textContent = 'Save Name'; btn.disabled = false;
+            }
+        });
+
+        // ── Change Password form ────────────────────────────────
+        document.getElementById('changePasswordForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const curPw  = document.getElementById('currentPassword').value;
+            const newPw  = document.getElementById('newPassword').value;
+            const conPw  = document.getElementById('confirmPassword').value;
+            const errEl  = document.getElementById('passwordError');
+            const sucEl  = document.getElementById('passwordSuccess');
+            const btn    = e.target.querySelector('button[type="submit"]');
+            const u      = getUser();
+
+            hideMsg(errEl); hideMsg(sucEl);
+
+            if (!curPw||!newPw||!conPw) return showMsg(errEl,'All fields are required.','err');
+            if (newPw.length < 8)       return showMsg(errEl,'New password must be at least 8 characters.','err');
+            if (newPw !== conPw)         return showMsg(errEl,'Passwords do not match.','err');
+            if (!u?.id)                  return showMsg(errEl,'Please log in again.','err');
+
+            btn.textContent = 'Updating…'; btn.disabled = true;
+
+            try {
+                const r = await fetch(`${API}/api/user/change-password`, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ userId: u.id, currentPassword: curPw, newPassword: newPw })
+                });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                showMsg(sucEl, 'Password changed successfully!', 'ok');
+                e.target.reset();
+                setTimeout(() => closeModal('changePasswordModal'), 2000);
+            } catch (err) {
+                showMsg(errEl, err.message || 'Failed to change password.', 'err');
+            } finally {
+                btn.textContent = 'Update Password'; btn.disabled = false;
+            }
+        });
+
+        // ── Profile pic upload ──────────────────────────────────
+        document.getElementById('profilePicForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const file = document.getElementById('profilePicInput').files[0];
+            const u    = getUser();
+            const btn  = e.target.querySelector('button[type="submit"]');
+
+            if (!file)  return alert('Please select a file.');
+            if (!u?.id) return alert('Please log in first.');
+
+            if (!file.type.startsWith('image/')) return alert('Please select an image file.');
+            if (file.size > 5*1024*1024)          return alert('File must be under 5 MB.');
+
+            btn.textContent = 'Uploading…'; btn.disabled = true;
+
+            const fd = new FormData();
+            fd.append('profilePic', file);
+            fd.append('userId', u.id);
+
+            try {
+                const r    = await fetch(`${API}/api/user/upload-profile-pic`, { method:'POST', body:fd });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                const src = avatarSrc(data.image);
+                document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+                u.profilePic = data.image;
+                localStorage.setItem('user', JSON.stringify(u));
+
+                closeModal('editProfileModal');
+                document.getElementById('profilePicInput').value = '';
+                alert('Profile picture updated!');
+            } catch (err) {
+                alert(err.message || 'Upload failed.');
+            } finally {
+                btn.textContent = 'Upload & Save'; btn.disabled = false;
+            }
+        });
+        document.getElementById('clearPicBtn').addEventListener('click', async () => {
+            const u = getUser();
+            if (!u?.id) return alert('Please log in first.');
+
+            const DEFAULT = 'assets/img/Profile-PNG-Photo.png';
+
+            try {
+                const r = await fetch(`${API}/api/user/update-profile-pic`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: u.id, profilePic: '' })
+                });
+                if (!r.ok) throw new Error('Server error');
+            } catch { /* non-fatal — still clear locally */ }
+
+            u.profilePic = '';
+            localStorage.setItem('user', JSON.stringify(u));
+
+            document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = DEFAULT);
+            closeModal('editProfileModal');
+            alert('Profile picture removed.');
+        });
+
+        // ── Toggle password visibility ──────────────────────────
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const inp = document.getElementById(icon.dataset.target);
+                if (!inp) return;
+                const show = inp.type === 'password';
+                inp.type = show ? 'text' : 'password';
+                icon.classList.toggle('fa-eye',       !show);
+                icon.classList.toggle('fa-eye-slash',  show);
+            });
+        });
+
+        // ── Star rating picker ──────────────────────────────────
+        const stars = document.querySelectorAll('#starRating i');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.val);
+                stars.forEach(s => {
+                    s.classList.toggle('active', parseInt(s.dataset.val) <= selectedRating);
+                });
+            });
+            star.addEventListener('mouseenter', () => {
+                const val = parseInt(star.dataset.val);
+                stars.forEach(s => {
+                    s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+                });
+            });
+            star.addEventListener('mouseleave', () => {
+                stars.forEach(s => {
+                    s.classList.toggle('active', parseInt(s.dataset.val) <= selectedRating);
+                });
+            });
+        });
+
+        // ── Post review (button click or Enter) ─────────────────
+        async function postReview() {
+            const input = document.getElementById('reviewInput');
+            const text  = input.value.trim();
+            const u     = getUser();
+
+            if (!u?.id) return alert('Please log in to post a review.');
+            if (!text)  return alert('Review cannot be empty.');
+
+            try {
+                const r = await fetch(`${API}/api/reviews`, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ comment: text, rating: selectedRating, user_id: u.id })
+                });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.message);
+
+                input.value = '';
+                selectedRating = 5;
+                stars.forEach(s => s.classList.add('active'));
+                loadReviews();
+            } catch (err) {
+                alert(err.message || 'Failed to post review.');
+            }
+        }
+
+        document.getElementById('postReviewBtn').addEventListener('click', postReview);
+        document.getElementById('reviewInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); postReview(); }
+        });
+
+        // ── Load reviews on page load ───────────────────────────
+        loadReviews();
+    });
+
+    // ════════════════════════════════════════════════════════════════
+    //  LOAD REVIEWS
+    // ════════════════════════════════════════════════════════════════
+    async function loadReviews() {
+        const container = document.getElementById('reviewsContainer');
+        if (!container) return;
+
+        try {
+            const r       = await fetch(`${API}/api/reviews`);
+            const reviews = r.ok ? await r.json() : [];
+
+            if (!reviews.length) {
+                container.innerHTML = `<div class="empty-reviews-box"><p>No reviews yet. Be the first to leave one!</p></div>`;
+                return;
+            }
+
+            container.innerHTML = reviews.map(rev => {
+                const stars = '★'.repeat(rev.rating || 5) + '☆'.repeat(5 - (rev.rating || 5));
+                const date  = rev.created_at
+                    ? new Date(rev.created_at).toLocaleDateString('en-PH', {month:'short',day:'numeric',year:'numeric'})
+                    : '';
+                const pic = rev.profilePic ? avatarSrc(rev.profilePic) : 'assets/img/Profile-PNG-Photo.png';
+                return `
+                    <div class="review-item">
+                        <div class="rev-header">
+                            <img src="${pic}" onerror="this.src='assets/img/Profile-PNG-Photo.png'" alt="">
+                            <strong>${escHtml(rev.username || 'Anonymous')}</strong>
+                            <span class="rev-stars">${stars}</span>
+                        </div>
+                        <p class="rev-text">${escHtml(rev.comment || '')}</p>
+                        <div class="rev-date">${date}</div>
+                    </div>`;
+            }).join('');
+
+        } catch (err) {
+            console.error('[reviews]', err);
+            container.innerHTML = `<div class="empty-reviews-box"><p>Could not load reviews.</p></div>`;
+        }
+    }
+
+    function escHtml(s) {
+        return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    </script>
+</body>
+</html>

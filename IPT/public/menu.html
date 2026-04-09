@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu - De Las Armas</title>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="assets/css/menu.css">
+
+    <style>
+        /* ── Bigger, readable price amounts ─────────────── */
+        .amount {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            color: #19276F !important;
+            letter-spacing: -0.3px;
+        }
+        .unit {
+            font-size: 12px !important;
+            color: #888 !important;
+            font-weight: 500 !important;
+            margin-left: 4px;
+        }
+        .price-text {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Filter bar polish ───────────────────────────── */
+        .filter-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #fff;
+            border: 1.5px solid #e2e6f0;
+            border-radius: 12px;
+            padding: 14px 22px;
+            margin: 18px auto 28px;
+            max-width: 900px;
+            box-shadow: 0 2px 10px rgba(25,39,111,0.07);
+            flex-wrap: wrap;
+        }
+        .filter-group { display: flex; align-items: center; gap: 10px; }
+        .filter-group .label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #19276F;
+            white-space: nowrap;
+        }
+        .select-wrapper select {
+            border: 1.5px solid #c5cde8;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 13px;
+            color: #19276F;
+            background: #f5f7ff;
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+            transition: border-color 0.2s;
+        }
+        .select-wrapper select:focus { border-color: #19276F; }
+
+        .price-inputs { display: flex; align-items: center; gap: 8px; }
+        .price-inputs input {
+            width: 90px;
+            border: 1.5px solid #c5cde8;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 13px;
+            color: #333;
+            background: #f5f7ff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .price-inputs input:focus { border-color: #19276F; }
+        .dash { color: #aaa; font-weight: 600; }
+
+        .reset-btn {
+            background: #19276F;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .reset-btn:hover { background: #0f1c50; transform: translateY(-1px); }
+        .reset-btn:active { transform: translateY(0); }
+
+        /* ── No results message ──────────────────────────── */
+        .no-results-msg {
+            display: none;
+            text-align: center;
+            padding: 48px 20px;
+            color: #aaa;
+            font-size: 15px;
+            font-style: italic;
+        }
+        .no-results-msg i { font-size: 36px; margin-bottom: 12px; display: block; color: #d0d5e8; }
+
+        /* ── Hidden category section ─────────────────────── */
+        .menu-category.hidden-category { display: none; }
+
+        /* ── Hidden food card ────────────────────────────── */
+        .food-card.hidden-card { display: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav class="main-nav">
+                <ul class="nav-left">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="packages_list.html">Packages</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="menu.html" class="active">Menu</a></li>
+                </ul>
+                <div class="nav-center">
+                    <h1>DE LAS ARMAS</h1>
+                    <p>Catering & Event Services</p>
+                </div>
+                <ul class="nav-right">
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="otherservices.html">Other Services</a></li>
+                    <li><a href="#" id="userNavBtn">User</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-main-title">DE LAS ARMAS</h1>
+
+        <div class="filter-bar-container">
+            <div class="filter-group left">
+                <span class="label">Category</span>
+                <div class="select-wrapper">
+                    <select>
+                        <option>All Categories</option>
+                        <option>Beef</option>
+                        <option>Pork</option>
+                        <option>Chicken</option>
+                        <option>Seafood</option>
+                        <option>Vegetables</option>
+                        <option>Noodles and Pasta</option>
+                        <option>Extra</option>
+                        <option>Dessert</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-group center">
+                <span class="label" style="color: #19276F; font-weight: bold;">Price Range</span>
+                <div class="price-inputs">
+                    <input type="text" placeholder="Min &#x20B1;">
+                    <span class="dash">-</span>
+                    <input type="text" placeholder="Max &#x20B1;">
+                </div>
+            </div>
+
+            <div class="filter-group right">
+                <button class="reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Dynamic menu loaded from DB -->
+        <div id="menuLoadingMsg" style="text-align:center;padding:40px;color:#aaa;font-size:15px;">
+            Loading menu&#8230;
+        </div>
+        <div id="menuContainer"></div>
+        <div class="no-results-msg" id="noResultsMsg" style="display:none;">
+            <i class="fa-solid fa-magnifying-glass"></i>No items match your filters.
+        </div>
+
+        <div class="floating-cart-btn">
+            <a href="cart.html" style="text-decoration: none;">
+                <button style="cursor: pointer;">View Cart</button>
+            </a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <h4>DE LAS ARMAS</h4>
+            <p>Catering & Event Services</p>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-links">
+            <a href="terms_&_conditions.html">Terms</a>
+            <a href="privacy_policy.html">Privacy</a>
+        </div>
+    </footer>
+
+    <div class="settings-popup" id="settingsPopup">
+        <div class="user-info">
+            <img src="assets/img/Profile-PNG-Photo.png" alt="" id="popupAvatar"
+                 onerror="this.src='assets/img/Profile-PNG-Photo.png'">
+            <h3 id="popupName">User</h3>
+            <p id="popupEmail">&#8212;</p>
+        </div>
+        <hr class="settings-divider">
+        <ul class="settings-menu">
+            <li><a href="#" id="editProfileBtn"><i class="fa-solid fa-user"></i> Edit Profile</a></li>
+            <li><a href="#" id="changeNameBtn"><i class="fa-solid fa-pen-to-square"></i> Change Name</a></li>
+            <li><a href="#" id="changePasswordBtn"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <li><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
+        </ul>
+    </div>
+
+    <div class="center-modal-overlay" id="editProfileModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="editProfileModal">&times;</span>
+            <h3>Edit Profile Picture</h3>
+            <form id="profilePicForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Upload a new photo:</label>
+                    <input type="file" id="profilePicInput" accept="image/*"
+                        style="border:none;padding:0;font-size:13px;">
+                </div>
+                <button type="submit" class="modal-btn">Upload &amp; Save</button>
+                <button type="button" id="clearPicBtn" class="modal-btn"
+                    style="margin-top:8px;background:transparent;color:#e53e3e;border:1.5px solid #e53e3e;">
+                    <i class="fa-solid fa-trash" style="margin-right:6px;"></i>Remove Profile Picture
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="center-modal-overlay" id="changeNameModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changeNameModal">&times;</span>
+            <h3>Change Name</h3>
+            <div style="margin-bottom:14px;padding:10px 14px;background:#f5f7ff;border-radius:7px;font-size:13px;">
+                <strong>Current Name:</strong> <span id="currentNameDisplay">&#8212;</span>
+            </div>
+            <div class="form-group">
+                <label>New Name:</label>
+                <input type="text" id="newNameField" placeholder="Enter your new name">
+            </div>
+            <div id="changeNameMsg" style="display:none;border-radius:6px;padding:8px 12px;font-size:13px;margin-bottom:10px;"></div>
+            <button class="modal-btn" id="saveNameBtn">Save Name</button>
+        </div>
+    </div>
+
+    <div class="center-modal-overlay" id="changePasswordModal">
+        <div class="center-modal">
+            <span class="close-modal" data-target="changePasswordModal">&times;</span>
+            <h3>Change Password</h3>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Current Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="currentPassword" placeholder="Current password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="currentPassword"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="newPassword" placeholder="New password (min 8 chars)" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="newPassword"></i>
+                    </div>
+                    <small class="password-hint">Minimum 8 characters</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                        <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                    </div>
+                </div>
+                <div id="passwordError"   class="error-message"   style="display:none;"></div>
+                <div id="passwordSuccess" class="success-message" style="display:none;"></div>
+                <button type="submit" class="modal-btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    const MAIN_API = 'http://localhost:3001';
+
+    // ── Category image map (fallback to placeholder) ──────────
+    const CAT_IMAGES = {
+        'Beef':              ['Beef 1','Beef 2','Beef 3','Beef 4','Beef 5','Beef 6','Beef 7'],
+        'Pork':              ['Pork 1','Pork 2','Pork 3','Pork 4','Pork 5','Pork 6'],
+        'Chicken':           ['Chicken 1','Chicken 2','Chicken 3','Chicken 4','Chicken 5','Chicken 6'],
+        'Seafood':           ['Seafood 1','Seafood 2','Seafood 3','Seafood 4','Seafood 5','Seafood 6','Seafood 7'],
+        'Vegetables':        ['Vegetables 1','Vegetables 2','Vegetables 3','Vegetables 4','Vegetables 5','Vegetables 6'],
+        'Noodles and Pasta': ['NP 1','NP 2','NP 3','NP 4','NP 5','NP 6','NP 7','NP 8','NP 9'],
+        'Extra':             ['Extra 1','Extra 2'],
+        'Dessert':           ['Dessert 1','Dessert 2','Dessert 3','Dessert 4','Dessert 5','Dessert 6','Dessert 7','Dessert 8','Dessert 9','Dessert 10','Dessert 11','Dessert 12'],
+    };
+    // Track how many images per category have been assigned
+    const catImgIdx = {};
+
+    function getItemImage(category) {
+        const imgs = CAT_IMAGES[category];
+        if (!imgs) return null;
+        if (!(category in catImgIdx)) catImgIdx[category] = 0;
+        const img = imgs[catImgIdx[category] % imgs.length];
+        catImgIdx[category]++;
+        return `assets/img/${img}.png`;
+    }
+
+    function esc(s) {
+        return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Per-serving divisor by category ──────────────────────
+    const PAX_LABEL = {
+        'Beef':              '(Good for 6 Pax)',
+        'Pork':              '(Good for 6 Pax)',
+        'Chicken':           '(Good for 6 Pax)',
+        'Seafood':           '(Good for 6 Pax)',
+        'Vegetables':        '(Good for 6 Pax)',
+        'Noodles and Pasta': '(Good for 8 Pax)',
+        'Extra':             '(Good for 10–12 Pax)',
+        'Dessert':           '(Good for 8 Pax)',
+    };
+    const PAX_DIVISOR = {
+        'Beef': 6, 'Pork': 6, 'Chicken': 6, 'Seafood': 6,
+        'Vegetables': 6, 'Noodles and Pasta': 8, 'Extra': 10, 'Dessert': 8
+    };
+
+    // ── Static descriptions fallback (used when DB description is empty) ──
+    const ITEM_DESC = {
+        // Beef
+        'Roast Beef in Mushroom Sauce':       'Slow-roasted beef drizzled with a rich, savory mushroom cream sauce.',
+        'Roast Beef Supreme':                 'Tender roast beef with a bold, herb-seasoned supreme sauce.',
+        'Korean Beef Stew':                   'Melt-in-your-mouth beef braised in a sweet and spicy Korean-style broth.',
+        'Garlic Pepper Beef':                 'Stir-fried beef strips with garlic and cracked black pepper sauce.',
+        'Beef Callos ala Madrilena':          'Spanish-style tripe and chickpea stew slow-cooked in tomato and chorizo.',
+        'Beef Caldereta':                     'Hearty beef stew in a rich tomato-liver sauce with bell peppers and olives.',
+        'Beef Kare-Kare with Shrimp Paste':   'Classic peanut-based beef stew served with fermented shrimp paste (bagoong).',
+        // Pork
+        'Pork Sisig':                         'Sizzling chopped pork cheeks and ears seasoned with calamansi and chili.',
+        'Crispy Dinuguan':                    'Deep-fried pork belly in a savory chocolate pork blood stew.',
+        'Garlic Pork Belly':                  'Crispy pork belly glazed with fragrant garlic butter sauce.',
+        'Barbecued Pork Spareribs':           'Fall-off-the-bone spareribs glazed with sweet smoky BBQ marinade.',
+        'Kare-Kareng Bagnet':                 'Crispy deep-fried pork belly in classic creamy peanut kare-kare sauce.',
+        'Lechon Porkchop':                    'Thick-cut porkchop marinated and roasted to crispy lechon perfection.',
+        // Chicken
+        'Lemon Rosemary Chicken':             'Oven-roasted chicken infused with fresh lemon and rosemary herbs.',
+        'Grilled Chicken with Mango Salsa':   'Juicy grilled chicken breast topped with a vibrant fresh mango salsa.',
+        'Chicken Teriyaki':                   'Tender chicken glazed in a sweet Japanese-style teriyaki sauce.',
+        'Chicken Cordon Bleu':                'Breaded chicken stuffed with ham and melted cheese, golden fried.',
+        'Crusted Chicken Pastel':             'Flaky pastry-crusted chicken and vegetable pie with creamy filling.',
+        'Baked Chicken Parmigiana':           'Breaded chicken baked with marinara sauce and melted mozzarella.',
+        // Seafood
+        'Crusted Fish Fillet with Aioli or Tartar Dip': 'Herb-crusted white fish fillet served with house-made aioli or tartar.',
+        'Fish Polvoron with Ham & Cheese':    'Flaky breaded fish topped with savory ham and melted cheese.',
+        'Baked Garlic Boneless Bangus':       'Butterflied milkfish marinated in garlic and butter, then baked to perfection.',
+        'Fish ala Creme':                     'Tender fish fillet in a light and creamy white sauce.',
+        'Seafood ala Pobre':                  'Mixed seafood sautéed in garlic, olive oil, and calamansi butter.',
+        'Buttered Garlic Shrimp':             'Plump shrimp tossed in rich garlic butter with a hint of herbs.',
+        'Seafood Kare-Kare':                  'Fresh mixed seafood simmered in velvety peanut sauce with vegetables.',
+        // Vegetables
+        'Buttered Vegetables':                'Seasonal vegetables lightly sautéed in herb butter.',
+        'Mixed Vegetables with Oyster Sauce': 'Crisp garden vegetables stir-fried in savory oyster sauce.',
+        'Roasted Herbed Mixed Vegetables':    'Colorful vegetables oven-roasted with garlic and aromatic herbs.',
+        'Vegetable Macaroni with Peanut Sauce':'Elbow macaroni tossed with fresh vegetables in creamy peanut sauce.',
+        'Chopsuey':                           'Classic Filipino stir-fry of crisp mixed vegetables in light sauce.',
+        'Lumpiang Sariwa in Egg Wrapper':     'Fresh vegetable lumpia wrapped in a soft egg crepe with sweet peanut sauce.',
+        // Noodles and Pasta
+        'Bam I':                              'Mixed canton and sotanghon noodles stir-fried with pork and vegetables.',
+        'Pancit Canton Guisado':              'Stir-fried thick egg noodles with pork, shrimp, and vegetables.',
+        'Garlic Sotanghon':                   'Glass noodles sautéed with garlic, chicken, and mixed vegetables.',
+        'Korean Chap Chae':                   'Stir-fried glass noodles with colorful vegetables and sesame oil.',
+        'Adobo Aglio Olio':                   'Pasta tossed in Filipino adobo-infused garlic and olive oil sauce.',
+        'Pesto Fettuccine':                   'Fettuccine ribbons coated in fresh basil pesto with Parmesan.',
+        'Pasta Carbonara':                    'Creamy egg and cheese sauce with crispy bacon on al dente pasta.',
+        'Cheesy Baked Macaroni':              'Classic baked mac layered with ground meat and three-cheese topping.',
+        'Meaty Baked Lasagna':                'Layers of pasta, rich Bolognese, béchamel, and melted cheese.',
+        // Extra
+        'Steamed Rice':                       'Freshly steamed premium white rice.',
+        'Garlic Rice':                        'Fragrant wok-fried rice tossed with golden garlic bits.',
+        // Dessert
+        'Ube Cake':                           'Moist purple yam chiffon cake layered with ube halaya cream.',
+        'Yema Cake':                          'Soft chiffon cake topped with sweet egg yolk yema frosting.',
+        'Sansrival':                          'Crispy meringue layers filled with buttercream and cashews.',
+        'Caramel Cheese Ensaymada':           'Fluffy brioche topped with sweet caramel glaze and cheese.',
+        'Silvanas':                           'Cashew meringue wafers sandwiched with buttercream and cookie crumbs.',
+        'Crema Balls':                        'Bite-sized cream-filled pastry puffs dusted with sugar.',
+        'Chocolate Eclair':                   'Choux pastry filled with custard cream and dipped in chocolate.',
+        'Cream Puff':                         'Light pastry shells filled with fresh vanilla whipped cream.',
+        'Classic Chocolate Brownie':          'Dense and fudgy brownie with a crinkly chocolate crust.',
+        'Buko Pandan':                        'Refreshing young coconut strips in pandan-flavored cream gelatin.',
+        'Mango Sago':                         'Chilled sweet mango pudding with sago pearls and coconut milk.',
+        'Fruit Salad':                        'Mixed tropical fruits in a sweet cream and condensed milk dressing.',
+    };
+
+    // ── Build a food card HTML string ─────────────────────────
+    function buildCard(item, imgSrc) {
+        const name     = esc(item.courseName);
+        const paxPrice = parseFloat(item.price) || 0;
+        const cat      = item.category || '';
+        const img      = imgSrc || `assets/img/de las armasa logo 3.png`;
+        const divisor  = PAX_DIVISOR[cat] || 6;
+        // Round per-serving to nearest 5
+        const servPrice = Math.round(paxPrice / divisor / 5) * 5;
+        const paxLabel  = PAX_LABEL[cat] || '(per tray)';
+
+        // DB description wins; fall back to static map; last resort = category name
+        const desc = esc(item.description || ITEM_DESC[item.courseName] || cat);
+
+        return `<div class="food-card" data-id="${item.id}" data-price="${paxPrice}" data-name="${name}" data-category="${esc(cat)}">
+            <div class="card-img"><img src="${img}" alt="${name}" onerror="this.src='assets/img/de las armasa logo 3.png'"></div>
+            <div class="card-content">
+                <h4>${name}</h4>
+                <p class="desc">${desc}</p>
+                <div class="card-footer">
+                    <div class="pricing-group">
+                        <div class="price-row">
+                            <div class="price-text">
+                                <span class="amount">&#x20B1; ${paxPrice.toLocaleString('en-PH')}</span>
+                                <span class="unit">${paxLabel}</span>
+                            </div>
+                            <div class="qty-control">
+                                <button class="qty-btn minus" data-variant="pax">-</button>
+                                <span class="qty-val" data-variant="pax">0</span>
+                                <button class="qty-btn plus"  data-variant="pax">+</button>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <div class="price-text">
+                                <span class="amount">&#x20B1; ${servPrice.toLocaleString('en-PH')}</span>
+                                <span class="unit">(Single Order)</span>
+                            </div>
+                            <div class="qty-control">
+                                <button class="qty-btn minus" data-variant="serving">-</button>
+                                <span class="qty-val" data-variant="serving">0</span>
+                                <button class="qty-btn plus"  data-variant="serving">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    // ── Render all items grouped by category ──────────────────
+    let allItems = [];
+
+    function renderMenu(items) {
+        const container = document.getElementById('menuContainer');
+        document.getElementById('menuLoadingMsg').style.display = 'none';
+
+        if (!items.length) {
+            container.innerHTML = '<div style="text-align:center;padding:60px;color:#aaa;font-size:15px;">No menu items available.</div>';
+            return;
+        }
+
+        // Reset image counters
+        Object.keys(catImgIdx).forEach(k => delete catImgIdx[k]);
+
+        // Group by category
+        const groups = {};
+        items.forEach(item => {
+            const cat = item.category || 'Other';
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(item);
+        });
+
+        const ORDER = ['Beef','Pork','Chicken','Seafood','Vegetables','Noodles and Pasta','Extra','Dessert'];
+        const cats  = [...ORDER.filter(c => groups[c]), ...Object.keys(groups).filter(c => !ORDER.includes(c))];
+
+        container.innerHTML = cats.map(cat => {
+            const cards = groups[cat].map(item => buildCard(item, getItemImage(cat))).join('');
+            return `<section class="menu-category" data-category="${esc(cat)}">
+                <div class="category-header-section">
+                    <h2 class="category-title">${esc(cat)}</h2>
+                    <div class="category-divider"></div>
+                </div>
+                <div class="menu-grid">${cards}</div>
+            </section>`;
+        }).join('');
+
+        attachCardListeners();
+        applyFilters();
+    }
+
+    // ── Qty buttons + Add to cart ─────────────────────────────
+    function attachCardListeners() {
+        document.querySelectorAll('.qty-btn.plus').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const span = btn.closest('.qty-control').querySelector('.qty-val');
+                span.textContent = parseInt(span.textContent) + 1;
+            });
+        });
+        document.querySelectorAll('.qty-btn.minus').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const span = btn.closest('.qty-control').querySelector('.qty-val');
+                const v = parseInt(span.textContent);
+                if (v > 0) span.textContent = v - 1;
+            });
+        });
+        document.querySelectorAll('.add-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const card = btn.closest('.food-card');
+                const name = card.dataset.name;
+                const cat  = card.dataset.category;
+                const id   = card.dataset.id;
+
+                function getMenuCartKey() {
+                    try {
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        return user?.id ? `menuCart_${user.id}` : 'menuCart_guest';
+                    } catch { return 'menuCart_guest'; }
+                }
+
+                const rows = card.querySelectorAll('.price-row');
+                const selections = [];
+
+                rows.forEach(row => {
+                    const qtyEl    = row.querySelector('.qty-val');
+                    const amountEl = row.querySelector('.amount');
+                    const unitEl   = row.querySelector('.unit');
+                    if (!qtyEl || !amountEl) return;
+                    const qty = parseInt(qtyEl.textContent) || 0;
+                    if (qty <= 0) return;
+                    const rawText = amountEl.textContent.replace(/[^\d]/g, '');
+                    const price   = parseInt(rawText) || 0;
+                    const variant = unitEl ? unitEl.textContent.trim() : 'per serving';
+                    const cartId  = `menu_${id}_${variant.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    selections.push({ id: cartId, name, category: cat, variant, price, qty });
+                });
+
+                if (!selections.length) {
+                    alert('Please select a quantity first!');
+                    return;
+                }
+
+                const key = getMenuCartKey();
+                let menuCart = [];
+                try {
+                    menuCart = JSON.parse(localStorage.getItem(key)) || [];
+                } catch { menuCart = []; }
+
+                selections.forEach(item => {
+                    const existing = menuCart.find(i => i.id === item.id);
+                    if (existing) existing.qty += item.qty;
+                    else menuCart.push(item);
+                });
+
+                try {
+                    localStorage.setItem(key, JSON.stringify(menuCart));
+                    console.log('[menu] Cart saved:', key, menuCart);
+                } catch (e) {
+                    console.error('[menu] Failed to save cart:', e);
+                    alert('Failed to save to cart. Storage may be full.');
+                    return;
+                }
+
+                const orig = btn.textContent;
+                btn.textContent = '✓ Added!';
+                btn.style.cssText = 'background:#2e7d32;color:#fff;';
+                setTimeout(() => { btn.textContent = orig; btn.style.cssText = ''; }, 1500);
+
+                card.querySelectorAll('.qty-val').forEach(el => el.textContent = '0');
+            });
+        });
+    }
+
+    // ── Filter logic ──────────────────────────────────────────
+    function applyFilters() {
+        const categorySelect = document.querySelector('.filter-group.left select');
+        const minInput       = document.querySelector('.price-inputs input:first-child');
+        const maxInput       = document.querySelector('.price-inputs input:last-child');
+        const selectedCat    = categorySelect ? categorySelect.value : 'All Categories';
+        const minVal         = parseInt(minInput?.value) || 0;
+        const maxVal         = parseInt(maxInput?.value) || Infinity;
+        let anyVisible       = false;
+
+        document.querySelectorAll('.menu-category').forEach(section => {
+            const catTitle = section.querySelector('.category-title')?.textContent?.trim() || '';
+            const catMatch = selectedCat === 'All Categories' || catTitle === selectedCat;
+            if (!catMatch) { section.classList.add('hidden-category'); return; }
+
+            let sectionHasVisible = false;
+            section.querySelectorAll('.food-card').forEach(card => {
+                const p = parseFloat(card.dataset.price) || 0;
+                if (p >= minVal && p <= maxVal) {
+                    card.classList.remove('hidden-card');
+                    sectionHasVisible = true;
+                    anyVisible = true;
+                } else {
+                    card.classList.add('hidden-card');
+                }
+            });
+            if (sectionHasVisible) section.classList.remove('hidden-category');
+            else section.classList.add('hidden-category');
+        });
+
+        const nr = document.getElementById('noResultsMsg');
+        if (nr) nr.style.display = anyVisible ? 'none' : 'block';
+    }
+
+    // ── Filter bar events ─────────────────────────────────────
+    (function () {
+        const categorySelect = document.querySelector('.filter-group.left select');
+        const minInput       = document.querySelector('.price-inputs input:first-child');
+        const maxInput       = document.querySelector('.price-inputs input:last-child');
+        const resetBtn       = document.querySelector('.reset-btn');
+
+        if (categorySelect) categorySelect.addEventListener('change', applyFilters);
+        if (minInput) minInput.addEventListener('input', applyFilters);
+        if (maxInput) maxInput.addEventListener('input', applyFilters);
+        if (resetBtn) resetBtn.addEventListener('click', () => {
+            if (categorySelect) categorySelect.value = 'All Categories';
+            if (minInput) minInput.value = '';
+            if (maxInput) maxInput.value = '';
+            document.querySelectorAll('.menu-category').forEach(s => s.classList.remove('hidden-category'));
+            document.querySelectorAll('.food-card').forEach(c => c.classList.remove('hidden-card'));
+            const nr = document.getElementById('noResultsMsg');
+            if (nr) nr.style.display = 'none';
+        });
+        [minInput, maxInput].forEach(inp => {
+            if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
+        });
+    })();
+
+    // ── Auth / profile boilerplate ────────────────────────────
+    function getUser() { try { return JSON.parse(localStorage.getItem('user')); } catch { return null; } }
+    function avatarSrc(pic) {
+        if (!pic) return 'assets/img/Profile-PNG-Photo.png';
+        if (pic.startsWith('http')) return pic;
+        return pic;
+    }
+    function showMsg(el, text, type) {
+        el.textContent = text;
+        el.style.background = type === 'ok' ? '#d4edda' : '#fde';
+        el.style.color      = type === 'ok' ? '#155724' : '#721c24';
+        el.style.border     = type === 'ok' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+        el.style.display    = 'block';
+    }
+    function hideMsg(el) { if (el) el.style.display = 'none'; }
+    function openModal(id)  { document.getElementById(id)?.classList.add('active'); }
+    function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        // Auth guard
+        const user = getUser();
+        if (!user) { window.location.href = 'index.html'; return; }
+
+        const name = user.username || user.fName || 'User';
+        document.getElementById('popupEmail').textContent = user.email || '—';
+        document.getElementById('userNavBtn').textContent = "User";
+        document.getElementById('popupName').textContent  = name;
+        if (user.profilePic) {
+            const src = avatarSrc(user.profilePic);
+            document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+        }
+
+        // Popup toggle
+        document.getElementById('userNavBtn').addEventListener('click', e => {
+            e.preventDefault(); e.stopPropagation();
+            document.getElementById('settingsPopup').classList.toggle('active');
+        });
+        document.addEventListener('click', e => {
+            const popup = document.getElementById('settingsPopup');
+            if (popup && !popup.contains(e.target) && e.target.id !== 'userNavBtn')
+                popup.classList.remove('active');
+        });
+
+        // Modal close handlers
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                closeModal(btn.dataset.target || btn.closest('.center-modal-overlay')?.id);
+            });
+        });
+        document.querySelectorAll('.center-modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay.id); });
+        });
+
+        // Settings modal openers
+        document.getElementById('editProfileBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            openModal('editProfileModal');
+        });
+        document.getElementById('clearPicBtn').addEventListener('click', async () => {
+            const u = getUser();
+            if (!u?.id) return alert('Please log in first.');
+
+            const DEFAULT = 'assets/img/Profile-PNG-Photo.png';
+
+            try {
+                const r = await fetch(`${API}/api/user/update-profile-pic`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: u.id, profilePic: '' })
+                });
+                if (!r.ok) throw new Error('Server error');
+            } catch { /* non-fatal — still clear locally */ }
+
+            u.profilePic = '';
+            localStorage.setItem('user', JSON.stringify(u));
+
+            document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = DEFAULT);
+            closeModal('editProfileModal');
+            alert('Profile picture removed.');
+        });
+        document.getElementById('changeNameBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            const u = getUser();
+            document.getElementById('currentNameDisplay').textContent = u?.username || u?.fName || '—';
+            document.getElementById('newNameField').value = '';
+            hideMsg(document.getElementById('changeNameMsg'));
+            openModal('changeNameModal');
+        });
+        document.getElementById('changePasswordBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('settingsPopup').classList.remove('active');
+            document.getElementById('changePasswordForm').reset();
+            hideMsg(document.getElementById('passwordError'));
+            hideMsg(document.getElementById('passwordSuccess'));
+            openModal('changePasswordModal');
+        });
+
+        document.getElementById('saveNameBtn').addEventListener('click', async () => {
+            const newName = document.getElementById('newNameField').value.trim();
+            const msgEl   = document.getElementById('changeNameMsg');
+            const u       = getUser();
+            if (!newName)         return showMsg(msgEl, 'Please enter a name.', 'err');
+            if (newName.length<2) return showMsg(msgEl, 'Name must be at least 2 characters.', 'err');
+            if (!u?.id)           return showMsg(msgEl, 'Please log in again.', 'err');
+            const btn = document.getElementById('saveNameBtn');
+            btn.textContent = 'Saving…'; btn.disabled = true;
+            try {
+                const r = await fetch(`${MAIN_API}/api/user/update-name`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:u.id, fName:newName}) });
+                const d = await r.json(); if (!r.ok) throw new Error(d.message);
+                u.username = newName; u.fName = newName;
+                localStorage.setItem('user', JSON.stringify(u));
+                document.getElementById('userNavBtn').textContent = newName;
+                document.getElementById('popupName').textContent  = newName;
+                showMsg(msgEl, 'Name updated successfully!', 'ok');
+                setTimeout(() => closeModal('changeNameModal'), 1500);
+            } catch (err) { showMsg(msgEl, err.message || 'Failed to update name.', 'err'); }
+            finally { btn.textContent = 'Save Name'; btn.disabled = false; }
+        });
+
+        document.getElementById('changePasswordForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const curPw = document.getElementById('currentPassword').value;
+            const newPw = document.getElementById('newPassword').value;
+            const conPw = document.getElementById('confirmPassword').value;
+            const errEl = document.getElementById('passwordError');
+            const sucEl = document.getElementById('passwordSuccess');
+            const btn   = e.target.querySelector('button[type="submit"]');
+            const u     = getUser();
+            hideMsg(errEl); hideMsg(sucEl);
+            if (!curPw||!newPw||!conPw) return showMsg(errEl,'All fields are required.','err');
+            if (newPw.length < 8)       return showMsg(errEl,'New password must be at least 8 characters.','err');
+            if (newPw !== conPw)        return showMsg(errEl,'Passwords do not match.','err');
+            if (!u?.id)                 return showMsg(errEl,'Please log in again.','err');
+            btn.textContent = 'Updating…'; btn.disabled = true;
+            try {
+                const r = await fetch(`${MAIN_API}/api/user/change-password`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId:u.id, currentPassword:curPw, newPassword:newPw}) });
+                const d = await r.json(); if (!r.ok) throw new Error(d.message);
+                showMsg(sucEl, 'Password changed successfully!', 'ok');
+                e.target.reset(); setTimeout(() => closeModal('changePasswordModal'), 2000);
+            } catch (err) { showMsg(errEl, err.message || 'Failed to change password.', 'err'); }
+            finally { btn.textContent = 'Update Password'; btn.disabled = false; }
+        });
+
+        document.getElementById('profilePicForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const file = document.getElementById('profilePicInput').files[0];
+            const u    = getUser();
+            const btn  = e.target.querySelector('button[type="submit"]');
+            if (!file)  return alert('Please select a file.');
+            if (!u?.id) return alert('Please log in first.');
+            if (!file.type.startsWith('image/')) return alert('Please select an image file.');
+            if (file.size > 5*1024*1024) return alert('File must be under 5 MB.');
+            btn.textContent = 'Uploading…'; btn.disabled = true;
+            const fd = new FormData(); fd.append('profilePic', file); fd.append('userId', u.id);
+            try {
+                const r = await fetch(`${MAIN_API}/api/user/upload-profile-pic`, { method:'POST', body:fd });
+                const d = await r.json(); if (!r.ok) throw new Error(d.message);
+                const src = avatarSrc(d.image);
+                document.querySelectorAll('.profile-pic, #popupAvatar').forEach(i => i.src = src);
+                u.profilePic = d.image; localStorage.setItem('user', JSON.stringify(u));
+                closeModal('editProfileModal');
+                document.getElementById('profilePicInput').value = '';
+                alert('Profile picture updated!');
+            } catch (err) { alert(err.message || 'Upload failed.'); }
+            finally { btn.textContent = 'Upload & Save'; btn.disabled = false; }
+        });
+
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const inp  = document.getElementById(icon.dataset.target); if (!inp) return;
+                const show = inp.type === 'password'; inp.type = show ? 'text' : 'password';
+                icon.classList.toggle('fa-eye', !show); icon.classList.toggle('fa-eye-slash', show);
+            });
+        });
+
+        // ── Load menu from DB ─────────────────────────────────
+        try {
+            const r = await fetch(`${MAIN_API}/api/menu`);
+            if (!r.ok) throw new Error('API error');
+            allItems = await r.json();
+        } catch {
+            allItems = [];
+            document.getElementById('menuLoadingMsg').innerHTML =
+                '<i class="fa-solid fa-triangle-exclamation" style="color:#BC4141;margin-right:8px;"></i>Could not load menu. Please try refreshing.';
+            return;
+        }
+        renderMenu(allItems);
+    });
+    </script>
+</body>
+</html>
