@@ -1,0 +1,136 @@
+.reviews-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    padding-bottom: 130px; 
+    border: 3px solid #19276F; 
+    min-height: 80vh;
+}
+
+.reviews-title-section {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.reviews-title-section h2 {
+    color: #19276F;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+
+.title-underline {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, #6a85e6, #a364d9);
+    border-radius: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.full-divider {
+    width: 100%;
+    height: 1px;
+    background-color: #19276F;
+    margin-top: -10px;
+    margin-bottom: -15px;
+}
+
+.reviews-table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0 0; 
+}
+
+.reviews-table thead tr {
+    background-color: #19276F;
+    color: white;
+}
+
+.reviews-table th {
+    padding: 18px 20px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.reviews-table th:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.reviews-table th:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.reviews-table th i {
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.reviews-table td {
+    padding: 20px;
+    border-bottom: 1px solid #19276F; 
+    font-size: 14px;
+    color: #19276F;
+    vertical-align: middle;
+}
+
+.client-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.client-info img {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.client-info span {
+    font-weight: 500;
+    color: #19276F;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: #19276F;
+}
+
+.rating i {
+    color: #FFD700;
+    font-size: 18px;
+    margin-bottom: 3px;
+}
+
+.bx-paperclip {
+    font-size: 18px;
+    color: #19276F;
+    cursor: pointer;
+    transform: rotate(-90deg);
+}
+
+.attachment {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #19276F;
+    font-weight: 500;
+}
+
+.attachment i {
+    font-size: 18px;
+}

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - De Las Armas</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="assets/img/de las armasa logo 3.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/appointments.css">
+    <style>
+        /* ── Settings popup ── */
+        .settings-popup { display: none; }
+        .settings-popup.active {
+            display: block; position: absolute; top: 54px; right: 0;
+            background: #fff; border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(25,39,111,0.18);
+            width: 240px; z-index: 9999; overflow: hidden;
+            border: 1px solid rgba(25,39,111,0.08);
+        }
+        .user-info {
+            padding: 20px 18px 14px; text-align: center;
+            background: linear-gradient(135deg, #19276F 0%, #1e3280 100%);
+        }
+        .user-info img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.4); margin-bottom: 8px; }
+        .user-info h3 { color: #fff; font-size: 14px; font-weight: 700; margin: 0 0 2px; }
+        .user-info p  { color: rgba(255,255,255,0.65); font-size: 11px; margin: 0; }
+        .settings-divider { margin: 0; border: none; border-top: 1px solid #f0f2f8; }
+        .settings-menu { list-style: none; padding: 6px 0 8px; margin: 0; }
+        .settings-menu li a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 13px; color: #333; text-decoration: none; transition: background 0.15s; }
+        .settings-menu li a:hover { background: #f5f7ff; color: #19276F; }
+        .settings-menu li a i { font-size: 14px; color: #19276F; width: 16px; text-align: center; }
+        .settings-menu li:last-child a { color: #e53e3e; }
+        .settings-menu li:last-child a i { color: #e53e3e; }
+        .settings-menu li:last-child a:hover { background: #fff5f5; }
+
+        /* ── Modals ── */
+        .center-modal-overlay { display: none; }
+        .center-modal-overlay.active { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99999; align-items: center; justify-content: center; }
+        .center-modal { background: #fff; border-radius: 14px; padding: 28px 26px; width: 100%; max-width: 440px; position: relative; box-shadow: 0 8px 40px rgba(25,39,111,0.18); }
+        .center-modal h3 { color: #19276F; margin-bottom: 18px; font-size: 18px; }
+        .close-modal { position: absolute; top: 14px; right: 18px; font-size: 22px; cursor: pointer; color: #888; }
+        .close-modal:hover { color: #BC4141; }
+        .modal-btn { width: 100%; padding: 11px; background: #19276F; color: #fff; border: none; border-radius: 7px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 6px; }
+        .modal-btn:hover { background: #0f1a4a; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; }
+        .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 13px; outline: none; box-sizing: border-box; }
+        .form-group input:focus { border-color: #19276F; }
+        .password-input-wrapper { position: relative; }
+        .password-input-wrapper input { padding-right: 38px; }
+        .toggle-password { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; }
+        .password-hint { font-size: 11px; color: #aaa; margin-top: 3px; display: block; }
+        .error-message   { background: #fde; color: #721c24; border: 1px solid #f5c6cb; border-radius: 6px; padding: 8px 12px; font-size: 13px; margin-bottom: 10px; }
+        .success-message { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; padding: 8px 12px; font-size: 13px; margin-bottom: 10px; }
+        .header-actions .profile { position: relative; }
+
+        /* ── Search & filter bar ── */
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+        .search-box { display: flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 8px 14px; flex: 1; max-width: 320px; }
+        .search-box i { color: #9ca3af; font-size: 17px; }
+        .search-box input { border: none; outline: none; font-size: 13px; width: 100%; background: transparent; color: #222; }
+        .filter-select { padding: 9px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 13px; background: #fff; color: #333; cursor: pointer; outline: none; }
+        .records-info { font-size: 12px; color: #9ca3af; white-space: nowrap; }
+
+        /* ── Table time cell ── */
+        .time-pill { display: inline-flex; align-items: center; gap: 4px; background: #f0f3ff; color: #19276F; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin-left: 6px; white-space: nowrap; }
+        .time-pill.no-time { background: #f3f4f6; color: #9ca3af; }
+
+        /* ── View modal ── */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.52); display: flex; align-items: center; justify-content: center; z-index: 9999; animation: fadeIn .15s ease; }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .modal-box { background: #fff; border-radius: 14px; width: 90%; max-width: 500px; box-shadow: 0 8px 40px rgba(25,39,111,0.18); animation: slideUp .2s ease; overflow: hidden; }
+        @keyframes slideUp { from { transform:translateY(18px);opacity:0; } to { transform:translateY(0);opacity:1; } }
+        .modal-head { background: #19276F; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; }
+        .modal-head h3 { color: #fff; font-size: 16px; font-weight: 700; margin: 0; }
+        .modal-head button { background: rgba(255,255,255,0.15); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal-head button:hover { background: rgba(255,255,255,0.28); }
+        .modal-body { padding: 24px; }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+        .modal-field label { display: block; font-size: 10px; font-weight: 700; color: #19276F; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
+        .modal-field span { font-size: 13px; color: #222; font-weight: 500; word-break: break-word; }
+        .modal-field.full { grid-column: 1 / -1; }
+        .modal-amount { margin-top: 18px; background: #f0f3ff; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+        .modal-amount span { font-size: 12px; color: #555; font-weight: 500; }
+        .modal-amount strong { font-size: 20px; color: #19276F; font-weight: 800; }
+        .modal-foot { padding: 14px 24px 20px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #f0f2f8; }
+        .btn-modal-close { padding: 9px 24px; background: #19276F; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .btn-modal-close:hover { background: #111b52; }
+
+        .status-btn { display: inline-block; padding: 10px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .status-btn.paid, .status-btn.status-paid { background: #dcfce7; color: #16a34a; }
+        .table-empty { text-align: center; padding: 48px; color: #aaa; font-size: 14px; }
+        .table-empty i { font-size: 40px; display: block; margin-bottom: 10px; color: #ddd; }
+        .toast { position: fixed; bottom: 24px; right: 24px; z-index: 99999; background: #19276F; color: #fff; padding: 11px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.18); animation: fadeIn .2s ease; }
+        .toast.err { background: #ef4444; }
+
+        /* ── Action cell: view only ── */
+        .action-cell { text-align: right; white-space: nowrap; }
+        .view-btn { padding: 6px 16px; background: #19276F; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .view-btn:hover { background: #111b52; }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-text">
+            <h3>DE LAS ARMAS</h3>
+            <p>Catering &amp; Event Services</p>
+        </div>
+    </div>
+    <ul class="sidebar-menu">
+        <li><a href="dashboard.html"><i class='bx bxs-dashboard'></i> <span>Dashboard</span></a></li>
+        <li class="active"><a href="appointments.html"><i class='bx bx-calendar'></i> <span>Appointments</span></a></li>
+        <li><a href="reviews.html"><i class='bx bxs-bell'></i> <span>Reviews</span></a></li>
+        <li><a href="reporting.html"><i class='bx bx-line-chart'></i> <span>Reporting</span></a></li>
+        <li><a href="manage.html"><i class='bx bx-folder'></i> <span>Manage</span></a></li>
+    </ul>
+</aside>
+
+<div class="main-content">
+    <header>
+        <div class="header-actions">
+            <div class="profile">
+                <a href="#" id="userNavBtn">
+                    <img src="assets/img/Profile-PNG-Photo.png" alt="Profile" id="adminAvatarImg"
+                         style="width:38px;height:38px;border-radius:50%;object-fit:cover;">
+                </a>
+                <div class="settings-popup" id="settingsPopup">
+                    <div class="user-info">
+                        <img src="assets/img/Profile-PNG-Photo.png" id="popupAvatar" alt="Admin"
+                             onerror="this.src='assets/img/Profile-PNG-Photo.png'">
+                        <h3 id="popupName">Admin</h3>
+                        <p id="popupEmail">admin@admin.com</p>
+                    </div>
+                    <hr class="settings-divider">
+                    <ul class="settings-menu">
+                        <li><a href="#" id="editProfileBtn"><i class="fa-solid fa-user"></i> Edit Profile</a></li>
+                        <li><a href="#" id="changeNameBtn"><i class="fa-solid fa-pen-to-square"></i> Change Name</a></li>
+                        <li><a href="#" id="changePasswordBtn"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+                        <li><a href="adminlogin.html"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Manage Appointments</h1>
+        </div>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <i class='bx bx-search'></i>
+                <input type="text" id="searchInput" placeholder="Search by name, contact…">
+            </div>
+            <select class="filter-select" id="statusFilter">
+                <option value="">All Status</option>
+                <option value="Paid">Paid</option>
+            </select>
+            <span class="records-info" id="recordsInfo"></span>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th id="thDate" style="cursor:pointer;">
+                            Appointment Date &amp; Time <i class='bx bxs-sort-alt'></i>
+                        </th>
+                        <th>Reservation Paid</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentsBody">
+                    <tr><td colspan="6" class="table-empty">
+                        <i class='bx bx-loader-alt bx-spin'></i> Loading appointments…
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+</div>
+
+<!-- View Modal -->
+<div id="viewModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="max-width:580px;">
+        <div class="modal-head">
+            <h3>Appointment Details</h3>
+            <button onclick="closeViewModal()">&#x2715;</button>
+        </div>
+        <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+
+            <!-- Basic Info -->
+            <div class="modal-grid">
+                <div class="modal-field"><label>Name</label><span id="mFName">—</span></div>
+                <div class="modal-field"><label>Email</label><span id="mEmail">—</span></div>
+                <div class="modal-field"><label>Phone</label><span id="mPhone">—</span></div>
+                <div class="modal-field"><label>Event Date</label><span id="mDate">—</span></div>
+                <div class="modal-field"><label>Event Time</label><span id="mTime">—</span></div>
+                <div class="modal-field"><label>Guests</label><span id="mGuests">—</span></div>
+                <div class="modal-field full"><label>Venue / Address</label><span id="mAddress">—</span></div>
+                <div class="modal-field full"><label>Special Request</label><span id="mMessage">—</span></div>
+                <div class="modal-field"><label>Status</label><span id="mStatus">—</span></div>
+            </div>
+
+            <!-- Package & Items Section -->
+            <div style="margin-top:18px;">
+                <div style="font-size:11px;font-weight:700;color:#19276F;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #f0f2f8;">
+                    <i class='bx bx-package' style="margin-right:4px;"></i> Package &amp; Items Ordered
+                </div>
+                <div id="mOrderItems">
+                    <div style="text-align:center;padding:16px;color:#9ca3af;font-size:13px;">
+                        <i class='bx bx-loader-alt bx-spin'></i> Loading items…
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amounts -->
+            <div class="modal-amount" style="margin-top:14px;">
+                <span>Total Order Amount</span>
+                <strong id="mAmount">—</strong>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;">
+                <div style="flex:1;background:#dcfce7;border-radius:8px;padding:10px 14px;">
+                    <div style="font-size:10px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Reservation Fee Paid (50%)</div>
+                    <div style="font-size:16px;font-weight:800;color:#16a34a;" id="mResFee">—</div>
+                </div>
+                <div style="flex:1;background:#fef9c3;border-radius:8px;padding:10px 14px;">
+                    <div style="font-size:10px;color:#a16207;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Balance Due</div>
+                    <div style="font-size:16px;font-weight:800;color:#a16207;" id="mBalance">—</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-modal-close" onclick="closeViewModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="center-modal-overlay" id="editProfileModal">
+    <div class="center-modal">
+        <span class="close-modal" data-target="editProfileModal">&times;</span>
+        <h3>Edit Profile Picture</h3>
+        <form id="profilePicForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Upload a new photo:</label>
+                <input type="file" id="profilePicInput" accept="image/*" style="border:none;padding:0;font-size:13px;">
+            </div>
+            <div id="profilePicMsg" style="display:none;border-radius:6px;padding:8px 12px;font-size:13px;margin-bottom:10px;"></div>
+            <button type="submit" class="modal-btn">Upload &amp; Save</button>
+            <button type="button" id="clearPicBtn" class="modal-btn" style="margin-top:8px;background:transparent;color:#e53e3e;border:1.5px solid #e53e3e;">
+                <i class="fa-solid fa-trash" style="margin-right:6px;"></i>Remove Profile Picture
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Change Name Modal -->
+<div class="center-modal-overlay" id="changeNameModal">
+    <div class="center-modal">
+        <span class="close-modal" data-target="changeNameModal">&times;</span>
+        <h3>Change Name</h3>
+        <div style="margin-bottom:14px;padding:10px 14px;background:#f5f7ff;border-radius:7px;font-size:13px;">
+            <strong>Current Name:</strong> <span id="currentNameDisplay">Admin</span>
+        </div>
+        <div class="form-group">
+            <label>New Name:</label>
+            <input type="text" id="newNameField" placeholder="Enter your new name">
+        </div>
+        <div id="changeNameMsg" style="display:none;border-radius:6px;padding:8px 12px;font-size:13px;margin-bottom:10px;"></div>
+        <button class="modal-btn" id="saveNameBtn">Save Name</button>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="center-modal-overlay" id="changePasswordModal">
+    <div class="center-modal">
+        <span class="close-modal" data-target="changePasswordModal">&times;</span>
+        <h3>Change Password</h3>
+        <form id="changePasswordForm">
+            <div class="form-group">
+                <label>Current Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="currentPassword" placeholder="Current password" required>
+                    <i class="fa-solid fa-eye toggle-password" data-target="currentPassword"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>New Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="newPassword" placeholder="New password (min 8 chars)" required>
+                    <i class="fa-solid fa-eye toggle-password" data-target="newPassword"></i>
+                </div>
+                <small class="password-hint">Minimum 8 characters</small>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                    <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                </div>
+            </div>
+            <div id="passwordError" class="error-message" style="display:none;"></div>
+            <div id="passwordSuccess" class="success-message" style="display:none;"></div>
+            <button type="submit" class="modal-btn">Update Password</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const API      = 'http://localhost:4000';
+const MAIN_API = 'http://localhost:3001';
+const ROWS_PER_PAGE = 10;
+
+let allData = [], filtered = [], currentPage = 1, sortAsc = false;
+
+// ════════════════════════════════════════════════════════
+//  FIELD NORMALISER
+// ════════════════════════════════════════════════════════
+function normalise(raw) {
+    const fName = raw.fName || raw.firstName || raw.first_name
+                || raw.fullName || raw.full_name || raw.name
+                || raw.customer_name || raw.clientName || '—';
+    const lName = raw.lName || raw.lastName || raw.last_name || '';
+    const displayName = lName ? `${fName} ${lName}` : fName;
+
+    const contact = raw.contact_number || raw.contactNumber || raw.phone
+                  || raw.contact || raw.mobile || '—';
+    const email = raw.email || raw.emailAddress || raw.email_address || '—';
+    const eventDate = raw.eventDate || raw.event_date || raw.appointmentDate
+                    || raw.appointment_date || raw.date || '—';
+    const eventStartTime = raw.event_start_time || raw.eventStartTime || '';
+    const eventEndTime   = raw.event_end_time   || raw.eventEndTime   || '';
+
+    const eventTime = eventStartTime && eventEndTime
+        ? `${eventStartTime} - ${eventEndTime}`
+        : (raw.event_time || raw.eventTime || raw.time || '');
+    const address = raw.event_address || raw.eventAddress || raw.address
+                  || raw.venue || raw.location || '—';
+    const status = raw.status || raw.payment_status || raw.paymentStatus || 'Paid';
+    const saleId = raw.saleId || raw.sale_id || raw.id || null;
+    const orderId = raw.orderId || raw.order_id || null;
+    const rawDate = raw.rawDate || raw.eventDate || raw.event_date || raw.date || '';
+
+    // Smart amount detection
+    let fullAmount = 0;
+    let reservationFee = 0;
+    
+    const amountVal = raw.amount ? parseFloat(raw.amount) : null;
+    const totalAmountVal = raw.total_amount ? parseFloat(raw.total_amount) : null;
+    
+    if (totalAmountVal && totalAmountVal > 0) {
+        fullAmount = totalAmountVal;
+        reservationFee = amountVal && amountVal > 0 ? amountVal : fullAmount * 0.5;
+    } else if (amountVal && amountVal > 0) {
+        if (amountVal > 100000) {
+            fullAmount = amountVal;
+            reservationFee = amountVal * 0.5;
+        } else {
+            reservationFee = amountVal;
+            fullAmount = amountVal * 2;
+        }
+    }
+
+    return { 
+        displayName, fName, lName, contact, email, eventDate,
+        eventTime,
+        eventStartTime,
+        eventEndTime,
+        address, amount: fullAmount, reservationFee, status, saleId, orderId,
+        rawDate,
+        // snapshot already parsed by server
+        snapshot: raw.snapshot || null,
+        _raw: raw 
+    };
+}
+
+// ════════════════════════════════════════════════════════
+//  ADMIN SETTINGS
+// ════════════════════════════════════════════════════════
+function getAdmin() { try { return JSON.parse(localStorage.getItem('adminUser')) || {}; } catch { return {}; } }
+function saveAdmin(obj) { localStorage.setItem('adminUser', JSON.stringify(obj)); }
+function avatarSrc(pic) {
+    if (!pic) return 'assets/img/Profile-PNG-Photo.png';
+    if (pic.startsWith('http') || pic.startsWith('data:')) return pic;
+    return `${MAIN_API}${pic}`;
+}
+function showMsg(el, text, type) {
+    el.textContent = text;
+    el.style.background = type === 'ok' ? '#d4edda' : '#fde';
+    el.style.color      = type === 'ok' ? '#155724' : '#721c24';
+    el.style.border     = type === 'ok' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+    el.style.display    = 'block';
+}
+function hideMsg(el) { if (el) el.style.display = 'none'; }
+function openModal(id)  { document.getElementById(id)?.classList.add('active'); }
+function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const admin = getAdmin();
+    const name  = admin.name  || 'Admin';
+    const email = admin.email || 'admin@admin.com';
+    document.getElementById('popupName').textContent  = name;
+    document.getElementById('popupEmail').textContent = email;
+    if (admin.profilePic) {
+        const src = avatarSrc(admin.profilePic);
+        document.getElementById('popupAvatar').src    = src;
+        document.getElementById('adminAvatarImg').src = src;
+    }
+
+    document.getElementById('userNavBtn').addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        document.getElementById('settingsPopup').classList.toggle('active');
+    });
+    document.addEventListener('click', e => {
+        const popup = document.getElementById('settingsPopup');
+        if (!popup.contains(e.target) && e.target.id !== 'userNavBtn' && !e.target.closest('#userNavBtn'))
+            popup.classList.remove('active');
+    });
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            closeModal(btn.dataset.target || btn.closest('.center-modal-overlay')?.id);
+        });
+    });
+    document.querySelectorAll('.center-modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay.id); });
+    });
+
+    document.getElementById('editProfileBtn').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('settingsPopup').classList.remove('active');
+        document.getElementById('profilePicInput').value = '';
+        hideMsg(document.getElementById('profilePicMsg'));
+        openModal('editProfileModal');
+    });
+    document.getElementById('profilePicForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const file  = document.getElementById('profilePicInput').files[0];
+        const btn   = e.target.querySelector('button[type="submit"]');
+        const msgEl = document.getElementById('profilePicMsg');
+        const admin = getAdmin();
+        if (!file) return showMsg(msgEl, 'Please select a file.', 'err');
+        if (!file.type.startsWith('image/')) return showMsg(msgEl, 'Please select an image file.', 'err');
+        if (file.size > 5*1024*1024) return showMsg(msgEl, 'File must be under 5 MB.', 'err');
+        btn.textContent = 'Uploading…'; btn.disabled = true;
+        if (admin.userId) {
+            try {
+                const fd = new FormData(); fd.append('profilePic', file); fd.append('userId', admin.userId);
+                const r = await fetch(`${MAIN_API}/api/user/upload-profile-pic`, { method:'POST', body:fd });
+                const data = await r.json(); if (!r.ok) throw new Error(data.message);
+                const src = avatarSrc(data.image);
+                document.getElementById('popupAvatar').src = src; document.getElementById('adminAvatarImg').src = src;
+                admin.profilePic = data.image; saveAdmin(admin);
+                showMsg(msgEl, 'Profile picture updated!', 'ok');
+                setTimeout(() => closeModal('editProfileModal'), 1400); return;
+            } catch {}
+        }
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const src = ev.target.result;
+            document.getElementById('popupAvatar').src = src; document.getElementById('adminAvatarImg').src = src;
+            admin.profilePic = src; saveAdmin(admin);
+            showMsg(msgEl, 'Profile picture updated!', 'ok');
+            setTimeout(() => closeModal('editProfileModal'), 1400);
+        };
+        reader.readAsDataURL(file);
+        btn.textContent = 'Upload & Save'; btn.disabled = false;
+    });
+    document.getElementById('clearPicBtn').addEventListener('click', async () => {
+        const msgEl = document.getElementById('profilePicMsg');
+        const admin = getAdmin();
+        const DEFAULT = 'assets/img/Profile-PNG-Photo.png';
+        if (admin.userId) {
+            try {
+                await fetch(`${MAIN_API}/api/user/update-profile-pic`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: admin.userId, profilePic: '' })
+                });
+            } catch {}
+        }
+        admin.profilePic = ''; saveAdmin(admin);
+        document.getElementById('popupAvatar').src    = DEFAULT;
+        document.getElementById('adminAvatarImg').src = DEFAULT;
+        showMsg(msgEl, 'Profile picture removed.', 'ok');
+        setTimeout(() => closeModal('editProfileModal'), 1400);
+    });
+
+    document.getElementById('changeNameBtn').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('settingsPopup').classList.remove('active');
+        const admin = getAdmin();
+        document.getElementById('currentNameDisplay').textContent = admin.name || 'Admin';
+        document.getElementById('newNameField').value = '';
+        hideMsg(document.getElementById('changeNameMsg'));
+        openModal('changeNameModal');
+    });
+    document.getElementById('saveNameBtn').addEventListener('click', async () => {
+        const newName = document.getElementById('newNameField').value.trim();
+        const msgEl   = document.getElementById('changeNameMsg');
+        const btn     = document.getElementById('saveNameBtn');
+        const admin   = getAdmin();
+        if (!newName)           return showMsg(msgEl, 'Please enter a name.', 'err');
+        if (newName.length < 2) return showMsg(msgEl, 'Name must be at least 2 characters.', 'err');
+        btn.textContent = 'Saving…'; btn.disabled = true;
+        if (admin.userId) {
+            try { await fetch(`${MAIN_API}/api/user/update-name`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:admin.userId, fName:newName}) }); } catch {}
+        }
+        admin.name = newName; saveAdmin(admin);
+        document.getElementById('popupName').textContent = newName;
+        showMsg(msgEl, 'Name updated successfully!', 'ok');
+        setTimeout(() => closeModal('changeNameModal'), 1500);
+        btn.textContent = 'Save Name'; btn.disabled = false;
+    });
+
+    document.getElementById('changePasswordBtn').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('settingsPopup').classList.remove('active');
+        document.getElementById('changePasswordForm').reset();
+        hideMsg(document.getElementById('passwordError'));
+        hideMsg(document.getElementById('passwordSuccess'));
+        openModal('changePasswordModal');
+    });
+    document.getElementById('changePasswordForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const curPw = document.getElementById('currentPassword').value;
+        const newPw = document.getElementById('newPassword').value;
+        const conPw = document.getElementById('confirmPassword').value;
+        const errEl = document.getElementById('passwordError');
+        const sucEl = document.getElementById('passwordSuccess');
+        const btn   = e.target.querySelector('button[type="submit"]');
+        const admin = getAdmin();
+        hideMsg(errEl); hideMsg(sucEl);
+        if (!curPw||!newPw||!conPw) return showMsg(errEl,'All fields are required.','err');
+        if (newPw.length < 8)       return showMsg(errEl,'New password must be at least 8 characters.','err');
+        if (newPw !== conPw)        return showMsg(errEl,'Passwords do not match.','err');
+        btn.textContent = 'Updating…'; btn.disabled = true;
+        try {
+            if (admin.userId) {
+                const r = await fetch(`${MAIN_API}/api/user/change-password`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId:admin.userId, currentPassword:curPw, newPassword:newPw}) });
+                const data = await r.json(); if (!r.ok) throw new Error(data.message);
+            } else { if (curPw !== 'admin123') throw new Error('Current password is incorrect.'); }
+            showMsg(sucEl, 'Password changed successfully!', 'ok');
+            e.target.reset(); setTimeout(() => closeModal('changePasswordModal'), 2000);
+        } catch (err) { showMsg(errEl, err.message || 'Failed to change password.', 'err'); }
+        finally { btn.textContent = 'Update Password'; btn.disabled = false; }
+    });
+
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const inp = document.getElementById(icon.dataset.target); if (!inp) return;
+            const show = inp.type === 'password'; inp.type = show ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !show); icon.classList.toggle('fa-eye-slash', show);
+        });
+    });
+
+    loadAppointments();
+});
+
+// ════════════════════════════════════════════════════════
+//  APPOINTMENTS
+// ════════════════════════════════════════════════════════
+async function loadAppointments() {
+    const tbody = document.getElementById('appointmentsBody');
+    tbody.innerHTML = `<tr><td colspan="6" class="table-empty"><i class='bx bx-loader-alt bx-spin'></i> Loading…</td></tr>`;
+
+    try {
+        const res = await fetch(`${API}/all-appointments`);
+
+        if (!res.ok) throw new Error(`Server returned ${res.status} ${res.statusText}`);
+
+        const raw = await res.json();
+
+        const rows = Array.isArray(raw) ? raw
+                   : Array.isArray(raw.data) ? raw.data
+                   : Array.isArray(raw.appointments) ? raw.appointments
+                   : Array.isArray(raw.results) ? raw.results
+                   : [];
+
+        if (rows.length === 0) {
+            allData = [];
+            applyFilters();
+            return;
+        }
+
+        allData = rows.map(normalise);
+        applyFilters();
+
+    } catch (err) {
+        console.error('[appointments] Load error:', err);
+        tbody.innerHTML = `
+            <tr><td colspan="6" class="table-empty">
+                <i class='bx bx-error-circle' style="color:#ef4444;"></i>
+                <br>Could not load appointments.<br>
+                <small style="color:#ef4444;">${esc(err.message)}</small><br>
+                <small>Make sure your server is running at <code>${API}</code></small>
+            </td></tr>`;
+    }
+}
+
+function applyFilters() {
+    const q      = document.getElementById('searchInput').value.trim().toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+
+    filtered = allData.filter(a => {
+        const matchStatus = !status || (a.status || '').toLowerCase() === status.toLowerCase();
+        const matchQ = !q
+            || a.displayName.toLowerCase().includes(q)
+            || a.contact.toLowerCase().includes(q)
+            || a.email.toLowerCase().includes(q)
+            || a.eventDate.toLowerCase().includes(q);
+        return matchStatus && matchQ;
+    });
+
+    currentPage = 1;
+    renderTable();
+}
+
+document.getElementById('thDate').addEventListener('click', () => {
+    sortAsc = !sortAsc;
+    filtered.sort((a, b) => {
+        const da = new Date(a.rawDate || 0), db = new Date(b.rawDate || 0);
+        return sortAsc ? da - db : db - da;
+    });
+    renderTable();
+});
+
+function statusClass(status) {
+    const s = (status || '').toLowerCase();
+    if (s === 'paid' || s === 'fully paid') return 'paid';
+    return 'pending';
+}
+
+function renderTable() {
+    const tbody = document.getElementById('appointmentsBody');
+    const total = filtered.length;
+
+    document.getElementById('recordsInfo').textContent = total
+        ? `Showing ${Math.min((currentPage-1)*ROWS_PER_PAGE+1, total)}–${Math.min(currentPage*ROWS_PER_PAGE, total)} of ${total}`
+        : '';
+
+    if (!total) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty"><i class='bx bx-calendar-x'></i>No appointments found.</td></tr>`;
+        renderPagination();
+        return;
+    }
+
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const page  = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    tbody.innerHTML = page.map((a, idx) => {
+        let timeStr = '';
+
+            if (a.eventStartTime && a.eventEndTime) {
+                timeStr = `${formatTime(a.eventStartTime)} – ${formatTime(a.eventEndTime)}`;
+            } else {
+                timeStr = formatTime(a.eventTime);
+            }
+        const timePill = timeStr
+            ? `<span class="time-pill"><i class='bx bx-time-five' style="font-size:11px;"></i>${timeStr}</span>`
+            : `<span class="time-pill no-time">No time</span>`;
+
+        const totalAmt  = a.amount != null ? parseFloat(a.amount) : null;
+        const resFeeAmt = a.reservationFee != null ? parseFloat(a.reservationFee)
+                        : (totalAmt != null ? totalAmt * 0.5 : null);
+
+        const amount = resFeeAmt != null
+            ? '₱' + resFeeAmt.toLocaleString('en-PH', {minimumFractionDigits: 2})
+                + '<br><span style="font-size:10px;font-weight:500;color:#6b7280;">Total: ₱'
+                + (totalAmt || resFeeAmt * 2).toLocaleString('en-PH', {minimumFractionDigits: 2})
+                + '</span>'
+            : '—';
+
+        const absIdx = start + idx;
+
+        return `<tr class="${idx % 2 === 0 ? 'highlight-row' : ''}">
+            <td>${esc(a.displayName)}</td>
+            <td>${esc(a.contact)}</td>
+            <td>${esc(a.eventDate)} ${timePill}</td>
+            <td style="font-weight:700;color:#19276F;line-height:1.5;">${amount}</td>
+            <td><span class="status-btn ${statusClass(a.status)}">${esc(a.status)}</span></td>
+            <td class="action-cell">
+                <button class="view-btn" onclick="openViewModal(${absIdx})">View</button>
+            </td>
+        </tr>`;
+    }).join('');
+
+    renderPagination();
+}
+
+function renderPagination() {
+    const total = Math.ceil(filtered.length / ROWS_PER_PAGE);
+    const pg    = document.getElementById('pagination');
+    if (total <= 1) { pg.innerHTML = ''; return; }
+    let html = `<a href="#" class="page-link ${currentPage===1?'disabled':''}" onclick="goPage(${currentPage-1});return false;">Previous</a>`;
+    for (let i = 1; i <= total; i++)
+        html += `<a href="#" class="page-num ${i===currentPage?'active':''}" onclick="goPage(${i});return false;">${i}</a>`;
+    html += `<a href="#" class="page-link ${currentPage===total?'disabled':''}" onclick="goPage(${currentPage+1});return false;">Next</a>`;
+    pg.innerHTML = html;
+}
+
+function goPage(p) {
+    const total = Math.ceil(filtered.length / ROWS_PER_PAGE);
+    if (p < 1 || p > total) return;
+    currentPage = p;
+    renderTable();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ════════════════════════════════════════════════════════
+//  VIEW MODAL — renders order items from snapshot directly
+//  (no extra fetch needed); falls back to /api/order-items
+//  if snapshot is missing (older bookings).
+// ════════════════════════════════════════════════════════
+async function openViewModal(idx) {
+    const a = filtered[idx];
+    if (!a) return;
+
+    document.getElementById('mFName').textContent   = a.displayName;
+    document.getElementById('mEmail').textContent   = a.email;
+    document.getElementById('mPhone').textContent   = a.contact;
+    document.getElementById('mDate').textContent    = a.eventDate;
+    if (a.eventStartTime && a.eventEndTime) {
+        document.getElementById('mTime').textContent =
+            `${formatTime(a.eventStartTime)} – ${formatTime(a.eventEndTime)}`;
+    } else {
+        document.getElementById('mTime').textContent =
+            formatTime(a.eventTime) || 'Not recorded';
+    }
+    document.getElementById('mGuests').textContent  = a._raw?.guestCount || a._raw?.guest_count || '—';
+    document.getElementById('mAddress').textContent = a.address;
+    document.getElementById('mMessage').textContent = a._raw?.messageConcern || a._raw?.message_concern || 'None';
+    document.getElementById('mStatus').innerHTML    = `<span class="status-btn ${statusClass(a.status)}">${esc(a.status)}</span>`;
+
+    const totalAmt = a.amount != null ? parseFloat(a.amount) : 0;
+    const resFee   = a.reservationFee != null ? parseFloat(a.reservationFee) : totalAmt * 0.5;
+    const balance  = totalAmt - resFee;
+
+    document.getElementById('mAmount').textContent  = totalAmt ? '₱' + totalAmt.toLocaleString('en-PH', { minimumFractionDigits: 2 }) : '—';
+    document.getElementById('mResFee').textContent  = resFee   ? '₱' + resFee.toLocaleString('en-PH', { minimumFractionDigits: 2 }) : '—';
+    document.getElementById('mBalance').textContent = balance > 0 ? '₱' + balance.toLocaleString('en-PH', { minimumFractionDigits: 2 }) : '₱0.00';
+
+    document.getElementById('viewModal').style.display = 'flex';
+
+    const itemsEl = document.getElementById('mOrderItems');
+
+    // ── Try snapshot first (already embedded in appointment row) ──
+    const snap = a.snapshot;
+    if (snap && (snap.selectedPackage || snap.addons?.length || snap.menuItems?.length)) {
+        itemsEl.innerHTML = buildOrderItemsHtml(snap);
+        return;
+    }
+
+    // ── Fallback: fetch from /api/order-items if orderId is known ──
+    if (!a.orderId) {
+        itemsEl.innerHTML = `<div style="color:#9ca3af;font-size:12px;font-style:italic;padding:8px 0;">No order items recorded for this booking.</div>`;
+        return;
+    }
+
+    itemsEl.innerHTML = `<div style="text-align:center;padding:16px;color:#9ca3af;font-size:13px;"><i class='bx bx-loader-alt bx-spin'></i> Loading items…</div>`;
+
+    try {
+        const res  = await fetch(`${API}/api/order-items/${a.orderId}`);
+        const data = res.ok ? await res.json() : null;
+
+        if (!data || (!data.package && !data.addons?.length && !data.menuItems?.length)) {
+            itemsEl.innerHTML = `<div style="color:#9ca3af;font-size:12px;font-style:italic;padding:8px 0;">No items recorded for this order.</div>`;
+            return;
+        }
+
+        itemsEl.innerHTML = buildOrderItemsHtml(data);
+
+    } catch (err) {
+        console.error('[order-items] Failed:', err);
+        itemsEl.innerHTML = `<div style="color:#ef4444;font-size:12px;padding:8px 0;">Could not load order items.</div>`;
+    }
+}
+
+function buildOrderItemsHtml(data) {
+    let html = '';
+
+    // Package
+    const pkg = data.package || data.selectedPackage;
+    if (pkg) {
+        const qty      = parseInt(pkg.qty || pkg.quantity || 1);
+        const price    = parseFloat(pkg.price || 0);
+        const pkgTotal = price * qty;
+        const guests   = pkg.guestCount || pkg.cartGuestCount ||
+                        (pkg.variantName || '').match(/\((\d+)\s*Guests?\)/i)?.[1] || '';
+        html += `
+            <div style="background:#f0f3ff;border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:#19276F;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;">
+                        <i class='bx bx-box' style="margin-right:3px;"></i>Package
+                    </div>
+                    <div style="font-size:13px;font-weight:700;color:#222;">${esc(pkg.variantName || pkg.name || 'Package')}</div>
+                    <div style="font-size:12px;color:#555;margin-top:2px;">${esc(pkg.name || '')}</div>
+                    ${guests ? `<div style="font-size:11px;color:#6b7280;margin-top:2px;"><i class='bx bx-group' style="font-size:11px;"></i> ${guests} guests</div>` : ''}
+                </div>
+                <div style="text-align:right;white-space:nowrap;">
+                    <div style="font-size:13px;font-weight:700;color:#19276F;">₱${pkgTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
+                    <div style="font-size:11px;color:#9ca3af;">qty: ${qty}</div>
+                </div>
+            </div>`;
+    }
+
+    // Addons
+    const addons = data.addons || [];
+    if (addons.length) {
+        html += `<div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;margin:10px 0 6px;"><i class='bx bx-plus-circle' style="margin-right:3px;"></i>Add-ons</div>`;
+        addons.forEach(addon => {
+            const qty        = parseInt(addon.qty || addon.quantity || 1);
+            const addonTotal = parseFloat(addon.price || 0) * qty;
+            html += `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#fafafa;border-radius:7px;margin-bottom:5px;border:1px solid #f0f0f0;">
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:#222;">${esc(addon.variantName || addon.name)}</div>
+                        <div style="font-size:11px;color:#9ca3af;">qty: ${qty}</div>
+                    </div>
+                    <div style="font-size:13px;font-weight:700;color:#19276F;">₱${addonTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
+                </div>`;
+        });
+    }
+
+    // Menu Items
+    const menuItems = data.menuItems || [];
+    if (menuItems.length) {
+        html += `<div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;margin:10px 0 6px;"><i class='bx bx-food-menu' style="margin-right:3px;"></i>Menu Items</div>`;
+        menuItems.forEach(item => {
+            const qty      = parseInt(item.qty || item.quantity || 1);
+            const itemTotal = parseFloat(item.price || 0) * qty;
+            html += `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#fafafa;border-radius:7px;margin-bottom:5px;border:1px solid #f0f0f0;">
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:#222;">${esc(item.name)}</div>
+                        ${item.category ? `<div style="font-size:11px;color:#9ca3af;">${esc(item.category)}</div>` : ''}
+                        <div style="font-size:11px;color:#9ca3af;">qty: ${qty}</div>
+                    </div>
+                    <div style="font-size:13px;font-weight:700;color:#19276F;">₱${itemTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
+                </div>`;
+        });
+    }
+
+    if (!html) {
+        return `<div style="color:#9ca3af;font-size:12px;font-style:italic;padding:8px 0;">No items recorded for this booking.</div>`;
+    }
+
+    return html;
+}
+
+function closeViewModal() { document.getElementById('viewModal').style.display = 'none'; }
+
+document.getElementById('viewModal').addEventListener('click', function(e) { if (e.target === this) closeViewModal(); });
+
+function formatTime(raw) {
+    if (!raw || !String(raw).trim()) return null;
+    const s = String(raw).trim();
+    if (/[AaPp][Mm]/.test(s)) return s;
+    const [hStr, mStr='00'] = s.split(':');
+    const h = parseInt(hStr, 10);
+    if (isNaN(h)) return s;
+    return `${h%12||12}:${mStr.padStart(2,'0')} ${h>=12?'PM':'AM'}`;
+}
+
+function esc(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function showToast(msg, err=false) {
+    const t = document.createElement('div');
+    t.className = 'toast' + (err ? ' err' : '');
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2800);
+}
+
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
+</script>
+</body>
+</html>

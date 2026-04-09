@@ -1,0 +1,361 @@
+.manage-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px 30px;
+    border: 3px solid #19276F;
+}
+
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+.manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.manage-header h2 {
+    color: #282C34;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    font-size: 16px;
+    color: #282C34;
+    font-weight: bold;
+}
+
+.filter-btn {
+    width: 85px;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-btn.outline {
+    background: transparent;
+    border: 1px solid #19276F;
+    color: #000000;
+}
+
+.filter-btn.solid {
+    background: #19276F;
+    border: 1px solid #19276F;
+    color: white;
+}
+
+.sort-arrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 30px;
+}
+
+.sort-arrows img {
+    width: 16px; 
+    height: auto;
+    cursor: pointer;
+}
+
+.menu-table-header {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1.5fr 1.2fr;
+    padding: 10px 0;
+    border-bottom: 2px solid #f36a83; 
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: #282C34;
+    margin-bottom: 15px;
+}
+
+.menu-item {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1.5fr 1.2fr;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.col-name h4 {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #333;
+    margin-bottom: 2px;
+}
+.col-name p {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #666;
+}
+
+.col-thumb img {
+    width: 110px;
+    height: 85px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 1px solid #19276F;
+}
+
+.col-price, .col-stat, .col-date {
+    font-size: 14px;
+    font-weight: bold;
+    color: #282C34;
+    letter-spacing: 2px;
+}
+
+.col-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.action-btn {
+    width: 80px;
+    height: 30px;
+    padding: 4px 0;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+}
+
+.action-btn.edit {
+    background-color: #19276F;
+    color: white;
+    border: 1px solid #19276F;
+}
+
+.action-btn.delete {
+    background-color: white;
+    color: #19276F;
+    border: 1px solid #19276F;
+}
+
+.inbox-header-section {
+    position: relative;
+    margin-bottom: 15px;
+    padding-bottom: 15px; 
+}
+
+.inbox-header-section h3 {
+    color: #19276F;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -10px;
+    margin-bottom: 5px; 
+}
+
+.title-underline {
+    width: 55px;
+    height: 4px;
+    background: linear-gradient(to right, #6a85e6, #a364d9);
+    border-radius: 2px;
+    position: absolute;
+    bottom: 0; 
+    left: 0;
+    z-index: 2;
+}
+
+.full-divider {
+    width: 100%;
+    height: 1px;
+    background-color: #19276F;
+    position: absolute;
+    bottom: 0; 
+    left: 0;
+    z-index: 1;
+    margin: 0; 
+}
+
+.inbox-table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0 0; 
+}
+
+.inbox-table thead tr {
+    background-color: #19276F;
+    color: white;
+}
+
+.inbox-table th {
+    padding: 18px 20px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.inbox-table th:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.inbox-table th:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.inbox-table td {
+    padding: 20px;
+    border-bottom: 1px solid #19276F; 
+    font-size: 14px;
+    color: #19276F; 
+    vertical-align: middle;
+}
+
+.client-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.client-info img {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.client-info span {
+    font-weight: 500;
+    color: #19276F;
+}
+
+.message-col {
+    font-weight: 500;
+}
+
+.bx-paperclip {
+    font-size: 18px;
+    color: #19276F;
+    cursor: pointer;
+    transform: rotate(-90deg);
+}
+
+.attachment {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #19276F;
+    font-weight: 500;
+}
+
+.calendar-box {
+    border: 4px solid #19276F;
+    border-radius: 20px;
+    padding: 20px;
+    padding-top: 30px;
+    background-color: #fff;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+    min-height: 497px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.calendar-header h2 {
+    font-family: 'Tw Cen MT';
+    font-weight: bold;
+    font-size: 28px;
+    color: #19276F;
+}
+
+.arrows span {
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.calendar-box{
+    margin-top:25px;
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    width:100%;
+}
+
+/* HEADER */
+
+.calendar-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.calendar-header h2{
+    font-size:18px;
+    font-weight:600;
+}
+
+.calendar-header .arrows span{
+    cursor:pointer;
+    font-size:20px;
+    margin-left:10px;
+    padding:5px 10px;
+    border-radius:6px;
+    transition:0.2s;
+}
+
+.calendar-header .arrows span:hover{
+    background:#f0f0f0;
+}
+
+/* GRID */
+
+.calendar-grid{
+    display:grid;
+    grid-template-columns: repeat(7,1fr);
+}
+
+.weekday{
+    text-align:center;
+    font-weight:600;
+    color: #19276F;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.day{
+    height:70px;
+    width: 165px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f5f5f5;
+    border: 1px solid #ccc;
+    cursor:pointer;
+}
+
+
+.day.free { background-color: #fff; }
+.day.busy { background-color: #ff9800; color: #fff; }
+.day.full { background-color: #f44336; color: #fff; }
+.day.fade { opacity: 0.3; }
