@@ -1,0 +1,255 @@
+@font-face {
+    font-family: 'Tw Cen MT';
+    src: url('fonts/Tw\ Cen\ MT.ttf') format('truetype');
+    font-family: Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: #FBFFF3;
+    font-family: 'Tw Cen MT', Arial, sans-serif;
+    color: #19276F;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.checkout-header {
+    background-color: #19276F;
+    color: white;
+    padding: 10px 0;
+}
+
+.header-container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-logo {
+    width: 65px;
+    height: auto;
+    object-fit: contain;
+}
+
+.header-left h1 {
+    font-family: "Times New Roman", serif;
+    font-weight: normal;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.header-right nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 15px;
+}
+
+.header-right nav a:hover {
+    color: #2AC3D8;
+    font-weight: bold;
+}
+
+.brand-text {
+    border-left: none; 
+    padding-left: 0;
+    text-align: left;
+}
+.brand-text h4 { font-family: "Times New Roman", serif; font-size: 16px; font-style: italic; margin-bottom: 2px;}
+.brand-text p { font-size: 11px; }
+
+.checkout-main {
+    flex: 1;
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.form-container {
+    width: 100%;
+    border: 2px solid #19276F;
+    padding: 20px 50px;
+    background-color: #FBFFF3;
+}
+
+.page-title {
+    font-family: "Times New Roman", serif;
+    color: #19276F;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+.checkout-form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.span-two {
+    grid-column: span 2;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-family: "Times New Roman", serif;
+    font-weight: bold;
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"] {
+    background-color: #F9F9F9;
+    border: 1px solid #19276F;
+    height: 45px;
+    padding: 5px 10px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    width: 100%;
+}
+
+.date-group {
+    align-items: flex-start;
+}
+
+.date-inputs {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.date-inputs input {
+    flex: 1; 
+    height: 50px;
+    text-align: center;
+    border: 1px solid #19276F;
+    background-color: white;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #777;
+}
+
+.form-group textarea {
+    height: 150px;
+    border: 1px solid #19276F;
+    background-color: #F9F9F9;
+    padding: 15px;
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #19276F;
+    resize: none;
+    outline: none;
+    width: 100%;
+}
+
+.form-group textarea::placeholder {
+    color: #19276F;
+    opacity: 1;
+}
+
+#contact {
+    padding: 14px;
+    border: 1px solid #19276F;
+}
+
+.button-row {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-continue {
+    background-color: #19276F;
+    color: white;
+    border: none;
+    padding: 15px 60px;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    margin-bottom: 35px;
+}
+
+.btn-continue:hover {
+    opacity: 0.9;
+}
+
+.page-footer {
+    width: 95%;
+    max-width: 1400px;
+    margin: 50px auto 30px auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-brand h4 {
+    font-family: "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: italic;
+    color: #19276F;
+    margin-bottom: 0;
+    line-height: 1;
+}
+.footer-brand p {
+    font-size: 11px;
+    color: #19276F;
+    margin-top: 2px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.v-line {
+    width: 1px;
+    height: 30px;
+    background-color: #19276F;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #19276F;
+    font-size: 12px;
+}

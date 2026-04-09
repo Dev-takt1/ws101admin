@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #19276F;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.sub-logo h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.sub-logo p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.wrapper {
+    max-width: 400px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.wrapper h1 {
+    color: #19276F;
+    font-size: 24px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.wrapper > p {
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.otp-desc {
+    color: #666;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.mpin-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.mpin-input {
+    width: 45px;
+    height: 45px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #19276F;
+}
+
+.mpin-input:focus {
+    border-color: #19276F;
+    outline: none;
+}
+
+.resend-btn {
+    background: none;
+    border: none;
+    color: #19276F;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    margin: 10px auto;
+}
+
+.resend-btn:disabled {
+    color: #999;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.resend-timer {
+    display: block;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.btn, .signup-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #19276F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover, .signup-btn:hover {
+    background-color: #0f1a4a;
+}
+
+.btn:disabled, .signup-btn:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+.success-logo {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.success-logo img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #28a745;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.success-desc {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.type-box {
+    margin-bottom: 20px;
+}
+
+.type-box p {
+    color: #666;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.type-box input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.type-box input:focus {
+    border-color: #19276F;
+    outline: none;
+}

@@ -1,0 +1,437 @@
+* {
+  box-sizing: border-box;
+}
+
+body{
+  min-height: 100vh;
+  margin: 0;
+  padding: 24px 16px;
+
+  background-image: url("/assets/img/image\ 7.png");
+  background-color: #19276F;
+  background-blend-mode: luminosity;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  overflow-x: hidden;
+}
+
+
+header{
+  margin: 0 auto 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+}
+
+.sub-logo{
+  margin: 0;
+  line-height: 0.8;
+}
+
+.sub-logo h1,
+.sub-logo p{
+  position: static; /* OVERRIDE your absolute positioning */
+  margin: 0 40px;
+  color: #fbfff3;
+}
+
+.sub-logo h1{
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 550;
+  text-transform: uppercase;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.sub-logo p{
+  font-size: 12px;
+  font-weight: 100;
+  margin-top: 2px;
+}
+
+/* ---------- WRAPPER CARD ---------- */
+.wrapper{
+  width: min(565px, 92vw);
+  min-height: 550px;        /* keeps your design */
+  height: auto;             /* allow it to grow if needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.35);
+  border: 1px solid #fbfff3;
+  border-radius: 30px;
+  margin: auto;
+  padding-top:20px;        /* OVERRIDE your top/right positioning */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+}
+
+#termsOverlay .wrapper {
+    background: #fbfff3; /* Solid off-white background */
+    backdrop-filter: none; /* Remove the blur so it's solid */
+    color: #19276F; /* Ensure text is your brand blue */
+    position: relative; /* Centers it within the flex overlay */
+    top: auto;
+    left: auto;
+    transform: none;
+    padding: 30px;
+    max-height: 90vh; /* Prevents it from going off-screen */
+    overflow-y: auto; /* Adds scroll if terms are too long */
+}
+
+#termsOverlay h1, 
+#termsOverlay p, 
+#termsOverlay div {
+    color: #19276F !important;
+}
+
+/* Fix the Accept button styling to match your brand */
+#closeTermsBtn {
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    margin-top: 20px;
+    background-color: #19276F; /* Dark blue */
+    color: #fbfff3; /* White text */
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#closeTermsBtn:hover:not(:disabled) {
+    background-color: #19276F; /* Turns gold on hover */
+}
+
+/* Use a centered column layout inside the wrapper */
+.wrapper form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Titles */
+.wrapper h1{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 8px 0 0;
+  color: #fbfff3;
+  font-family: 'Tw Cen MT';
+  text-align: center;
+}
+
+.wrapper p{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 0 0 18px;
+  color: #fbfff3;
+  font-family: 'Tw Cen MT';
+  text-align: center;
+}
+
+/* ---------- INPUT GROUPS ---------- */
+.input-box, .info-box, .type-box{
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+  margin: 0;
+  top: auto; left: auto;    /* OVERRIDE your offsets */
+}
+
+/* Inputs */
+.input-box input,
+.info-box input,
+.type-box input{
+  width: 100%;
+  height: 70px;
+  background: transparent;
+  outline: none;
+  border: 3px solid #fbfff3;
+  border-radius: 17px;
+  font-size: 14px;
+  color: #fbfff3;
+  padding: 0 108px 0 16px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* Icons inside fields */
+.input-box i,
+.info-box i,
+.type-box i{
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+}
+
+/* placeholder */
+.input-box input::placeholder,
+.info-box input::placeholder,
+.type-box input::placeholder{
+  color: #fbfff3;
+}
+
+/* ---------- FORGOT / LINKS TEXT ---------- */
+/* IMPORTANT: You used p1/p2 tags, which are not valid HTML tags.
+   Your CSS will still "work", but it's better to use <p> or <span>.
+   For now we’ll keep it working: */
+.wrapper p2{
+  padding-right: 40px;
+  font-family: 'Tw Cen MT';
+  color: #fbfff3;
+}
+
+.remember-forgot{
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 14px;
+  margin-top: -6px;
+}
+
+.remember-forgot p1{
+  color: #fbfff3;
+  cursor: pointer;
+}
+
+
+/* Signup/Login rows */
+.signup-link a, .login-link a, .register-link a{
+  color: #fbfff3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+  text-decoration: none;
+  font-family: 'Tw Cen MT';
+}
+
+.signup-link a,
+.login-link a,
+.register-link a{
+  cursor: pointer;
+  font-weight: 600;
+  position: relative;
+  bottom: 42px;
+  left: 85px;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn,
+.signup-btn,
+.forgot-btn{
+  width: 100%;
+  max-width: 360px;
+  height: 66px;
+  background: #fbfff3;
+  border: none;
+  outline: none;
+  border-radius: 17px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-size: 18px;
+  color: #19276F;
+  font-weight: 600;
+
+  position: static; /* OVERRIDE your top/left */
+  margin-top: 40px;
+}
+
+/* Forgot password message */
+.type-box p{
+  position: static;  /* OVERRIDE */
+  margin: 8px 0 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.wrapper::-webkit-scrollbar{
+    display: none;
+}
+
+
+.wrapper .subtitle{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 0 0 18px;
+  color: #19276F;
+  font-family: 'Tw Cen MT';
+  text-align: justify;
+  width: 400px;
+}
+
+.wrapper .terms-list{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 0 0 18px;
+  color: #19276F;
+  font-family: 'Tw Cen MT';
+  text-align: justify;
+  width: 400px;
+}
+
+.wrapper .terms-title span{
+    display: block;
+}
+
+.wrapper .terms-title{
+    position: static;
+    color: #19276F;
+    font-family: 'Tw Cen MT';
+    text-align: justify;
+    width: 100%; 
+    max-width: 500px;
+    margin-bottom: 0 !important;
+    padding-bottom: 5px;
+}
+
+.wrapper .terms-req {   
+    position: static;
+    margin-top: 0 !important;
+    padding-top: 0;
+    padding-left: 25px;
+    list-style-position: outside;
+    list-style-type: disc; 
+    text-align: left;
+    width: 100%;
+    max-width: 400px;
+}
+
+.wrapper .terms-req li {
+    font-size: 16px;
+    font-family: 'Tw Cen MT';
+    color: #19276F;
+}
+
+.terms-box label{
+    font-family: 'Tw Cen MT';
+    color: #19276F;
+}
+
+.terms-box input[type="checkbox"] {
+    accent-color: #19276F; /* Your brand blue */
+    width: 18px;           /* Makes it slightly larger and easier to click */
+    height: 18px;
+    cursor: pointer;
+    border: 2px solid #19276F;
+    vertical-align: middle;
+}
+
+.terms-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Darken background */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.terms-overlay.active {
+    display: flex;
+}
+
+.terms-content {
+    max-height: 300px;
+    overflow-y: auto; /* Scrollable terms */
+    margin: 20px 0;
+    text-align: left;
+}
+
+#closeTermsBtn {
+    padding: 10px 20px;
+    background-color: #d4af37; /* Gold theme */
+    border: none;
+    cursor: pointer;
+}
+
+#closeTermsBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width: 480px){
+  body{
+    padding: 18px 12px;
+  }
+
+  .wrapper{
+    border-radius: 22px;
+    padding: 22px 16px;
+    min-height: auto;
+  }
+
+  .sub-logo h1{
+    font-size: 16px;
+  }
+
+  .wrapper h1{
+    font-size: 26px; /* if your default renders too big/small adjust */
+  }
+
+  .btn, .signup-btn, .forgot-btn{
+    height: 52px;
+    font-size: 16px;
+  }
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fbfff3 !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width: 480px){
+  body{
+    padding: 18px 12px;
+  }
+
+  .wrapper{
+    border-radius: 22px;
+    padding: 22px 16px;
+    min-height: auto;
+  }
+
+  .sub-logo h1{
+    font-size: 16px;
+  }
+
+  .wrapper h1{
+    font-size: 26px; /* if your default renders too big/small adjust */
+  }
+
+  .btn, .signup-btn, .forgot-btn{
+    height: 52px;
+    font-size: 16px;
+  }
+}
+
+/* ---------- AUTOFILL (keep yours, but once is enough) ---------- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fbfff3 !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+}

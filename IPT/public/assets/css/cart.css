@@ -1,0 +1,818 @@
+@font-face {
+    font-family: 'Tw Cen MT';
+    src: url('fonts/Tw\ Cen\ MT.ttf') format('truetype');
+    font-family: Arial, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #FBFFF3;
+    font-family: 'Tw Cen MT', Arial, sans-serif;
+    color: #19276F;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.cart-header {
+    background-color: #19276F;
+    color: white;
+    padding: 10px 0;
+}
+
+.header-container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-logo {
+    width: 65px;
+    height: auto;
+    object-fit: contain;
+}
+
+.header-left h1 {
+    font-family: "Times New Roman", serif;
+    font-weight: normal;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-right {
+    font-family: 'Tw Cen MT';
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-right nav a {
+    text-decoration: none;
+    color: #FBFFF3;
+    font-size: 17.8px;
+    font-weight: 500;
+    transition: all 0.3s ease; 
+    position: relative;
+    white-space: nowrap;
+    padding: 6px 16px; 
+    border-radius: 8px; 
+}
+
+.header-right a:hover {
+    background-color: #FBFFF3; 
+    color: #19276F; 
+}
+
+.brand-text {
+    border-left: none;
+    padding-left: 0;
+    text-align: left;
+}
+
+.brand-text h4 {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 2px;
+}
+
+.brand-text p {
+    font-size: 11px;
+}
+
+.cart-main {
+    flex: 1;
+    width: 95%;
+    max-width: 1400px;
+    margin: 40px auto;
+}
+
+.cart-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 50px;
+}
+
+.cart-table-header {
+    display: flex;
+    font-weight: bold;
+    color: #000000;
+    font-size: 18px;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    font-family: "Times New Roman", serif;
+    text-align: center;
+}
+
+.h-pkg {
+    flex: 3;
+    text-align: center;
+}
+
+.h-price {
+    flex: 1;
+    text-align: center;
+}
+
+.h-qty {
+    flex: 1;
+    text-align: center;
+}
+
+.h-sub {
+    flex: 1;
+    text-align: center;
+}
+
+.cart-row {
+    margin-bottom: 20px;
+}
+
+.main-item {
+    display: flex;
+    align-items: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: normal;
+    font-size: 18px;
+    color: #000000;
+}
+
+.col-pkg {
+    flex: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.col-pkg img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+.col-pkg h3 {
+    font-size: 18px;
+    margin-right: 100px;
+}
+
+.col-price {
+    flex: 1;
+    text-align: center;
+    font-weight: normal;
+    font-weight: bold;
+}
+
+.col-qty {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.col-sub {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    background-color: #19276F;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+.stepper button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    width: 25px;
+}
+
+.stepper span {
+    background: white;
+    color: #19276F;
+    width: 25px;
+    text-align: center;
+    margin: 0 2px;
+}
+
+.adds-on-label {
+    font-family: 'Times New Roman', Times, serif;
+    color: #979699;
+    font-size: 14px;
+    padding-left: 40px;
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+
+.addons-group {
+    margin-bottom: 10px;
+}
+
+.group-title {
+    padding-left: 40px;
+    font-size: 18px;
+    margin-bottom: 5px;
+    font-family: "Times New Roman", serif;
+    color: #000000;
+}
+
+.sub-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+    font-size: 18px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.sub-name {
+    color: #000000;
+    flex: 3;
+    text-align: left;
+    padding-left: 90px;
+}
+
+.sub-price {
+    flex: 1;
+    text-align: center;
+    color: #000000;
+    margin-left: -90px;
+}
+
+.sub-qty {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.sub-total {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    color: #000000;
+}
+
+.action-row {
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.trash-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000;
+}
+
+.cart-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-update {
+    background-color: #19276F;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    width: 220px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: "Times New Roman", serif;
+    text-align: center;
+}
+
+.btn-continue {
+    background-color: transparent;
+    color: #19276F;
+    border: 1px solid #19276F;
+    padding: 10px 0;
+    width: 220px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    font-family: "Times New Roman", serif;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message-box {
+    margin-top: 20px;
+}
+
+.message-box label {
+    font-weight: bold;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+    font-family: "Times New Roman", serif;
+}
+
+.message-box textarea {
+    width: 60%;
+    height: 100px;
+    border: 1px solid #19276F;
+    padding: 10px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.payment-sidebar {
+    width: 515px;
+    height: 700px;
+    border: 2px solid #002AFF;
+    padding: 3px 20px;
+    margin-top: -20px;
+    margin-bottom: -70px;
+}
+
+.sidebar-box {
+    padding: 10px;
+}
+
+.sidebar-title {
+    font-family: "Times New Roman", serif;
+    color: #19276F;
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.summary-line {
+    font-family: Arial, sans-serif;
+    display: flex;
+    color: #000000;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.summary-divider {
+    height: 2px;
+    background-color: #979699;
+    width: 100%;
+    margin: 10px 0;
+    opacity: 0.8;
+}
+
+.summary-line.total-row {
+    font-size: 16px;
+    margin-top: 5px;
+    margin-left: 280px;
+}
+
+.gray {
+    color: #979699;
+    margin-right: 20px;
+}
+
+.mt-40 {
+    margin-top: 25px;
+}
+
+.gcash-logo-row {
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    color: #000000;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-bottom: 5px;
+}
+
+.gcash-logo-row img {
+    height: 30px;
+}
+
+.payment-options-box {
+    border: 2px solid #19276F;
+    padding: 5px 20px;
+    background: white;
+    margin-left: 70px;
+    margin-right: 70px;
+}
+
+.radio-item {
+    display: block;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.radio-top {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: #19276F;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-top: 5px;
+}
+
+.radio-item input {
+    display: none;
+}
+
+.radio-desc {
+    font-family: 'Times New Roman', Times, serif;
+    display: block;
+    font-size: 10px;
+    color: #555;
+    margin-top: 2px;
+}
+
+.divider-line {
+    height: 2px;
+    border: 2px solid #19276F;
+    margin: 10px -20px;
+}
+
+.billing-check {
+    font-family: 'Times New Roman', Times, serif;
+    margin: 10px 46px;
+    font-size: 12px;
+    color: #979699;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.billing-check input {
+    width: 15px;
+    height: 15px;
+    background: #ccc;
+    border: none;
+}
+
+.pay-button {
+    width: 275px;
+    margin-right: 100px;
+    background-color: #19276F;
+    color: white;
+    font-family: "Times New Roman", serif;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    padding: 10px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.split-pay-divider {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 12px;
+    color: #19276F;
+}
+
+.split-pay-divider .line {
+    flex: 1;
+    height: 2px;
+    background-color: #19276F;
+    margin: 0 10px;
+}
+
+.sidebar-contact {
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 40px;
+    font-size: 12px;
+    color: #19276F;
+}
+
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 0px;
+}
+
+.contact-row img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.visit-us {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.address {
+    margin-bottom: 15px;
+}
+
+.admin-chat-btn {
+    background: white;
+    border: 3px solid #19276F;
+    color: #19276F;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    float: right;
+    font-family: "Times New Roman", serif;
+    margin-top: -60px;
+}
+
+.page-footer {
+    width: 95%;
+    max-width: 1400px;
+    margin: 0 auto 30px auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-brand h4 {
+    font-family: "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: italic;
+    color: #19276F;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.footer-brand p {
+    font-size: 11px;
+    color: #19276F;
+    margin-top: 2px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.v-line {
+    width: 1px;
+    height: 30px;
+    background-color: #19276F;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #19276F;
+    font-size: 12px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.btn-cancel-action {
+    background-color: #19276F;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    width: 220px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: "Times New Roman", serif;
+    text-align: center;
+}
+
+.btn-delete-action {
+    background-color: transparent;
+    color: #19276F;
+    border: 1px solid #19276F;
+    padding: 10px 0;
+    width: 220px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: "Times New Roman", serif;
+    text-align: center;
+}
+
+.btn-cancel-action:hover {
+    opacity: 0.9;
+}
+
+.btn-delete-action:hover {
+    opacity: 0.9;
+}
+
+.settings-popup {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    width: 260px;
+    background-color: #ffffff;
+    border-radius: 20px 0 0 20px;
+    box-shadow: -4px 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px 0 20px 0;
+    display: none;
+    z-index: 1000;
+    font-family: 'Tw Cen MT', Arial, sans-serif;
+}
+
+.settings-popup.active {
+    display: block;
+}
+
+.user-info {
+    text-align: center;
+    padding: 0 20px;
+}
+
+.user-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #19276F;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
+.user-info h3 {
+    color: #19276F;
+    font-size: 24px;
+    margin-bottom: -5px;
+    font-weight: bold;
+}
+
+.user-info p {
+    color: #19276F;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.settings-divider {
+    border: none;
+    border-top: 1px solid #19276F;
+    margin: 0 20px 15px;
+    opacity: 0.5;
+}
+
+.settings-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-menu li {
+    margin: 5px 0;
+}
+
+.settings-menu a {
+    display: flex;
+    align-items: center;
+    padding: 8px 25px;
+    color: #19276F;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    gap: 12px;
+    margin: 0 15px;
+    border-radius: 20px;
+}
+
+.settings-menu a i {
+    width: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.settings-menu a:hover {
+    background-color: #19276F;
+    color: #ffffff;
+}
+
+.center-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.center-modal-overlay.active {
+    display: flex;
+}
+
+.center-modal {
+    background: #FBFFF3;
+    padding: 40px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    border: 5px solid #19276F;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    font-family: 'Tw Cen MT', Arial, sans-serif;
+    color: #19276F;
+}
+
+.center-modal h3 {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 32px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.center-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.center-modal label {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.center-modal input {
+    padding: 12px;
+    border: 2px solid #19276F;
+    border-radius: 5px;
+    font-family: 'Tw Cen MT', Arial, sans-serif;
+    font-size: 16px;
+    outline: none;
+    background: transparent;
+}
+
+.modal-btn {
+    background-color: #19276F;
+    color: #FBFFF3;
+    border: 2px solid #19276F;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    font-family: 'Tw Cen MT', Arial, sans-serif;
+}
+
+.modal-btn:hover {
+    background-color: transparent;
+    color: #19276F;
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #19276F;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+.close-modal:hover {
+    color: #2AC3D8;
+}

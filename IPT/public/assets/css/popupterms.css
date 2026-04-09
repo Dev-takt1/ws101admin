@@ -1,0 +1,237 @@
+* {
+  box-sizing: border-box;
+}
+
+body{
+  min-height: 100vh;
+  margin: 0;
+  padding: 24px 16px;
+
+  background-image: url("/assets/img/image\ 7.png");
+  background-color: #19276F;
+  background-blend-mode: luminosity;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar{
+    display: none;
+}
+
+header{
+  margin: 0 auto 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+}
+
+.sub-logo{
+  margin: 0;
+  line-height: 0.8;
+}
+
+.sub-logo h1,
+.sub-logo p{
+  position: static; /* OVERRIDE your absolute positioning */
+  margin: 0 40px;
+  color: #fbfff3;
+}
+
+.sub-logo h1{
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 550;
+  text-transform: uppercase;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.sub-logo p{
+  font-size: 12px;
+  font-weight: 100;
+  margin-top: 2px;
+}
+
+.wrapper{
+  width: min(565px, 92vw);
+  min-height: 550px;        /* keeps your design */
+  height: auto;             /* allow it to grow if needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.35);
+  border: 1px solid #fbfff3;
+  border-radius: 30px;
+  margin: auto;
+  position: static;    
+  line-height: 1;
+  max-height: 80vh;           /* Limits height to 80% of the screen height */
+  overflow-y: auto;           /* Adds a vertical scrollbar only when needed */
+  overflow-x: hidden;         /* Prevents horizontal shifting */ 
+  padding: 30px;              /* Ensure space so text doesn't hit the edges */
+  display: block;
+}
+
+.wrapper::-webkit-scrollbar{
+    display: none;
+}
+
+/* Titles */
+.wrapper h1{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 40px 0 0;
+  color: #19276F;
+  font-family: 'Tw Cen MT';
+  text-align: center;
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.wrapper p{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 0 0 18px;
+  color: #19276F;
+  font-family: 'Tw Cen MT';
+  text-align: center;
+  font-size: 14px;
+}
+
+.wrapper .subtitle{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 0 0 18px;
+  color: #19276F;
+  font-family: 'Tw Cen MT';
+  text-align: justify;
+  width: 400px;
+}
+
+.wrapper .terms-list{
+  position: static;         /* OVERRIDE absolute positioning */
+  margin: 0 0 18px;
+  color: #19276F;
+  font-family: 'Tw Cen MT';
+  text-align: justify;
+  width: 400px;
+}
+
+.wrapper .terms-title span{
+    display: block;
+}
+
+.wrapper .terms-title{
+    position: static;
+    color: #19276F;
+    font-family: 'Tw Cen MT';
+    text-align: justify;
+    width: 100%; 
+    max-width: 500px;
+    margin-bottom: 0 !important;
+    padding-bottom: 5px;
+}
+
+.wrapper .terms-req {   
+    position: static;
+    margin-top: 0 !important;
+    padding-top: 0;
+    padding-left: 25px;
+    list-style-position: outside;
+    list-style-type: disc; 
+    text-align: left;
+    width: 100%;
+    max-width: 400px;
+}
+
+.wrapper .terms-req li {
+    font-size: 16px;
+    font-family: 'Tw Cen MT';
+    color: #19276F;
+}
+
+.terms-box label{
+    font-family: 'Tw Cen MT';
+    color: #19276F;
+}
+
+.terms-box input[type="checkbox"] {
+    accent-color: #19276F; /* Your brand blue */
+    width: 18px;           /* Makes it slightly larger and easier to click */
+    height: 18px;
+    cursor: pointer;
+    border: 2px solid #19276F;
+    vertical-align: middle;
+}
+
+.terms-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Darken background */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.terms-overlay.active {
+    display: flex;
+}
+
+.terms-content {
+    max-height: 300px;
+    overflow-y: auto; /* Scrollable terms */
+    margin: 20px 0;
+    text-align: left;
+}
+
+#closeTermsBtn {
+    padding: 10px 20px;
+    background-color: #d4af37; /* Gold theme */
+    border: none;
+    cursor: pointer;
+}
+
+#closeTermsBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width: 480px){
+  body{
+    padding: 18px 12px;
+  }
+
+  .wrapper{
+    border-radius: 22px;
+    padding: 22px 16px;
+    min-height: auto;
+  }
+
+  .sub-logo h1{
+    font-size: 16px;
+  }
+
+  .wrapper h1{
+    font-size: 26px; /* if your default renders too big/small adjust */
+  }
+
+  .btn, .signup-btn, .forgot-btn{
+    height: 52px;
+    font-size: 16px;
+  }
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fbfff3 !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+}

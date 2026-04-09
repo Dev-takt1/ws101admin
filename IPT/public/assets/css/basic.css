@@ -1,0 +1,373 @@
+@font-face {
+    font-family: 'Tw Cen MT';
+    src: url('fonts/Tw\ Cen\ MT.ttf') format('truetype');
+    font-family: Arial, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #FBFFF3;
+    font-family: Arial, sans-serif;
+    color: #19276F;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.package-header {
+    background-color: #19276F;
+    color: white;
+    padding: 15px 40px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-button {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.header-logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.pkg-logo {
+    width: 50px;
+    height: auto;
+}
+
+.header-text h3 {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+.header-text p {
+    font-family: "Times New Roman", serif;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+.package-main {
+    flex: 1;
+    padding: 40px 50px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 0.8fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.col-text {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.info-section {
+    margin-bottom: auto; 
+}
+
+.pkg-title {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 42px;
+    margin-bottom: 5px;
+}
+
+.pkg-desc {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.italic { font-style: italic; }
+
+.list-label {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.inclusions-list, .rates-list {
+    list-style: none;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.inclusions-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+
+.variant-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border: 1px solid #19276F;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: justify;
+}
+
+.promo {
+    font-weight: bold;
+}
+
+.promo-label {
+    display: block;
+    font-size: 10px;
+    color: #19276F; 
+    font-weight: bold;
+}
+
+.img-container {
+    border: 4px solid #19276F;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+
+.img-1 {
+    width: 100%;
+    max-width: 330px;
+    height: 265px;
+    margin-top: 25px;
+}
+
+.col-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.img-2, .img-3 {
+    width: 100%;
+    height: 303px;
+}
+
+.col-right {
+    height: 100%;
+}
+
+.img-4 {
+    width: 100%;
+    height: 630px;
+}
+
+.site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px 50px;
+    background-color: #FBFFF3; 
+    border-top: 1px solid rgba(25, 39, 111, 0.1);
+    flex-wrap: wrap;
+}
+
+.footer-brand h4 {
+    color: #19276F;
+    font-family: "Times New Roman", serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.footer-brand p {
+    color: #19276F;
+    font-size: 10px;
+}
+
+.footer-divider {
+    width: 1px;
+    height: 40px;
+    background-color: #19276F;
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-links a {
+    color: #19276F;
+    font-size: 12px;
+    text-decoration: none;
+    font-family: 'Tw Cen MT';
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-left: auto;
+}
+
+.btn-pkg {
+    background-color: #19276F;
+    color: white;
+    border: 2px solid #19276F;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap; 
+    text-align: center;
+    min-width: 140px;
+}
+
+.btn-pkg:hover {
+    background-color: transparent;
+    color: #19276F;
+}
+
+.btn-pkg:active {
+    transform: scale(0.96); /* Feedback for mobile taps */
+}
+
+html, body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    overflow-x: hidden;
+}
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar { 
+    display: none !important; 
+    width: 0 !important;
+    height: 0 !important;
+}
+
+@media (max-width: 1200px) {
+    .content-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .col-right {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    .col-middle {
+        order: -1;
+    }
+    .img-1 {
+        max-width: 100%;
+        height: 250px;
+        margin-top: 20px;
+    }
+    .img-2, .img-3 {
+        height: 250px;
+    }
+}
+@media (max-width: 768px) {
+    .action-buttons {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        flex-direction: column; /* Stacks buttons vertically on mobile */
+        gap: 10px;
+    }
+
+    .btn-pkg {
+        width: 100%; /* Full width buttons for easier tapping */
+        font-size: 18px; /* Slightly larger text for mobile readability */
+        padding: 15px 20px;
+    }
+} @media (max-width: 768px) {
+    .action-buttons {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        flex-direction: column; /* Stacks buttons vertically on mobile */
+        gap: 10px;
+    }
+
+    .btn-pkg {
+        width: 100%; /* Full width buttons for easier tapping */
+        font-size: 18px; /* Slightly larger text for mobile readability */
+        padding: 15px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .package-header {
+        padding: 15px 20px;
+    }
+    .header-text h3 {
+        font-size: 14px;
+    }
+    .header-text p {
+        display: none;
+    }
+    .package-main {
+        padding: 20px;
+    }
+    .pkg-title {
+        font-size: 32px;
+    }
+    .site-footer {
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 15px;
+    }
+    .footer-divider {
+        width: 100%;
+        height: 1px;
+    }
+    .action-buttons {
+        margin-left: 0; 
+        width: 100%;
+        flex-direction: column; 
+    }
+    .btn-pkg {
+        width: 100%; 
+        padding: 15px;
+        font-size: 18px;
+    }
+    .footer-links {
+        justify-content: center;
+        width: 100%;
+    }
+}
