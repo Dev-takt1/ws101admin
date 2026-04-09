@@ -1,14 +1,18 @@
 {
+  "name": "delasarmas-catering",
+  "version": "1.0.0",
+  "description": "De Las Armas Catering & Event Services",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
-    "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
-    "email-validator": "^2.0.4",
     "express": "^5.2.1",
     "multer": "^2.1.1",
-    "mysql2": "^3.16.3",
     "nodemailer": "^8.0.1"
   }
 }
